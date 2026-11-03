@@ -1,44 +1,13 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BioDataSim · Datos biomédicos</title><meta name="theme-color" content="#070b14">
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="../../shared/simulab.css">
 <style>
-body{background:#070b14;color:#cbd5e1;font-family:system-ui,sans-serif}
-canvas{width:100%;display:block;background:#0a1020;border-radius:.5rem;border:1px solid #1e293b}
-.ia{touch-action:none;cursor:crosshair}
-.card{background:#0d1424;border:1px solid #1e293b;border-radius:.75rem;padding:.7rem}
-.b{padding:.35rem .7rem;border-radius:.5rem;border:1px solid #334155;background:#111b30;font-size:.82rem;min-height:40px}
-.b.on{border-color:#22d3ee;color:#22d3ee;background:#06323d}
-.b:disabled{opacity:.4}
-input[type=range]{width:100%;accent-color:#34d399}
-input[type=number]{background:#0a1020;border:1px solid #334155;border-radius:.4rem;padding:.3rem .5rem;width:6rem;color:#e2e8f0}
-summary{cursor:pointer;color:#22d3ee;font-weight:600;min-height:32px}
-.bd{display:inline-grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:9999px;color:#000;font-weight:700;margin-right:.4rem}
-.hd{font-weight:600;margin-bottom:.4rem;display:flex;align-items:center;flex-wrap:wrap;gap:.25rem}
-.key{background:#06281f;border:1px solid #047857;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;color:#a7f3d0;margin:.4rem 0}
-.try{background:#2a1a05;border:1px solid #b45309;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;color:#fde68a;margin:.4rem 0}
-.m b{color:#34d399;font-size:1.15rem}.m small{display:block;color:#94a3b8;font-size:.68rem;line-height:1.1}
-.led{font-family:ui-monospace,monospace;color:#fb923c;background:#1a0f08;border:2px solid #44403c;border-radius:.4rem;padding:.2rem .5rem;font-size:1.3rem;letter-spacing:.05em}
-.blk{border:1px solid #334155;border-radius:.4rem;padding:.25rem .45rem;background:#0a1020;font-size:.72rem;text-align:center}.blk b{color:#34d399}
-.q{display:block;width:100%;text-align:left;margin-bottom:.3rem}.q.ok{border-color:#34d399;color:#34d399;background:#064e3b55}.q.ko{border-color:#f87171;color:#f87171;background:#7f1d1d55}
-table{width:100%;font-size:.78rem}td,th{padding:.2rem .35rem;text-align:left;border-bottom:1px solid #1e293b}
-:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
-</style>
-<style id="nl-style">
-/* Elementos comunes NeuroLab UVa: fondo de nodos, enlace al índice y pie */
-html{background:radial-gradient(circle at 82% 8%,rgba(34,211,238,.10),transparent 45%),radial-gradient(circle at 12% 88%,rgba(167,139,250,.08),transparent 45%),#070b14;background-attachment:fixed}
-body{background:transparent!important}
-#nl-bg{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;display:block;background:transparent!important;border:0!important;border-radius:0!important}
-.nl-hd{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:.5rem}
-.nl-back{font-size:.72rem;color:#7dd3fc;border:1px solid rgba(56,189,248,.35);border-radius:9999px;padding:.25rem .7rem;text-decoration:none;white-space:nowrap;background:rgba(8,16,36,.55)}
-.nl-back:hover{background:rgba(14,116,144,.35);color:#e0f2fe}
-#nl-foot{margin-top:1.25rem;padding:.8rem 0 calc(.8rem + env(safe-area-inset-bottom));border-top:1px solid rgba(51,65,85,.6);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;font-size:.68rem;line-height:1.3;color:#64748b}
-#nl-foot a{color:inherit;text-decoration:none}#nl-foot a:hover{color:#cbd5e1}
-#nl-foot .nl-logos{display:flex;align-items:center;gap:.9rem}
-#nl-foot img{height:26px;width:auto;opacity:.85}#nl-foot img:hover{opacity:1}
-@media print{#nl-bg,#nl-foot,.nl-back{display:none!important}}
+td,th{padding:.2rem .35rem;text-align:left;border-bottom:1px solid #1e293b}
 </style></head>
 <body class="p-2 md:p-4 max-w-7xl mx-auto">
 <canvas id="nl-bg" aria-hidden="true"></canvas>
-<header class="mb-3 nl-hd"><h1 class="text-xl md:text-2xl font-bold text-white">EEGsim <span class="text-cyan-400 text-sm md:text-base font-normal">Laboratorio de simulación de EEG</span></h1><a class="nl-back nl-idx" href="../index.html" title="Volver al índice de simuladores">← NeuroLab UVa</a></header>
+<header class="mb-3"><div class="nl-hd"><h1 class="text-xl md:text-2xl font-bold text-white">BioDataSim <span class="text-cyan-400 text-sm md:text-base font-normal">Datos biomédicos</span></h1><a class="nl-back nl-idx" href="../index.html" title="Volver al índice de simuladores">← DataLab UVa</a></div>
+  <div class="card mt-2 text-sm"><b class="text-white">La idea en 20 segundos.</b> Las señales biomédicas se <b class="text-cyan-300">clasifican</b> según sus características, su fuente y su aplicación, y de ellas se extraen datos que hay que analizar con <b class="text-amber-300">estadística</b> para no engañarse con el azar. Los paneles recorren: <b>1</b> señales y su clasificación, <b>2</b> EEG, retinografía y evaluación de clasificadores, <b>3</b> redes de correlación, <b>4-5</b> estadística y <b>6</b> preguntas del temario.</div></header>
 <main class="grid lg:grid-cols-3 gap-3">
 <div class="lg:col-span-2 space-y-3">
 
@@ -46,7 +15,7 @@ body{background:transparent!important}
  <p class="text-sm mb-2">Una <b>señal</b> es la variación medible de una cantidad física respecto a una variable independiente (normalmente el tiempo). Si depende de dos variables de espacio es una <b>imagen</b>; con una tercera variable de tiempo, un <b>vídeo</b>. Se clasifican según sus <b>características</b> (punto de vista técnico), su <b>fuente</b> y su <b>aplicación</b>.</p>
  <div class="text-xs">① Por sus características: elige una señal, mira las herramientas y clasifícala</div><div id="sg1"></div>
  <canvas id="c1a" style="height:200px" aria-label="Señal en el tiempo"></canvas>
- <div class="grid sm:grid-cols-2 gap-2 mt-2"><canvas id="c1b" style="height:140px" aria-label="Autocorrelación"></canvas><canvas id="c1c" style="height:140px" aria-label="Espectro"></canvas></div>
+ <div class="grid sm:grid-cols-2 gap-2 mt-2"><canvas id="c1b" style="height:150px" aria-label="Autocorrelación"></canvas><canvas id="c1c" style="height:150px" aria-label="Espectro"></canvas></div>
  <p id="s1w" class="text-xs text-slate-300 mt-1"></p>
  <div class="try mt-2"><div class="text-xs mb-1" id="a1q"></div><div id="a1"></div><div id="a2"></div><div class="flex flex-wrap items-center gap-1"><button class="b" id="a1c">Comprobar</button><button class="b" id="a1m">🎯 Señal misteriosa</button><span id="a1s" class="text-xs ml-2"></span></div><p id="a1f" class="text-sm mt-1"></p></div>
  <div class="text-xs mt-3">② Por su fuente: ¿eléctrica, mecánica o bioquímica?</div>
@@ -56,12 +25,12 @@ body{background:transparent!important}
 <section class="card"><div class="hd"><span class="bd bg-amber-400">2</span>EEG, retinografía y evaluación de clasificadores</div>
  <p class="text-sm mb-2">Dos ejemplos en los que se aplicó <i>deep learning</i> con IA explicable (XAI): clasificar las <b>fases del sueño</b> con un EEG de un solo canal y valorar la <b>calidad y la gravedad</b> de retinografías. Para entender sus resultados hay que dominar las métricas de un clasificador.</p>
  <div class="text-xs">A · Tipos de onda: frecuencia y amplitud</div><div id="bw"></div>
- <canvas id="c2a" style="height:110px" aria-label="Ritmo EEG puro"></canvas>
+ <canvas id="c2a" style="height:150px" aria-label="Ritmo EEG puro"></canvas>
  <div class="grid sm:grid-cols-2 gap-3"><label class="text-xs block">Frecuencia: <b id="fqv" class="text-emerald-400">10</b> Hz<input id="fq" type="range" min=".5" max="45" step=".5" value="10"></label><label class="text-xs block">Amplitud: <b id="amv" class="text-emerald-400">30</b> µV<input id="am" type="range" min="5" max="120" step="1" value="30"></label></div>
  <p id="t2w" class="text-xs text-slate-300 mt-1"></p>
- <div class="text-xs mt-3">B · Fases del sueño: toca una fase o un tramo del hipnograma</div><div id="st"></div>
+ <div class="text-xs mt-3">B · Fases del sueño: haz clic en una fase o en un tramo del hipnograma</div><div id="st"></div>
  <canvas id="c2b" style="height:150px" aria-label="Época de EEG"></canvas>
- <div class="grid sm:grid-cols-2 gap-2 mt-2"><canvas id="c2c" style="height:140px" aria-label="Potencia por bandas"></canvas><canvas id="c2d" class="ia" style="height:140px" aria-label="Hipnograma"></canvas></div>
+ <div class="grid sm:grid-cols-2 gap-2 mt-2"><canvas id="c2c" style="height:150px" aria-label="Potencia por bandas"></canvas><canvas id="c2d" class="ia" style="height:150px" aria-label="Hipnograma"></canvas></div>
  <p id="t2" class="text-sm mt-1"></p>
  <div class="try mt-2"><div id="q2a"></div><div class="flex flex-wrap items-center gap-1"><button class="b" id="q2b">🎯 ¿Qué fase es? (época oculta)</button><span id="q2s" class="text-xs ml-2"></span></div><p id="q2f" class="text-sm mt-1"></p></div>
  <div class="text-xs mt-3">C · Evaluar un clasificador (control frente a patológico)</div>
@@ -76,30 +45,30 @@ body{background:transparent!important}
 <section class="card"><div class="hd"><span class="bd bg-violet-400">3</span>Redes de correlación (WGCNA)</div>
  <p class="text-sm mb-2">Una <b>red de correlación</b> convierte una tabla de sujetos × variables en un grafo: <b>nodo = variable</b>, <b>enlace = correlación</b> entre dos variables. Se usa con muchas variables y pocos sujetos (genes, neurociencia…) para explorar, reducir datos, agrupar y seleccionar características.</p>
  <div class="text-xs">① Red = grafo = matriz (edita la matriz de pesos)</div>
- <div class="grid sm:grid-cols-2 gap-3"><div class="overflow-x-auto" id="mx"></div><canvas id="c3t" style="height:170px" aria-label="Grafo de 4 nodos"></canvas></div>
+ <div class="grid sm:grid-cols-2 gap-3"><div class="overflow-x-auto" id="mx"></div><canvas id="c3t" style="height:200px" aria-label="Grafo de 4 nodos"></canvas></div>
  <div class="text-xs mt-3">② Genera una red: datos → imputación → transformación → correlación → umbral → visualización</div>
  <div class="grid sm:grid-cols-3 gap-x-3 gap-y-1"><div><div class="text-xs">Correlación</div><div id="me3"></div></div><div><div class="text-xs">Transformación</div><div id="tr3"></div></div><div><div class="text-xs">Datos faltantes</div><div id="im3"></div></div></div>
  <div class="grid sm:grid-cols-3 gap-3 mt-1"><label class="text-xs block">Sujetos n: <b id="n3v" class="text-emerald-400">60</b><input id="n3" type="range" min="8" max="300" value="60"></label><label class="text-xs block">Cohesión de los módulos: <b id="cov" class="text-emerald-400">0.6</b><input id="co" type="range" min="0" max=".9" step=".05" value=".6"></label><label class="text-xs block">Umbral |r|: <b id="t3v" class="text-emerald-400">0.4</b><input id="th3" type="range" min="0" max=".95" step=".01" value=".4"></label>
   <label class="text-xs block">% de valores perdidos: <b id="nav" class="text-emerald-400">0</b><input id="na" type="range" min="0" max="40" value="0"></label><label class="text-xs block">Regularización λ (glasso): <b id="lav" class="text-emerald-400">0.15</b><input id="la" type="range" min="0" max=".6" step=".01" value=".15"></label><div><div class="text-xs">Filtro de significación</div><div id="fl3"></div></div></div>
- <div class="grid sm:grid-cols-2 gap-3 mt-2"><div><canvas id="c3a" style="height:280px" aria-label="Matriz de correlación"></canvas></div><div><canvas id="c3b" style="height:280px" aria-label="Red de correlación"></canvas><div class="flex flex-wrap items-center gap-1 mt-1"><span class="text-xs text-slate-400">Disposición</span><span id="ly3"></span></div></div></div>
+ <div class="grid sm:grid-cols-2 gap-3 mt-2"><div><canvas id="c3a" style="height:300px" aria-label="Matriz de correlación"></canvas></div><div><canvas id="c3b" style="height:300px" aria-label="Red de correlación"></canvas><div class="flex flex-wrap items-center gap-1 mt-1"><span class="text-xs text-slate-400">Disposición</span><span id="ly3"></span></div></div></div>
  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 m mt-2" id="o3"></div><p id="t3" class="text-sm mt-1"></p>
  <div class="text-xs mt-3">③ Correlaciones indirectas o espurias: B y C dependen de A</div>
- <div class="grid sm:grid-cols-3 gap-3"><div class="sm:col-span-2"><canvas id="c3c" style="height:170px" aria-label="Correlación parcial"></canvas></div><div><label class="text-xs block">Ruido propio de B y C: <b id="niv" class="text-emerald-400">0.6</b><input id="ni" type="range" min=".1" max="2" step=".05" value=".6"></label><p id="t3c" class="text-xs text-slate-300 mt-2"></p></div></div>
+ <div class="grid sm:grid-cols-3 gap-3"><div class="sm:col-span-2"><canvas id="c3c" style="height:200px" aria-label="Correlación parcial"></canvas></div><div><label class="text-xs block">Ruido propio de B y C: <b id="niv" class="text-emerald-400">0.6</b><input id="ni" type="range" min=".1" max="2" step=".05" value=".6"></label><p id="t3c" class="text-xs text-slate-300 mt-2"></p></div></div>
  <div class="text-xs mt-3">④ Grupos desequilibrados: ¿red con todos los sujetos o con «bootstrapping»?</div>
- <div class="grid sm:grid-cols-2 gap-3 mt-1"><canvas id="c3d" style="height:210px" aria-label="Redes con y sin bootstrapping"></canvas><div><label class="text-xs block">Repeticiones B: <b id="bbv" class="text-emerald-400">200</b><input id="bb" type="range" min="1" max="500" value="200"></label><label class="text-xs block">Sujetos por grupo m: <b id="bmv" class="text-emerald-400">10</b><input id="bm" type="range" min="4" max="40" value="10"></label><p id="t3d" class="text-xs text-slate-300 mt-2"></p></div></div>
+ <div class="grid sm:grid-cols-2 gap-3 mt-1"><canvas id="c3d" style="height:250px" aria-label="Redes con y sin bootstrapping"></canvas><div><label class="text-xs block">Repeticiones B: <b id="bbv" class="text-emerald-400">200</b><input id="bb" type="range" min="1" max="500" value="200"></label><label class="text-xs block">Sujetos por grupo m: <b id="bmv" class="text-emerald-400">10</b><input id="bm" type="range" min="4" max="40" value="10"></label><p id="t3d" class="text-xs text-slate-300 mt-2"></p></div></div>
  <div class="key"><b>Clave:</b> pasos: <b>imputación</b> (media, mediana, moda, MICE…) → <b>transformaciones</b> (log, rangos) → <b>correlación</b> (Pearson, Spearman, parcial, <i>graphical lasso</i>…) → <b>visualización</b> (Fruchterman–Reingold o ForceAtlas2). La correlación parcial y el <i>glasso</i> eliminan correlaciones indirectas; el <i>bootstrapping</i> equilibra grupos con muy distinto tamaño. Con pocos sujetos y muchas variables aparecen enlaces por puro azar.</div></section>
 
 <section class="card"><div class="hd"><span class="bd bg-rose-400">4</span>Estadística (I): normalidad, homocedasticidad y comparación de grupos</div>
  <p class="text-sm mb-2">Antes de extraer características: comprobar la fuente, la naturaleza (continuos, discretos, categóricos), estructurar, <b>explorar</b> (histogramas, boxplots, normalidad, homocedasticidad, tests de hipótesis), limpiar e imputar, y normalizar o transformar.</p>
  <div class="text-xs">A · ¿Mi distribución es normal?</div><div id="dn"></div>
- <div class="grid sm:grid-cols-2 gap-3"><canvas id="c4a" style="height:180px" aria-label="Histograma"></canvas><canvas id="c4b" style="height:180px" aria-label="Gráfico Q-Q"></canvas></div>
+ <div class="grid sm:grid-cols-2 gap-3"><canvas id="c4a" style="height:200px" aria-label="Histograma"></canvas><canvas id="c4b" style="height:200px" aria-label="Gráfico Q-Q"></canvas></div>
  <label class="text-xs block mt-1">Tamaño muestral n: <b id="n4v" class="text-emerald-400">30</b><input id="n4" type="range" min="5" max="1000" value="30"></label>
  <p id="t4n" class="text-sm mt-1"></p>
  <div class="text-xs mt-3">B · ¿Mis grupos tienen la misma varianza (homocedasticidad)?</div>
  <div class="grid sm:grid-cols-3 gap-3"><div class="sm:col-span-2"><canvas id="c4c" style="height:150px" aria-label="Dos grupos"></canvas></div><div><label class="text-xs block">Razón de desviaciones B/A: <b id="rsv" class="text-emerald-400">1.5</b><input id="rs4" type="range" min="1" max="4" step=".1" value="1.5"></label><label class="text-xs block">n por grupo: <b id="n4hv" class="text-emerald-400">30</b><input id="n4h" type="range" min="5" max="300" value="30"></label><div class="text-xs">Datos</div><div id="dh"></div></div></div>
  <p id="t4h" class="text-sm mt-1"></p>
  <div class="text-xs mt-3">C · Comparar distribuciones: H₀ «las muestras tienen el mismo origen»</div>
- <div class="grid sm:grid-cols-2 gap-3"><div><canvas id="c4d" style="height:170px" aria-label="Grupos A y B"></canvas></div><div><canvas id="c4e" style="height:170px" aria-label="Distribución de p"></canvas></div></div>
+ <div class="grid sm:grid-cols-2 gap-3"><div><canvas id="c4d" style="height:200px" aria-label="Grupos A y B"></canvas></div><div><canvas id="c4e" style="height:200px" aria-label="Distribución de p"></canvas></div></div>
  <div class="grid sm:grid-cols-3 gap-3 mt-1"><label class="text-xs block">Efecto d (diferencia/DE): <b id="efv" class="text-emerald-400">0.5</b><input id="ef" type="range" min="0" max="2" step=".05" value=".5"></label><label class="text-xs block">n por grupo: <b id="n4cv" class="text-emerald-400">30</b><input id="n4c" type="range" min="4" max="500" value="30"></label><label class="text-xs block">Razón de DE B/A: <b id="srv" class="text-emerald-400">1</b><input id="sr" type="range" min=".5" max="3" step=".1" value="1"></label></div>
  <div class="grid sm:grid-cols-3 gap-x-3"><div><div class="text-xs">Datos</div><div id="d4c"></div></div><div><div class="text-xs">Muestras</div><div id="p4c"></div></div><div><div class="text-xs">Test</div><div id="t4c"></div></div></div>
  <label class="text-xs block" id="rpw">Correlación entre medidas repetidas ρ: <b id="rpv" class="text-emerald-400">0.6</b><input id="rp" type="range" min="0" max=".95" step=".05" value=".6"></label>
@@ -118,11 +87,11 @@ body{background:transparent!important}
   <div><label class="text-xs block">Correlación verdadera ρ: <b id="rhv" class="text-emerald-400">0.5</b><input id="rho" type="range" min="-1" max="1" step=".05" value=".5"></label><label class="text-xs block">n: <b id="n5v" class="text-emerald-400">30</b><input id="n5" type="range" min="4" max="500" value="30"></label><label class="text-xs block">Atípicos: <b id="ouv" class="text-emerald-400">0</b><input id="ou" type="range" min="0" max="5" value="0"></label><div class="text-xs">Forma de la relación</div><div id="sh5"></div></div></div>
  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 m mt-2" id="o5a"></div><p id="t5a" class="text-sm mt-1"></p>
  <div class="text-xs mt-3">B · Cuarteto de Anscombe: mismas estadísticas, datos muy distintos</div><div id="an"></div>
- <canvas id="c5b" style="height:210px" aria-label="Cuarteto de Anscombe"></canvas><p id="t5b" class="text-xs text-slate-300"></p>
+ <canvas id="c5b" style="height:250px" aria-label="Cuarteto de Anscombe"></canvas><p id="t5b" class="text-xs text-slate-300"></p>
  <div class="text-xs mt-3">C · El tamaño muestral y la «significación»</div>
- <div class="grid sm:grid-cols-3 gap-3"><div class="sm:col-span-2"><canvas id="c5c" style="height:190px" aria-label="r crítico frente a n"></canvas></div><div><label class="text-xs block">r observado: <b id="rov" class="text-emerald-400">0.3</b><input id="ro" type="range" min=".02" max=".95" step=".01" value=".3"></label><p id="t5c" class="text-xs text-slate-300 mt-2"></p></div></div>
+ <div class="grid sm:grid-cols-3 gap-3"><div class="sm:col-span-2"><canvas id="c5c" style="height:200px" aria-label="r crítico frente a n"></canvas></div><div><label class="text-xs block">r observado: <b id="rov" class="text-emerald-400">0.3</b><input id="ro" type="range" min=".02" max=".95" step=".01" value=".3"></label><p id="t5c" class="text-xs text-slate-300 mt-2"></p></div></div>
  <div class="text-xs mt-3">D · Asociación entre variables categóricas (χ²): edita la tabla</div>
- <div class="grid sm:grid-cols-2 gap-3"><div class="overflow-x-auto" id="ct"></div><canvas id="c5d" style="height:170px" aria-label="Frecuencias"></canvas></div><p id="t5d" class="text-sm mt-1"></p>
+ <div class="grid sm:grid-cols-2 gap-3"><div class="overflow-x-auto" id="ct"></div><canvas id="c5d" style="height:200px" aria-label="Frecuencias"></canvas></div><p id="t5d" class="text-sm mt-1"></p>
  <div class="key"><b>Clave:</b> H₀ del test de correlación: <b>no hay correlación (ρ = 0)</b>; se rechaza si p &lt; α. Un p pequeño dice que la relación <i>probablemente no es nula</i>, no que sea fuerte (mira r) ni que haya causalidad. Siempre hay que <b>dibujar</b> los datos: los atípicos y las relaciones no lineales engañan a Pearson.</div></section>
 
 <section class="card"><div class="hd"><span class="bd bg-sky-400">6</span>Preguntas del temario<span id="qs" class="text-xs text-slate-400 font-normal ml-1"></span></div>
@@ -142,8 +111,9 @@ body{background:transparent!important}
 </aside></main>
 
 <footer id="nl-foot">
-<span>BioDataSim · IA y Datos Biomédicos · Universidad de Valladolid</span>
-<div>© 2026 <a href="https://gib.uva.es/member.php?id=16" target="_blank" rel="noopener">Javier Gómez Pilar</a> · Universidad de Valladolid</div>
+<a class="nl-idx" href="../index.html">← DataLab UVa · Índice de simuladores</a>
+<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img src="../../img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img src="../../img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
+<div>© 2026 <a href="https://gib.uva.es/member.php?id=16" target="_blank" rel="noopener">Javier Gómez Pilar</a> · Grupo de Ingeniería Biomédica, Universidad de Valladolid</div>
 </footer>
 <script>
 // ====================== biblioteca estadística (sin dependencias) ======================
@@ -547,21 +517,6 @@ let rzT;addEventListener('resize',()=>{clearTimeout(rzT);rzT=setTimeout(()=>{CID
 
 
 </script>
-<script>
-/* NeuroLab UVa: fondo de nodos, enlaces al índice y logos (independiente del resto de la app) */
-(function(){
-var base=/\/apps\/[^\/]*$/i.test(location.pathname)?'../':'';
-document.querySelectorAll('.nl-idx').forEach(function(a){a.href=base+'index.html'});
-document.querySelectorAll('#nl-foot img').forEach(function(im){var f=im.getAttribute('data-f');im.src=base+f;
- im.onerror=function(){if(!im.dataset.t){im.dataset.t=1;im.src=(base?'':'../')+f}else{im.onerror=null;var sp=document.createElement('span');sp.textContent=im.alt;im.replaceWith(sp)}}});
-var c=document.getElementById('nl-bg');if(!c||!c.getContext)return;var x=c.getContext('2d'),W=0,H=0,P=[],last=0,still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-function build(){W=c.width=innerWidth;H=c.height=innerHeight;var n=Math.min(60,Math.floor(W*H/20000));P=[];for(var i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.4+1})}
-function draw(k){x.clearRect(0,0,W,H);for(var i=0;i<P.length;i++){var p=P[i];p.x+=p.vx*k;p.y+=p.vy*k;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,6.2832);x.fillStyle='rgba(56,189,248,.4)';x.fill();
- for(var j=i+1;j<P.length;j++){var q=P[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.strokeStyle='rgba(99,102,241,'+((1-d/120)*.18)+')';x.lineWidth=.8;x.stroke()}}}}
-function frame(t){requestAnimationFrame(frame);if(document.hidden||t-last<33)return;var k=Math.min(3,(t-last)/16.7);last=t;draw(k)}
-build();draw(0);if(!still)requestAnimationFrame(frame);
-addEventListener('resize',function(){if(Math.abs(innerWidth-W)>2||Math.abs(innerHeight-H)>150){build();draw(0)}else{c.width=W=innerWidth;c.height=H=innerHeight}});
-})();
-</script>
+<script src="../../shared/simulab.js"></script>
 <script src="../../shared/aula.js"></script>
 </body></html>

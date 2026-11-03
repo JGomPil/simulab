@@ -1,50 +1,18 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RadarSim · Laboratorio de radar</title><meta name="theme-color" content="#070b14">
 <script src="https://cdn.tailwindcss.com"></script>
-<style>
-body{background:#070b14;color:#cbd5e1;font-family:system-ui,sans-serif}
-canvas{width:100%;display:block;background:#0a1020;border-radius:.5rem;border:1px solid #1e293b}
-.ia{touch-action:none;cursor:crosshair}
-.card{background:#0d1424;border:1px solid #1e293b;border-radius:.75rem;padding:.7rem}
-.b{padding:.35rem .7rem;border-radius:.5rem;border:1px solid #334155;background:#111b30;font-size:.82rem;min-height:40px}
-.b.on{border-color:#22d3ee;color:#22d3ee;background:#06323d}
-input[type=range]{width:100%;accent-color:#34d399}
-summary{cursor:pointer;color:#22d3ee;font-weight:600;min-height:32px}
-.bd{display:inline-grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:9999px;color:#000;font-weight:700;margin-right:.4rem}
-.hd{font-weight:600;margin-bottom:.4rem;display:flex;align-items:center;flex-wrap:wrap;gap:.25rem}
-.sub{font-weight:600;color:#e2e8f0;font-size:.9rem;margin:.9rem 0 .3rem;padding-top:.6rem;border-top:1px dashed #1e293b}
-.key{background:#06281f;border:1px solid #047857;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;color:#a7f3d0;margin:.4rem 0}
-.try{background:#2a1a05;border:1px solid #b45309;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;color:#fde68a;margin:.4rem 0}
-.res{background:#0a1020;border:1px solid #1e293b;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;margin:.4rem 0}
-table.cmp{width:100%;font-size:.8rem;border-collapse:collapse}.cmp th,.cmp td{border:1px solid #1e293b;padding:.35rem .5rem;text-align:left;vertical-align:top}.cmp th{background:#111b30;color:#e2e8f0}
-.chip{display:inline-block;border:1px solid #334155;border-radius:9999px;padding:.1rem .6rem;font-size:.75rem;margin:.15rem .15rem .15rem 0;background:#111b30}
-.hidden{display:none!important}
-:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
-</style><style id="nl-style">
-/* Elementos comunes RadioNav UVa: fondo de nodos, enlace al índice y pie */
-html{background:radial-gradient(circle at 82% 8%,rgba(34,211,238,.10),transparent 45%),radial-gradient(circle at 12% 88%,rgba(167,139,250,.08),transparent 45%),#070b14;background-attachment:fixed}
-body{background:transparent!important}
-#nl-bg{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;display:block;background:transparent!important;border:0!important;border-radius:0!important}
-.nl-hd{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:.5rem}
-.nl-back{font-size:.72rem;color:#7dd3fc;border:1px solid rgba(56,189,248,.35);border-radius:9999px;padding:.25rem .7rem;text-decoration:none;white-space:nowrap;background:rgba(8,16,36,.55)}
-.nl-back:hover{background:rgba(14,116,144,.35);color:#e0f2fe}
-#nl-foot{margin-top:1.25rem;padding:.8rem 0 calc(.8rem + env(safe-area-inset-bottom));border-top:1px solid rgba(51,65,85,.6);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;font-size:.68rem;line-height:1.3;color:#64748b}
-#nl-foot a{color:inherit;text-decoration:none}#nl-foot a:hover{color:#cbd5e1}
-#nl-foot .nl-logos{display:flex;align-items:center;gap:.9rem}
-#nl-foot img{height:26px;width:auto;opacity:.85}#nl-foot img:hover{opacity:1}
-@media print{#nl-bg,#nl-foot,.nl-back{display:none!important}}
-</style>
+<link rel="stylesheet" href="../../shared/simulab.css">
 </head><body class="p-2 md:p-4 max-w-7xl mx-auto">
 <canvas id="nl-bg" aria-hidden="true"></canvas>
 
 <header class="mb-3"><div class="nl-hd"><h1 class="text-xl md:text-2xl font-bold text-white">RadarSim <span class="text-cyan-400 text-sm md:text-base font-normal">Antenas, radares de impulsos, MTI y radares de onda continua</span></h1><a class="nl-back nl-idx" href="../index.html" title="Volver al índice de simuladores">← RadioNav UVa</a></div>
-<div class="card mt-2 text-sm"><b class="text-white">La idea en 20 segundos.</b> Un radar <b class="text-cyan-300">emite</b> una onda y <b class="text-cyan-300">escucha el eco</b>. Del eco saca la <b class="text-violet-300">dirección</b> (según cómo recibe la antena), la <b class="text-amber-300">distancia</b> (por el tiempo que tarda en volver) y la <b class="text-emerald-300">velocidad</b> (por el efecto Doppler). Los cuatro paneles recorren el temario: <b>1</b> cómo se mide el ángulo, <b>2</b> radar de impulsos, <b>3</b> cómo se separa lo que se mueve de lo que está quieto (MTI) y <b>4</b> radares de onda continua.</div></header>
+  <div class="card mt-2 text-sm"><b class="text-white">La idea en 20 segundos.</b> Un radar <b class="text-cyan-300">emite</b> una onda y <b class="text-cyan-300">escucha el eco</b>. Del eco saca la <b class="text-violet-300">dirección</b> (según cómo recibe la antena), la <b class="text-amber-300">distancia</b> (por el tiempo que tarda en volver) y la <b class="text-emerald-300">velocidad</b> (por el efecto Doppler). Los cuatro paneles recorren el temario: <b>1</b> cómo se mide el ángulo, <b>2</b> radar de impulsos, <b>3</b> cómo se separa lo que se mueve de lo que está quieto (MTI) y <b>4</b> radares de onda continua.</div></header>
 <main class="grid lg:grid-cols-3 gap-3">
 <div class="lg:col-span-2 space-y-3">
 
  <section class="card"><div class="hd"><span class="bd bg-cyan-400">1</span>Antenas: ¿de dónde viene la señal?</div>
   <p class="text-sm mb-2">La antena es la que da la <b>dirección</b> del blanco. Hay varias técnicas para medir el ángulo de llegada de una señal (Tema 4). Elige una y mueve el blanco: la pantalla de la derecha muestra <b>qué mide el receptor</b> y a qué ángulo lo traduce.</p>
   <div id="m1" class="mb-1"></div><p id="d1" class="text-sm mb-2"></p>
-  <div class="grid sm:grid-cols-2 gap-3"><div><p class="text-xs text-slate-400" id="c1a">&nbsp;</p><canvas id="a1" style="height:310px" aria-label="Escena de antenas"></canvas></div><div><p class="text-xs text-slate-400" id="c1b">&nbsp;</p><canvas id="a2" style="height:310px" aria-label="Señal medida"></canvas></div></div>
+  <div class="grid sm:grid-cols-2 gap-3"><div><p class="text-xs text-slate-400" id="c1a">&nbsp;</p><canvas id="a1" style="height:350px" aria-label="Escena de antenas"></canvas></div><div><p class="text-xs text-slate-400" id="c1b">&nbsp;</p><canvas id="a2" style="height:350px" aria-label="Señal medida"></canvas></div></div>
   <div id="sl-a" class="grid sm:grid-cols-2 gap-x-4 mt-2"></div>
   <div class="flex flex-wrap gap-1"><button class="b" id="a1new">🎲 Repetir la medida (otro ruido)</button><button class="b hidden" id="a1opt"></button></div>
   <div id="t1a" class="res"></div><div class="key" id="k1"></div><div class="try" id="y1"></div></section>
@@ -52,9 +20,9 @@ body{background:transparent!important}
  <section class="card"><div class="hd"><span class="bd bg-amber-400">2</span>Radar de impulsos: τ, T, R<sub>max</sub> no ambigua y pulsos por blanco</div>
   <p class="text-sm mb-2">La señal del radar pulsado son <b>pulsos de RF de duración τ separados T</b>. Todo lo demás (alcance, resolución, pulsos por blanco) sale de esos dos tiempos.</p>
   <div class="sub" style="border:0;margin-top:.2rem">a) Frecuencia de repetición y distancia máxima no ambigua</div>
-  <p class="text-xs text-slate-400">Pulsos emitidos (cian, dibujados más anchos de lo real) y eco del blanco (ámbar). Eje = tiempo.</p><canvas id="s1" style="height:190px" aria-label="Tren de pulsos"></canvas>
+  <p class="text-xs text-slate-400">Pulsos emitidos (cian, dibujados más anchos de lo real) y eco del blanco (ámbar). Eje = tiempo.</p><canvas id="s1" style="height:200px" aria-label="Tren de pulsos"></canvas>
   <div id="sl-p1" class="grid sm:grid-cols-2 gap-x-4 mt-2"></div>
-  <p class="text-xs text-slate-400 mt-2">Eje de distancias: de 0 a R<sub>max</sub> (cada eco se coloca según el tiempo que tarda desde el <i>último</i> pulso)</p><canvas id="s1r" style="height:120px" aria-label="Eje de distancias"></canvas>
+  <p class="text-xs text-slate-400 mt-2">Eje de distancias: de 0 a R<sub>max</sub> (cada eco se coloca según el tiempo que tarda desde el <i>último</i> pulso)</p><canvas id="s1r" style="height:150px" aria-label="Eje de distancias"></canvas>
   <div id="sl-p1r" class="grid sm:grid-cols-2 gap-x-4 mt-2"></div><div id="t1" class="res"></div>
   <div class="key">💡 <b>Idea clave:</b> hay que esperar el eco antes de lanzar el siguiente pulso. Si el blanco está más lejos que <b>R<sub>max</sub> = c·T/2 = c/(2f<sub>p</sub>)</b>, su eco llega cuando ya se ha emitido otro pulso y se ve <i>más cerca de lo que está</i>. Por eso la <b>distancia útil</b> del radar debe ser menor que R<sub>max</sub>.</div>
   <div class="try">🧪 <b>Prueba esto:</b> con el blanco a 120 km, sube f<sub>p</sub> hasta que R<sub>max</sub> quede por debajo de 120 km: el blanco «salta» a otra distancia. Observa cómo la distancia útil deja de ser válida. Luego sube τ y fíjate en el ciclo de trabajo y la potencia media.</div>
@@ -66,7 +34,7 @@ body{background:transparent!important}
 
   <div class="sub">c) Pulsos que recibe cada blanco: N = (θ<sub>B</sub>/Ω)·f<sub>p</sub></div>
   <p class="text-sm mb-1">Mientras el haz barre un blanco (θ<sub>B</sub> = ancho a 3 dB en acimut, Ω = velocidad de giro) el blanco recibe varios pulsos. Se pueden <b>sumar</b> para detectar mejor.</p>
-  <p class="text-xs text-slate-400">Eje = acimut del haz respecto al blanco. Cada marca es un pulso emitido (cian = pulsos dentro del haz a 3 dB).</p><canvas id="s1c" style="height:170px" aria-label="Pulsos por blanco"></canvas>
+  <p class="text-xs text-slate-400">Eje = acimut del haz respecto al blanco. Cada marca es un pulso emitido (cian = pulsos dentro del haz a 3 dB).</p><canvas id="s1c" style="height:200px" aria-label="Pulsos por blanco"></canvas>
   <div id="sl-p1c" class="grid sm:grid-cols-3 gap-x-4 mt-2"></div><div class="flex flex-wrap gap-1"><button class="b" id="typ">📐 Valores típicos: 300 Hz, 1,5°, 5 rpm</button></div><div id="t1c" class="res"></div>
   <div class="key">💡 <b>Idea clave:</b> cuantos más pulsos por blanco, mejor detección. Pero un haz más estrecho o una antena más rápida dan <i>menos</i> pulsos, y subir f<sub>p</sub> para compensarlo reduce R<sub>max</sub>.</div>
   <div class="try">🧪 <b>Prueba esto:</b> pulsa «valores típicos» (N = 15). Sube el giro a 30 rpm: ¿cuántos pulsos quedan? ¿Qué f<sub>p</sub> necesitas para recuperar 15 y cuánto vale entonces R<sub>max</sub>?</div></section>
@@ -82,16 +50,16 @@ body{background:transparent!important}
 
   <div class="sub">b) El efecto mariposa y el cancelador de línea de retardo</div>
   <p class="text-sm mb-1">Si superponemos varios barridos consecutivos (amplitud frente a distancia), el clutter se ve siempre igual, pero el eco del blanco móvil <b>cambia de amplitud y de signo</b> en cada barrido: dibuja unas «alas», el <b>efecto mariposa</b>.</p>
-  <div class="grid sm:grid-cols-2 gap-3"><div><p class="text-xs text-slate-400">Ocho barridos superpuestos</p><canvas id="bf1" style="height:180px"></canvas></div><div><p class="text-xs text-slate-400">Tras el cancelador: cada barrido menos el anterior</p><canvas id="bf2" style="height:180px"></canvas></div></div>
+  <div class="grid sm:grid-cols-2 gap-3"><div><p class="text-xs text-slate-400">Ocho barridos superpuestos</p><canvas id="bf1" style="height:200px"></canvas></div><div><p class="text-xs text-slate-400">Tras el cancelador: cada barrido menos el anterior</p><canvas id="bf2" style="height:200px"></canvas></div></div>
   <div class="card mt-2" style="background:#0a1020"><p class="text-xs text-slate-400 mb-1">El <b>cancelador de línea de retardo</b> (DLC): la señal se retarda un periodo T entre pulsos y se resta de la que llega ahora.</p>
    <svg viewBox="0 0 520 90" class="w-full" style="max-height:110px" role="img" aria-label="Esquema del cancelador de línea de retardo"><g font-family="system-ui,sans-serif" font-size="11" fill="#cbd5e1" stroke-width="1.5"><line x1="10" y1="45" x2="90" y2="45" stroke="#22d3ee"/><circle cx="90" cy="45" r="3" fill="#22d3ee" stroke="none"/><line x1="90" y1="45" x2="90" y2="20" stroke="#22d3ee"/><line x1="90" y1="20" x2="330" y2="20" stroke="#22d3ee"/><line x1="90" y1="45" x2="150" y2="45" stroke="#a78bfa"/><rect x="150" y="30" width="120" height="30" rx="5" fill="#111b30" stroke="#a78bfa"/><text x="210" y="49" text-anchor="middle">retardo T = 1/f_p</text><line x1="270" y1="45" x2="330" y2="45" stroke="#a78bfa"/><circle cx="350" cy="32" r="15" fill="#111b30" stroke="#34d399"/><text x="350" y="37" text-anchor="middle" font-size="16">Σ</text><line x1="330" y1="20" x2="338" y2="25" stroke="#22d3ee"/><line x1="330" y1="45" x2="340" y2="40" stroke="#a78bfa"/><text x="322" y="16" text-anchor="end" fill="#22d3ee">+</text><text x="322" y="58" text-anchor="end" fill="#a78bfa">−</text><line x1="365" y1="32" x2="440" y2="32" stroke="#34d399"/><text x="445" y="36" fill="#34d399">salida</text><text x="10" y="38" fill="#22d3ee">entrada</text><text x="260" y="85" fill="#94a3b8" text-anchor="middle">salida = eco actual − eco del pulso anterior</text></g></svg></div>
   <p class="text-sm mt-2 mb-1"><b>Un solo punto de distancia, pulso a pulso.</b> La curva es el Doppler real del blanco; los puntos son lo que el radar mide, <b>una muestra por pulso</b>. El cancelador resta cada muestra de la anterior (barras de abajo).</p>
-  <canvas id="bf3" style="height:230px" aria-label="Muestras pulso a pulso"></canvas>
+  <canvas id="bf3" style="height:250px" aria-label="Muestras pulso a pulso"></canvas>
   <div id="sl-m2" class="grid sm:grid-cols-2 gap-x-4 mt-2"></div><div class="flex flex-wrap gap-1"><button class="b" id="blind">🙈 Poner el blanco en la primera velocidad ciega</button><button class="b" id="half">⭐ Poner el blanco en la velocidad de máxima respuesta</button></div><div id="t3b" class="res"></div>
 
   <div class="sub">c) Velocidades ciegas</div>
   <p class="text-sm mb-1">La respuesta del cancelador es <b>|2·sen(π·f<sub>d</sub>·T)|</b>. Se anula cuando f<sub>d</sub> es múltiplo de f<sub>p</sub>, es decir, para <b>v = n·λ·f<sub>p</sub>/2</b>: el blanco se mueve, pero entre pulso y pulso su eco vuelve a ser idéntico.</p>
-  <canvas id="bf4" style="height:170px" aria-label="Respuesta del cancelador"></canvas>
+  <canvas id="bf4" style="height:200px" aria-label="Respuesta del cancelador"></canvas>
   <div class="key">💡 <b>Idea clave:</b> el MTI mide el Doppler «a trozos», una muestra por pulso (a f<sub>p</sub>). Por eso aparecen velocidades ciegas, que el CW no tiene. Para alejarlas: <b>subir f<sub>p</sub></b> (a costa de reducir R<sub>max</sub>), usar dos f<sub>p</sub> alternadas o varias frecuencias portadoras.</div>
   <div class="try">🧪 <b>Prueba esto:</b> pulsa «primera velocidad ciega»: los puntos de abajo quedan todos a la misma altura y las barras desaparecen. Después sube f<sub>p</sub> y mira cómo se aleja la velocidad ciega… y cuánto baja R<sub>max</sub>. Cambia también la banda (panel lateral): ¿qué pasa con λ y con v<sub>1</sub>?</div></section>
 
@@ -102,28 +70,28 @@ body{background:transparent!important}
   <div class="cw" data-m="0">
    <p class="text-sm mb-2"><b>CW simple.</b> Mide <b>velocidad</b>: el eco vuelve con otra frecuencia, <b>f<sub>d</sub> = 2·v<sub>r</sub>/λ = 2·v<sub>r</sub>·f<sub>0</sub>/c</b>. Solo cuenta la parte de la velocidad que va hacia el radar o desde él (v<sub>r</sub> = v·cos α). Pero no sabe a qué distancia está el blanco.</p>
    <div class="grid sm:grid-cols-2 gap-3"><div><p class="text-xs text-slate-400">Vista desde arriba (el blanco se mueve en la dirección de la flecha)</p><canvas id="s3" style="aspect-ratio:16/10" aria-label="Escena Doppler"></canvas></div>
-   <div><p class="text-xs text-slate-400">Frecuencia emitida (cian) y recibida (ámbar)</p><canvas id="s3b" style="height:100px"></canvas><p class="text-xs text-slate-400 mt-1">Tono Doppler a la salida del receptor</p><canvas id="s3c" style="height:90px"></canvas></div></div>
+   <div><p class="text-xs text-slate-400">Frecuencia emitida (cian) y recibida (ámbar)</p><canvas id="s3b" style="height:100px"></canvas><p class="text-xs text-slate-400 mt-1">Tono Doppler a la salida del receptor</p><canvas id="s3c" style="height:100px"></canvas></div></div>
    <div id="sl-c0" class="grid sm:grid-cols-3 gap-x-4 mt-2"></div><div id="t4a" class="res"></div>
    <div class="key">💡 <b>Idea clave:</b> el CW mide <b>velocidad</b> directamente y sin velocidades ciegas. Pero la <b>distancia no se puede medir</b>: cambiarla solo desplaza la fase del tono (y la fase se repite cada λ/2, centímetros). Si el blanco va de lado (α = 90°), el Doppler es cero.</div>
    <div class="try">🧪 <b>Prueba esto:</b> cambia la distancia R y comprueba que el desplazamiento Doppler no cambia, solo la fase del tono. Pon α a 90° y mira cómo desaparece. Cambia la banda en el panel lateral.</div></div>
 
   <div class="cw hidden" data-m="1">
    <p class="text-sm mb-2"><b>CW-FM.</b> Si la frecuencia sube y baja en <b>triángulo</b> (excursión Δf, frecuencia de modulación f<sub>m</sub>), el eco vuelve con un retardo y el receptor ve una diferencia de frecuencias constante, la <b>frecuencia de batido</b>: <b>f<sub>bR</sub> = 4·Δf·f<sub>m</sub>·R/c</b>. Si el blanco se mueve, el Doppler se suma en una rampa y se resta en la otra.</p>
-   <p class="text-xs text-slate-400">Frecuencia frente al tiempo: emitida (cian) y eco (ámbar). Retardo y Doppler exagerados.</p><canvas id="s5" style="height:190px"></canvas>
-   <p class="text-xs text-slate-400 mt-1">Frecuencia de batido en cada rampa (f<sub>b</sub>′ en la subida, f<sub>b</sub>″ en la bajada)</p><canvas id="s5b" style="height:120px"></canvas>
+   <p class="text-xs text-slate-400">Frecuencia frente al tiempo: emitida (cian) y eco (ámbar). Retardo y Doppler exagerados.</p><canvas id="s5" style="height:200px"></canvas>
+   <p class="text-xs text-slate-400 mt-1">Frecuencia de batido en cada rampa (f<sub>b</sub>′ en la subida, f<sub>b</sub>″ en la bajada)</p><canvas id="s5b" style="height:150px"></canvas>
    <div id="sl-c1" class="grid sm:grid-cols-2 gap-x-4 mt-2"></div><div id="t4b" class="res"></div>
    <div class="key">💡 <b>Idea clave:</b> con las dos rampas se separan distancia y velocidad: la <b>media</b> de los batidos da la distancia y su <b>semidiferencia</b> da el Doppler. Más Δf = más resolución en distancia (pero más ancho de banda). Aplicación clásica: el altímetro.</div>
    <div class="try">🧪 <b>Prueba esto:</b> con v = 0 las dos rampas dan el mismo batido. Mueve v: f<sub>b</sub>′ y f<sub>b</sub>″ se separan, pero su media (la distancia) no cambia.</div></div>
 
   <div class="cw hidden" data-m="2">
    <p class="text-sm mb-2"><b>CW de múltiples frecuencias.</b> Se emiten dos frecuencias separadas Δf y se compara la fase de sus ecos: <b>Δφ = 4π·Δf·R/c</b>. Con una sola frecuencia la fase da la vuelta cada λ/2 (¡centímetros!). Con Δf pequeño, la diferencia solo da la vuelta cada <b>R<sub>max</sub> = c/(2Δf)</b>.</p>
-   <canvas id="s6" style="height:190px" aria-label="Fase frente a distancia"></canvas><div id="sl-c2" class="grid sm:grid-cols-2 gap-x-4 mt-2"></div><div id="t4c" class="res"></div>
+   <canvas id="s6" style="height:200px" aria-label="Fase frente a distancia"></canvas><div id="sl-c2" class="grid sm:grid-cols-2 gap-x-4 mt-2"></div><div id="t4c" class="res"></div>
    <div class="key">💡 <b>Idea clave:</b> hay compromiso. Con Δf grande, un pequeño error de fase da muy poco error de distancia (precisión), pero la medida se repite antes (R<sub>max</sub> menor; Δf &lt; c/(2R<sub>max</sub>)). Y solo funciona con <b>un único blanco</b> (telurómetro, guiado de misiles).</div>
    <div class="try">🧪 <b>Prueba esto:</b> sube R por encima de R<sub>max</sub> y comprueba que el radar «lee» una distancia más corta. Prueba Δf pequeño y grande y compara R<sub>max</sub> con el error de distancia.</div></div>
 
   <div class="cw hidden" data-m="3">
    <p class="text-sm mb-2"><b>Navegación Doppler.</b> Una aeronave apunta un haz hacia el suelo con un ángulo γ respecto a la horizontal (habitualmente 65°–70°). El eco del suelo tiene un desplazamiento <b>f<sub>d</sub> = 2·(f<sub>0</sub>/c)·v·cos γ</b>, de donde se calcula la <b>velocidad respecto al suelo</b> sin ninguna estación en tierra. Un haz da una sola componente; con varios haces se obtiene el vector velocidad (y el ángulo de <b>deriva</b>). El sistema <b>Janus</b> usa 4 haces: 2 hacia delante y 2 hacia atrás.</p>
-   <div class="grid sm:grid-cols-2 gap-3"><div><p class="text-xs text-slate-400">Vista desde arriba: haces (puntos en el suelo) y velocidad respecto al suelo</p><canvas id="s7" style="height:290px" aria-label="Haces Janus"></canvas></div><div><p class="text-xs text-slate-400">Desplazamiento Doppler de cada haz (los delanteros suben, los traseros bajan)</p><canvas id="s7b" style="height:290px" aria-label="Doppler de cada haz"></canvas></div></div>
+   <div class="grid sm:grid-cols-2 gap-3"><div><p class="text-xs text-slate-400">Vista desde arriba: haces (puntos en el suelo) y velocidad respecto al suelo</p><canvas id="s7" style="height:300px" aria-label="Haces Janus"></canvas></div><div><p class="text-xs text-slate-400">Desplazamiento Doppler de cada haz (los delanteros suben, los traseros bajan)</p><canvas id="s7b" style="height:300px" aria-label="Doppler de cada haz"></canvas></div></div>
    <div id="sl-c3" class="grid sm:grid-cols-2 gap-x-4 mt-2"></div><div id="t4d" class="res"></div>
    <div class="key">💡 <b>Idea clave:</b> con un solo haz, un cabeceo o una velocidad vertical de la aeronave se confunden con velocidad horizontal. Con haces delante <i>y</i> detrás, esos errores se <b>restan</b> y se anulan: por eso Janus es más preciso. Con 2 haces se simplifica el sistema, pero hace falta otra fuente para la tercera coordenada.</div>
    <div class="try">🧪 <b>Prueba esto:</b> sube el cabeceo a 4° con v<sub>vert</sub> = 0: el haz único se equivoca más de un 10 %, Janus casi nada. Luego pon una velocidad vertical y compara. Mueve la deriva y mira cómo los haces izquierdo y derecho dejan de ser iguales.</div></div>
@@ -161,7 +129,7 @@ body{background:transparent!important}
 </aside></main>
 <footer id="nl-foot">
 <a class="nl-idx" href="../index.html">← RadioNav UVa · Índice de simuladores</a>
-<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img data-f="img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img data-f="img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
+<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img src="../../img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img src="../../img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
 <div>© 2026 <a href="https://gib.uva.es/member.php?id=16" target="_blank" rel="noopener">Javier Gómez Pilar</a> · Grupo de Ingeniería Biomédica, Universidad de Valladolid</div>
 </footer>
 <script>
@@ -441,21 +409,6 @@ setMode1(0);qnew();all();
 function loop(now){requestAnimationFrame(loop);if(document.hidden)return;if(A.mode==0||A.mode==4)p1(now);ppiLoop(now)}
 requestAnimationFrame(loop);addEventListener('resize',all);
 </script>
-<script>
-/* RadioNav UVa: fondo de nodos, enlaces al índice y logos (independiente del resto de la app) */
-(function(){
-var base=/\/apps\/[^\/]*$/i.test(location.pathname)?'../':'';
-document.querySelectorAll('.nl-idx').forEach(function(a){a.href=base+'index.html'});
-document.querySelectorAll('#nl-foot img').forEach(function(im){var f=im.getAttribute('data-f');im.src=base+f;
- im.onerror=function(){if(!im.dataset.t){im.dataset.t=1;im.src=(base?'':'../')+f}else{im.onerror=null;var sp=document.createElement('span');sp.textContent=im.alt;im.replaceWith(sp)}}});
-var c=document.getElementById('nl-bg');if(!c||!c.getContext)return;var x=c.getContext('2d'),W=0,H=0,P=[],last=0,still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-function build(){W=c.width=innerWidth;H=c.height=innerHeight;var n=Math.min(60,Math.floor(W*H/20000));P=[];for(var i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.4+1})}
-function draw(k){x.clearRect(0,0,W,H);for(var i=0;i<P.length;i++){var p=P[i];p.x+=p.vx*k;p.y+=p.vy*k;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,6.2832);x.fillStyle='rgba(56,189,248,.4)';x.fill();
- for(var j=i+1;j<P.length;j++){var q=P[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.strokeStyle='rgba(99,102,241,'+((1-d/120)*.18)+')';x.lineWidth=.8;x.stroke()}}}}
-function frame(t){requestAnimationFrame(frame);if(document.hidden||t-last<33)return;var k=Math.min(3,(t-last)/16.7);last=t;draw(k)}
-build();draw(0);if(!still)requestAnimationFrame(frame);
-addEventListener('resize',function(){if(Math.abs(innerWidth-W)>2||Math.abs(innerHeight-H)>150){build();draw(0)}else{c.width=W=innerWidth;c.height=H=innerHeight}});
-})();
-</script>
+<script src="../../shared/simulab.js"></script>
 <script src="../../shared/aula.js"></script>
 </body></html>

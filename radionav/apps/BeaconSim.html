@@ -1,40 +1,8 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BeaconSim · Radiofaros: VOR y DME</title><meta name="theme-color" content="#070b14">
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="../../shared/simulab.css">
 <style>
-body{background:#070b14;color:#cbd5e1;font-family:system-ui,sans-serif}
-canvas{width:100%;display:block;background:#0a1020;border-radius:.5rem;border:1px solid #1e293b}
-.ia{touch-action:none;cursor:crosshair}
-.card{background:#0d1424;border:1px solid #1e293b;border-radius:.75rem;padding:.7rem}
-.b{padding:.35rem .7rem;border-radius:.5rem;border:1px solid #334155;background:#111b30;font-size:.82rem;min-height:40px}
-.b.on{border-color:#22d3ee;color:#22d3ee;background:#06323d}
-.b:disabled{opacity:.4}
-input[type=range]{width:100%;accent-color:#34d399}
-input[type=number]{background:#0a1020;border:1px solid #334155;border-radius:.4rem;padding:.3rem .5rem;width:6rem;color:#e2e8f0}
-summary{cursor:pointer;color:#22d3ee;font-weight:600;min-height:32px}
-.bd{display:inline-grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:9999px;color:#000;font-weight:700;margin-right:.4rem}
-.hd{font-weight:600;margin-bottom:.4rem;display:flex;align-items:center;flex-wrap:wrap;gap:.25rem}
-.key{background:#06281f;border:1px solid #047857;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;color:#a7f3d0;margin:.4rem 0}
-.try{background:#2a1a05;border:1px solid #b45309;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;color:#fde68a;margin:.4rem 0}
-.m b{color:#34d399;font-size:1.15rem}.m small{display:block;color:#94a3b8;font-size:.68rem;line-height:1.1}
-.led{font-family:ui-monospace,monospace;color:#fb923c;background:#1a0f08;border:2px solid #44403c;border-radius:.4rem;padding:.2rem .5rem;font-size:1.3rem;letter-spacing:.05em}
-.blk{border:1px solid #334155;border-radius:.4rem;padding:.25rem .45rem;background:#0a1020;font-size:.72rem;text-align:center}.blk b{color:#34d399}
-.q{display:block;width:100%;text-align:left;margin-bottom:.3rem}.q.ok{border-color:#34d399;color:#34d399;background:#064e3b55}.q.ko{border-color:#f87171;color:#f87171;background:#7f1d1d55}
-table{width:100%;font-size:.78rem}td,th{padding:.2rem .35rem;text-align:left;border-bottom:1px solid #1e293b}
-:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
-</style>
-<style id="nl-style">
-/* Elementos comunes NeuroLab UVa: fondo de nodos, enlace al índice y pie */
-html{background:radial-gradient(circle at 82% 8%,rgba(34,211,238,.10),transparent 45%),radial-gradient(circle at 12% 88%,rgba(167,139,250,.08),transparent 45%),#070b14;background-attachment:fixed}
-body{background:transparent!important}
-#nl-bg{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;display:block;background:transparent!important;border:0!important;border-radius:0!important}
-.nl-hd{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:.5rem}
-.nl-back{font-size:.72rem;color:#7dd3fc;border:1px solid rgba(56,189,248,.35);border-radius:9999px;padding:.25rem .7rem;text-decoration:none;white-space:nowrap;background:rgba(8,16,36,.55)}
-.nl-back:hover{background:rgba(14,116,144,.35);color:#e0f2fe}
-#nl-foot{margin-top:1.25rem;padding:.8rem 0 calc(.8rem + env(safe-area-inset-bottom));border-top:1px solid rgba(51,65,85,.6);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;font-size:.68rem;line-height:1.3;color:#64748b}
-#nl-foot a{color:inherit;text-decoration:none}#nl-foot a:hover{color:#cbd5e1}
-#nl-foot .nl-logos{display:flex;align-items:center;gap:.9rem}
-#nl-foot img{height:26px;width:auto;opacity:.85}#nl-foot img:hover{opacity:1}
-@media print{#nl-bg,#nl-foot,.nl-back{display:none!important}}
+td,th{padding:.2rem .35rem;text-align:left;border-bottom:1px solid #1e293b}
 </style></head><body class="p-2 md:p-4 max-w-7xl mx-auto">
 <canvas id="nl-bg" aria-hidden="true"></canvas>
 <header class="mb-3"><div class="nl-hd"><h1 class="text-xl md:text-2xl font-bold text-white">BeaconSim <span class="text-cyan-400 text-sm md:text-base font-normal">Radiofaros: VOR, VOR-Doppler y DME</span></h1><a class="nl-back nl-idx" href="../index.html" title="Volver al índice de simuladores">← RadioNav UVa</a></div>
@@ -54,12 +22,12 @@ body{background:transparent!important}
  <div class="flex flex-wrap items-center gap-1 mt-1"><button class="b" id="p1sim">▶ Ver la evolución</button><label class="text-xs ml-2"><input type="checkbox" id="pxe"> Modo ejercicio (ocultar la solución)</label><button class="b" id="p1rnd">🎲 Problema aleatorio</button></div>
  <div id="p1x" class="try hidden"></div>
  <div id="p1t" class="text-sm mt-2"></div>
- <canvas id="c1c" style="height:190px;margin-top:8px" aria-label="Reglas 1 y 2 en función de θ"></canvas>
+ <canvas id="c1c" style="height:200px;margin-top:8px" aria-label="Reglas 1 y 2 en función de θ"></canvas>
  <div id="p1s" class="key mt-2"></div></section>
 
 <section class="card"><div class="hd"><span class="bd bg-amber-400">2</span>VOR: modulación y demodulación paso a paso</div>
  <p class="text-sm mb-2">La antena emite un diagrama en <b>cardioide</b> (<i>V = V₀(1 + cos φ)</i>) que <b>gira a 30 vueltas por segundo</b>. Un avión en el radial α ve su intensidad subir y bajar 30 veces por segundo con un retardo proporcional a α respecto a una referencia en fase con el norte. Debajo recorres, paso a paso, cómo se <b>construye</b> la señal VOR y cómo el receptor la <b>demodula</b> (los pasos de la práctica de MATLAB®).</p>
- <div class="grid sm:grid-cols-2 gap-3"><div><canvas id="c2a" style="height:260px" aria-label="Cardioide giratoria"></canvas></div>
+ <div class="grid sm:grid-cols-2 gap-3"><div><canvas id="c2a" style="height:300px" aria-label="Cardioide giratoria"></canvas></div>
   <div class="text-sm"><label class="text-xs block">Radial del avión α: <b id="a2v" class="text-emerald-400">53</b>°<input id="a2" type="range" min="0" max="359" value="53"></label>
    <div class="text-xs mt-1">Cámara lenta (en la realidad: 30 vueltas/s)</div><div id="rs"></div>
    <p class="text-xs text-slate-400">La curva verde de abajo es lo que recibe el avión; la marca amarilla indica el instante en que la cardioide apunta al norte. El retardo entre la marca y el máximo es el ángulo.</p></div></div>
@@ -69,12 +37,12 @@ body{background:transparent!important}
  <div class="grid sm:grid-cols-3 gap-x-3 mt-1"><div><div class="text-xs">Ventana de tiempo</div><div id="tw"></div></div><div><div class="text-xs">Rango del espectro</div><div id="fw"></div></div><div><div class="text-xs">Moduladora de la FM</div><div id="fmm"></div></div></div>
  <canvas id="c2b" class="ia" style="height:250px;margin-top:6px" aria-label="Señal en el tiempo"></canvas>
  <p id="m2m" class="text-sm mt-1"></p>
- <canvas id="c2c" style="height:210px;margin-top:6px" aria-label="Espectro de la señal"></canvas>
+ <canvas id="c2c" style="height:250px;margin-top:6px" aria-label="Espectro de la señal"></canvas>
  <div class="key"><b>Clave:</b> <i>v<sub>r</sub>(t) = cos(ω<sub>c</sub>t)·[1 + m₁ sen(ω<sub>m</sub>t − α) + m₂ cos(ω<sub>u</sub>t + β sen ω<sub>m</sub>t) + f(t) cos(ω<sub>i</sub>t)]</i> con m₁ = m₂ = 0,3 · f<sub>m</sub> = 30 Hz · f<sub>u</sub> = 9960 Hz · β = 16 · f<sub>i</sub> = 1020 Hz (Morse; no se incluye aquí). Para la simulación se usa f<sub>c</sub> = 112 kHz (en la realidad 112 MHz) y f<sub>s</sub> = 1120 kHz. El radial es la <b>diferencia de fase</b> entre las dos señales de 30 Hz.</div></section>
 
 <section class="card"><div class="hd"><span class="bd bg-violet-400">3</span>El indicador VOR: OBS, CDI y TO/FROM</div>
  <p class="text-sm mb-2">Gira el <b>OBS</b> para elegir el radial. El <b>CDI</b> (aguja) te dice hacia dónde está esa ruta y el indicador <b>TO/FROM</b> resuelve la ambigüedad de 180°. <b>Vuela tú</b> con los controles de rumbo.</p>
- <div class="grid sm:grid-cols-2 gap-3"><div><canvas id="c3a" class="ia" style="height:290px" aria-label="Indicador VOR"></canvas></div><div><canvas id="c3b" style="height:290px" aria-label="Mapa de vuelo"></canvas></div></div>
+ <div class="grid sm:grid-cols-2 gap-3"><div><canvas id="c3a" class="ia" style="height:300px" aria-label="Indicador VOR"></canvas></div><div><canvas id="c3b" style="height:300px" aria-label="Mapa de vuelo"></canvas></div></div>
  <div class="grid sm:grid-cols-2 gap-3 mt-2"><label class="text-xs block">OBS (ruta seleccionada): <b id="obv" class="text-emerald-400">345</b>°<input id="ob" type="range" min="0" max="359" value="345"></label>
   <label class="text-xs block">Rumbo objetivo del avión: <b id="hdv" class="text-emerald-400">90</b>°<input id="hd" type="range" min="0" max="359" value="90"></label></div>
  <div class="flex flex-wrap items-center gap-1 mt-1"><button class="b" id="fy">▶ Volar</button><button class="b" id="fr">↺ Reiniciar</button><span class="text-xs text-slate-400">Velocidad</span><span id="fs"></span><button class="b" id="chb">🎯 Reto: intercepta el radial</button></div>
@@ -82,25 +50,25 @@ body{background:transparent!important}
  <div class="key"><b>Clave:</b> aguja a la izquierda → la ruta está a tu izquierda → vira a la izquierda; aguja centrada → estás sobre el radial. Plena escala = 10° (2° por punto). OFF = fuera de cobertura, mal sintonizado o cono de silencio.</div></section>
 <section class="card"><div class="hd"><span class="bd bg-emerald-400">4</span>Una estación, muchos aviones: búsqueda y seguimiento</div>
  <p class="text-sm mb-2">Todas las aeronaves usan <b>la misma frecuencia</b>. Cada una reconoce <i>sus</i> respuestas porque llegan siempre con el <b>mismo retardo</b> respecto a sus interrogaciones (que van con intervalos irregulares), mientras que las de los demás caen en retardos aleatorios. Recuerda: el avión mide t = 2d/c + 50 µs (12,36 µs por milla náutica de distancia + 50 µs de retardo de la estación). Pulsa <b>Interrogar</b> y mira cómo aparece la coincidencia.</p>
- <canvas id="c6a" style="height:290px" aria-label="Trazas de respuestas y coincidencias"></canvas>
+ <canvas id="c6a" style="height:300px" aria-label="Trazas de respuestas y coincidencias"></canvas>
  <div class="flex flex-wrap items-center gap-1 mt-2"><button class="b" id="i6">📡 Interrogar</button><button class="b" id="a6">▶ Automático</button><button class="b" id="z6">↺ Reiniciar búsqueda</button><label class="text-xs ml-2"><input type="checkbox" id="g6" checked> Marcar mis respuestas en verde</label><span id="m6" class="text-xs ml-auto"></span></div>
  <label class="text-xs block mt-2">Distancia horizontal de tu avión a la estación: <b id="dd6v" class="text-emerald-400">39</b> NM (retardo = 12,36 µs/NM · d + 50 µs)<input id="dd6" type="range" min="2" max="190" step=".5" value="39"></label><div class="grid sm:grid-cols-3 gap-3 mt-2"><label class="text-xs block">Aviones usando la estación: <b id="n6v" class="text-emerald-400">100</b><input id="n6" type="range" min="1" max="150" value="100"></label>
   <label class="text-xs block">Aviones en búsqueda: <b id="p6v" class="text-emerald-400">5</b> %<input id="p6" type="range" min="0" max="60" value="5"></label>
   <label class="text-xs block">Coincidencias para enganchar: <b id="k6v" class="text-emerald-400">4</b> de 8<input id="k6" type="range" min="2" max="7" value="4"></label></div>
- <div class="grid sm:grid-cols-2 gap-3 mt-2"><div><canvas id="c6b" style="height:210px" aria-label="Eficiencia frente al número de aviones"></canvas></div><div class="grid grid-cols-2 gap-2 m content-start" id="o6"></div></div>
+ <div class="grid sm:grid-cols-2 gap-3 mt-2"><div><canvas id="c6b" style="height:250px" aria-label="Eficiencia frente al número de aviones"></canvas></div><div class="grid grid-cols-2 gap-2 m content-start" id="o6"></div></div>
  <div class="key"><b>Clave:</b> en <b>búsqueda</b>: 150 interrogaciones/s y ventana de 2400 µs (200 NM); en <b>seguimiento</b>: 24 interrogaciones/s y ventana de 20 µs. Con 95 % de aviones en seguimiento: 0,05·150 + 0,95·24 = 30 int/s de media. Tras cada interrogación la estación queda ciega 60 µs (anti-multitrayecto), por lo que la eficiencia nunca es del 100 %; además, cada 37,5 s o 75 s transmite su identificación Morse (1350 Hz) y el equipo del avión <b>trabaja por memoria</b>.</div></section>
 <section class="card"><div class="hd"><span class="bd bg-sky-400">5</span>DME/P: precisión para aproximación y aterrizaje</div>
  <p class="text-sm mb-2">Cerca del aeropuerto, ±100 m es demasiado. El DME/P usa pulsos con <b>flanco de subida más empinado</b> y, en aproximación final, detecta el pulso <b>al principio</b> con la técnica <b>DAC</b> (<i>Delay, Attenuate and Compare</i>): se compara una copia retardada con una copia atenuada y se dispara donde se cruzan.</p>
- <canvas id="c7a" style="height:270px" aria-label="Pulsos DME/N y DME/P y detector DAC"></canvas>
+ <canvas id="c7a" style="height:300px" aria-label="Pulsos DME/N y DME/P y detector DAC"></canvas>
  <div class="grid sm:grid-cols-2 gap-3 mt-2"><label class="text-xs block">Atenuación A: <b id="avv" class="text-emerald-400">-6</b> dB<input id="av" type="range" min="-14" max="-1" step=".5" value="-6"></label>
   <label class="text-xs block">Retardo τ: <b id="tav" class="text-emerald-400">95</b> ns<input id="ta" type="range" min="20" max="300" step="5" value="95"></label>
   <label class="text-xs block">Relación señal/ruido: <b id="s7v" class="text-emerald-400">30</b> dB<input id="s7" type="range" min="10" max="45" value="30"></label>
   <label class="text-xs block">Reflexión (multitrayecto): <b id="k7v" class="text-emerald-400">0</b> % · retraso <b id="e7v" class="text-emerald-400">500</b> ns<input id="k7" type="range" min="0" max="80" value="0"><input id="e7" type="range" min="50" max="3000" step="10" value="500"></label></div>
  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 m mt-2" id="o7"></div>
- <canvas id="c7b" style="height:170px;margin-top:8px" aria-label="Error de detección"></canvas>
+ <canvas id="c7b" style="height:200px;margin-top:8px" aria-label="Error de detección"></canvas>
  <div class="text-xs text-slate-400 mt-2">¿Qué modo usa el interrogador? Mueve el avión hacia la pista</div>
  <label class="text-xs block"><b id="r7v" class="text-emerald-400">30</b> NM de la pista<input id="r7" type="range" min="0" max="35" step=".1" value="30"></label>
- <canvas id="c7c" style="height:96px" aria-label="Zonas DME/N, IA y FA"></canvas><p id="t7" class="text-sm mt-1"></p>
+ <canvas id="c7c" style="height:100px" aria-label="Zonas DME/N, IA y FA"></canvas><p id="t7" class="text-sm mt-1"></p>
  <div class="key"><b>Clave:</b> con la rampa inicial lineal, <i>A·t/T<sub>r</sub> = (t − τ)/T<sub>r</sub></i> ⇒ <b>t<sub>d</sub> = τ / (1 − A)</b>. Valores típicos: A = −6 dB, τ = 95 ns ⇒ t<sub>d</sub> ≈ 190 ns (frente a ~1,75 µs del detector al 50 %). Más protección frente a multitrayecto pide cortar bajo; más protección frente a ruido pide cortar alto: es un compromiso.</div></section>
 <section class="card"><div class="hd"><span class="bd bg-pink-400">6</span>Test final y chuleta<span id="qs" class="text-xs text-slate-400 font-normal ml-1"></span></div>
  <div id="qz"></div><button class="b mt-1" id="qn">Siguiente pregunta ▶</button>
@@ -126,8 +94,9 @@ body{background:transparent!important}
  <details open class="card"><summary>Guía rápida</summary><ul class="text-xs text-slate-400 list-disc pl-4 mt-1 space-y-1"><li>El avión se comparte entre los apartados 2, 3 y 4: gira α en el 2, vuela en el 3 y mira cómo cambia el retardo en el 4.</li><li>Atajos: <b>espacio</b> = volar/pausar (apartado 3); flechas ← → = ±1° de OBS cuando el indicador está enfocado.</li><li>Todo es simulación didáctica con los parámetros del temario.</li></ul></details>
 </aside></main>
 <footer id="nl-foot">
-<span>BeaconSim · Radiodeterminación · ETSIT, Universidad de Valladolid</span>
-<div>© 2026 <a href="https://gib.uva.es/member.php?id=16" target="_blank" rel="noopener">Javier Gómez Pilar</a> · Universidad de Valladolid</div>
+<a class="nl-idx" href="../index.html">← RadioNav UVa · Índice de simuladores</a>
+<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img src="../../img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img src="../../img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
+<div>© 2026 <a href="https://gib.uva.es/member.php?id=16" target="_blank" rel="noopener">Javier Gómez Pilar</a> · Grupo de Ingeniería Biomédica, Universidad de Valladolid</div>
 </footer>
 <script>
 // ====================== utilidades ======================
@@ -511,20 +480,6 @@ let rz;addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{CIDS.f
 CIDS.forEach(setup);stUI();mkParts();pbApply();pbSync();stepUI();showQ();resetSearch();mc7();updO6();setv('dd6',+geo().g.toFixed(1),f1);requestAnimationFrame(frame);
 
 </script>
-<script>
-/* NeuroLab UVa: fondo de nodos, enlaces al índice y logos (independiente del resto de la app) */
-(function(){
-var base=/\/apps\/[^\/]*$/i.test(location.pathname)?'../':'';
-document.querySelectorAll('.nl-idx').forEach(function(a){a.href=base+'index.html'});
-document.querySelectorAll('#nl-foot img').forEach(function(im){var f=im.getAttribute('data-f');im.src=base+f;
- im.onerror=function(){if(!im.dataset.t){im.dataset.t=1;im.src=(base?'':'../')+f}else{im.onerror=null;var sp=document.createElement('span');sp.textContent=im.alt;im.replaceWith(sp)}}});
-var c=document.getElementById('nl-bg');if(!c||!c.getContext)return;var x=c.getContext('2d'),W=0,H=0,P=[],last=0,still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-function build(){W=c.width=innerWidth;H=c.height=innerHeight;var n=Math.min(60,Math.floor(W*H/20000));P=[];for(var i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.4+1})}
-function draw(k){x.clearRect(0,0,W,H);for(var i=0;i<P.length;i++){var p=P[i];p.x+=p.vx*k;p.y+=p.vy*k;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,6.2832);x.fillStyle='rgba(56,189,248,.4)';x.fill();
- for(var j=i+1;j<P.length;j++){var q=P[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.strokeStyle='rgba(99,102,241,'+((1-d/120)*.18)+')';x.lineWidth=.8;x.stroke()}}}}
-function frame(t){requestAnimationFrame(frame);if(document.hidden||t-last<33)return;var k=Math.min(3,(t-last)/16.7);last=t;draw(k)}
-build();draw(0);if(!still)requestAnimationFrame(frame);
-addEventListener('resize',function(){if(Math.abs(innerWidth-W)>2||Math.abs(innerHeight-H)>150){build();draw(0)}else{c.width=W=innerWidth;c.height=H=innerHeight}});
-})();
-</script><script src="../../shared/aula.js"></script>
+<script src="../../shared/simulab.js"></script>
+<script src="../../shared/aula.js"></script>
 </body></html>

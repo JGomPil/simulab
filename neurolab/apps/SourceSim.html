@@ -1,99 +1,86 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SourceSim · Localización de fuentes cerebrales</title><meta name="theme-color" content="#070b14">
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="../../shared/simulab.css">
 <style>
-body{background:#070b14;color:#cbd5e1;font-family:system-ui,sans-serif}
-canvas{width:100%;display:block;background:#0a1020;border-radius:.5rem;border:1px solid #1e293b}
-.ia{touch-action:none;cursor:crosshair}
-.card{background:#0d1424;border:1px solid #1e293b;border-radius:.75rem;padding:.7rem}
-.b{padding:.35rem .7rem;border-radius:.5rem;border:1px solid #334155;background:#111b30;font-size:.82rem;min-height:40px}
-.b.on{border-color:#22d3ee;color:#22d3ee;background:#06323d}
-input[type=range]{width:100%;accent-color:#34d399}
-summary{cursor:pointer;color:#22d3ee;font-weight:600;min-height:32px}
-.bd{display:inline-grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:9999px;color:#000;font-weight:700;margin-right:.4rem}
-.hd{font-weight:600;margin-bottom:.4rem;display:flex;align-items:center;flex-wrap:wrap;gap:.25rem}
-.key{background:#06281f;border:1px solid #047857;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;color:#a7f3d0;margin:.4rem 0}
-.try{background:#2a1a05;border:1px solid #b45309;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;color:#fde68a;margin:.4rem 0}
-.mc{cursor:pointer;border:2px solid #1e293b;border-radius:.6rem;padding:.4rem;background:#0a1020}.mc.sel{border-color:#22d3ee}
-:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
-</style><style id="nl-style">
-/* Elementos comunes NeuroLab UVa: fondo de nodos, enlace al índice y pie */
-html{background:radial-gradient(circle at 82% 8%,rgba(34,211,238,.10),transparent 45%),radial-gradient(circle at 12% 88%,rgba(167,139,250,.08),transparent 45%),#070b14;background-attachment:fixed}
-body{background:transparent!important}
-#nl-bg{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;display:block;background:transparent!important;border:0!important;border-radius:0!important}
-.nl-hd{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:.5rem}
-.nl-back{font-size:.72rem;color:#7dd3fc;border:1px solid rgba(56,189,248,.35);border-radius:9999px;padding:.25rem .7rem;text-decoration:none;white-space:nowrap;background:rgba(8,16,36,.55)}
-.nl-back:hover{background:rgba(14,116,144,.35);color:#e0f2fe}
-#nl-foot{margin-top:1.25rem;padding:.8rem 0 calc(.8rem + env(safe-area-inset-bottom));border-top:1px solid rgba(51,65,85,.6);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;font-size:.68rem;line-height:1.3;color:#64748b}
-#nl-foot a{color:inherit;text-decoration:none}#nl-foot a:hover{color:#cbd5e1}
-#nl-foot .nl-logos{display:flex;align-items:center;gap:.9rem}
-#nl-foot img{height:26px;width:auto;opacity:.85}#nl-foot img:hover{opacity:1}
-@media print{#nl-bg,#nl-foot,.nl-back{display:none!important}}
+.mc{cursor:pointer;border:2px solid #1e293b;border-radius:.6rem;padding:.4rem;background:#0a1020}
+.mc.sel{border-color:#22d3ee}
 </style>
 </head><body class="p-2 md:p-4 max-w-7xl mx-auto">
 <canvas id="nl-bg" aria-hidden="true"></canvas>
 
 <header class="mb-3"><div class="nl-hd"><h1 class="text-xl md:text-2xl font-bold text-white">SourceSim <span class="text-cyan-400 text-sm md:text-base font-normal">De los electrodos al cerebro: localización de fuentes</span></h1><a class="nl-back nl-idx" href="../index.html" title="Volver al índice de simuladores">← NeuroLab UVa</a></div>
-<div class="card mt-2 text-sm"><b class="text-white">La idea en 20 segundos.</b> Una zona del cerebro se activa → la señal atraviesa el cráneo → los electrodos la miden. Eso es el <b class="text-cyan-300">problema directo</b> (fácil: se calcula). La <b class="text-amber-300">localización de fuentes</b> es el camino contrario: con lo que miden los electrodos, <i>adivinar</i> qué zona se activó. Es el <b class="text-rose-300">problema inverso</b> (difícil), y aquí lo vas a explorar.</div></header>
+  <div class="card mt-2 text-sm"><b class="text-white">La idea en 20 segundos.</b> Una zona del cerebro se activa → la señal atraviesa el cráneo → los electrodos la miden. Eso es el <b class="text-cyan-300">problema directo</b> (fácil: se calcula). La <b class="text-amber-300">localización de fuentes</b> es el camino contrario: con lo que miden los electrodos, <i>estimar</i> qué zona se activó. Es el <b class="text-rose-300">problema inverso</b> (difícil), y aquí lo vas a explorar.</div></header>
 <main class="grid lg:grid-cols-3 gap-3">
 <div class="lg:col-span-2 space-y-3">
 
  <section class="card"><div class="hd"><span class="bd bg-cyan-400">1</span>Problema directo: de la fuente a los electrodos</div>
-  <p class="text-sm mb-2">Una zona de la corteza se activa (la fuente, ✕). Su actividad se propaga hasta el cuero cabelludo y los electrodos registran un <b>mapa de voltaje</b>. <b>Toca o arrastra la fuente</b> en la vista superior.</p>
+  <p class="text-sm mb-2">Una zona de la corteza se activa (la fuente, ✕). Sus corrientes se conducen por los tejidos hasta el cuero cabelludo, de forma prácticamente instantánea, y los electrodos registran un <b>mapa de voltaje</b>. <b>Haz clic o arrastra la fuente</b> en la vista superior.</p>
   <div class="grid sm:grid-cols-2 gap-3">
    <div><p class="text-xs text-slate-400">Cabeza vista desde arriba (arriba = frente). Puntos = corteza.</p><canvas id="c0" class="ia" style="aspect-ratio:1/1" aria-label="Vista superior"></canvas></div>
    <div><p class="text-xs text-slate-400">Lo que miden los electrodos (rojo +, azul −)</p><canvas id="c1" style="aspect-ratio:1/1" aria-label="Mapa de voltaje"></canvas></div></div>
-  <p class="text-xs text-slate-400 mt-2">Registro de cada electrodo en el tiempo (línea vertical = instante del mapa)</p><canvas id="c2" style="height:130px" aria-label="Registro"></canvas>
+  <p class="text-xs text-slate-400 mt-2">Registro de cada electrodo en el tiempo (línea vertical = instante del mapa)</p><canvas id="c2" style="height:150px" aria-label="Registro"></canvas>
   <p id="t1" class="text-sm mt-2"></p>
   <div class="key">💡 <b>Idea clave:</b> una fuente pequeña se ve en <i>muchos</i> electrodos a la vez, porque el cráneo reparte (emborrona) la señal.</div>
-  <div class="try">🧪 <b>Prueba esto:</b> mueve la fuente al lateral y luego al centro. Después, en «Cabeza real» (panel lateral), cambia entre «Esfera simple» y «3 capas»: con el cráneo real el mapa se emborrona y la amplitud cae a la cuarta parte.</div></section>
+  <div class="try">🧪 <b>Prueba esto:</b> mueve la fuente al lateral y luego al centro. Después, en «Modelo de cabeza» (panel lateral), cambia entre «Esfera simple» y «3 capas»: el mapa se emborrona y la amplitud cae a la cuarta parte.</div></section>
 
  <section class="card"><div class="hd"><span class="bd bg-rose-400">2</span>Problema inverso: hay muchas respuestas posibles</div>
   <p class="text-sm mb-2">Tenemos 21 medidas y cientos de posibles puntos de origen. Estas tres distribuciones de actividad en la corteza son <b>muy distintas</b>… pero producen <b>exactamente los mismos voltajes</b> en los electrodos.</p>
   <div class="grid grid-cols-3 gap-2">
-   <div><p class="text-xs text-emerald-300 min-h-[2.4rem]">A · Una fuente estimada</p><canvas id="c3a" style="aspect-ratio:1/1"></canvas></div>
-   <div><p class="text-xs text-cyan-300 min-h-[2.4rem]">B · Otra posible: muy repartida</p><canvas id="c3b" style="aspect-ratio:1/1"></canvas></div>
-   <div><p class="text-xs text-amber-300 min-h-[2.4rem]">C · Otra más: un desastre</p><canvas id="c3c" style="aspect-ratio:1/1"></canvas></div></div>
-  <p id="d2" class="text-sm mt-2"></p><button class="b mt-1" id="nz">🎲 Inventar otra solución falsa</button>
-  <div class="key">💡 <b>Idea clave:</b> los datos solos no bastan. Para elegir una respuesta hay que añadir una <b>suposición</b> (por ejemplo, «la solución más suave» o «una sola fuente»). Cada método de localización es una suposición distinta.</div></section>
+   <div><p class="text-xs text-emerald-300 min-h-[2.4rem]">A · Una zona focal</p><canvas id="c3a" style="aspect-ratio:1/1"></canvas></div>
+   <div><p class="text-xs text-cyan-300 min-h-[2.4rem]">B · Muy repartida (mínima norma)</p><canvas id="c3b" style="aspect-ratio:1/1"></canvas></div>
+   <div><p class="text-xs text-amber-300 min-h-[2.4rem]">C · B + un patrón invisible para los electrodos</p><canvas id="c3c" style="aspect-ratio:1/1"></canvas></div></div>
+  <p id="d2" class="text-sm mt-2"></p><button class="b mt-1" id="nz">🎲 Inventar otra solución compatible</button>
+  <div class="key">💡 <b>Idea clave:</b> los datos solos no bastan. Para elegir una respuesta hay que añadir una <b>suposición</b> (por ejemplo, «la solución más suave» o «una sola fuente»). Los métodos de localización se diferencian en esas suposiciones.</div>
+  <div class="try">🧪 <b>Prueba esto:</b> pulsa «Inventar otra solución compatible»: el mapa C cambia por completo y la diferencia en los electrodos sigue siendo prácticamente cero.</div></section>
 
- <section class="card"><div class="hd"><span class="bd bg-amber-400">3</span>Tres métodos, tres suposiciones</div>
-  <p class="text-sm mb-2">Con los mismos datos, cada método dibuja su mapa de «dónde está la actividad» (amarillo = más probable). Toca uno para usarlo en el resto de paneles.</p>
+ <section class="card"><div class="hd"><span class="bd bg-amber-400">3</span>Tres métodos, distintas suposiciones</div>
+  <p class="text-sm mb-2">Con los mismos datos, cada método dibuja su mapa de «dónde está la actividad» (amarillo = mayor valor estimado; no es una probabilidad). Haz clic en uno para usarlo en el resto de paneles.</p>
   <div class="grid sm:grid-cols-3 gap-2" id="m3"></div>
   <p id="t3" class="text-sm mt-2"></p>
-  <div class="key">💡 <b>Idea clave:</b> ningún método es perfecto. La mínima norma (wMNE, sLORETA) da mapas <i>borrosos pero robustos</i>; el beamformer (LCMV) es <i>nítido pero frágil</i>.</div>
+  <div class="overflow-x-auto mt-3"><table class="text-xs w-full" id="mtab"><thead><tr class="text-slate-400 text-left"><th class="p-1">Método</th><th class="p-1">Cálculo en cada punto j</th><th class="p-1">Qué supone</th><th class="p-1">Limitación</th><th class="p-1">Mejoras metodológicas</th></tr></thead><tbody>
+<tr class="border-t border-slate-700 align-top"><td class="p-1 font-semibold" style="color:#22d3ee">wMNE</td><td class="p-1 whitespace-nowrap">x̂ = W Lᵀ(L W Lᵀ + λI)⁻¹ y</td><td class="p-1">Actividad distribuida y de mínima energía</td><td class="p-1">Mapa borroso; el sesgo hacia lo superficial se reduce, pero no desaparece</td><td class="p-1">La ponderación W corrige el sesgo de MNE. dSPM añade normalización por ruido</td></tr>
+<tr class="border-t border-slate-700 align-top"><td class="p-1 font-semibold" style="color:#a78bfa">sLORETA</td><td class="p-1 whitespace-nowrap">x̂ⱼ / √(lⱼᵀ(LLᵀ + λI)⁻¹lⱼ)</td><td class="p-1">La misma solución de MNE, estandarizada</td><td class="p-1">Error nulo solo en el caso ideal (una fuente, sin ruido); varias fuentes se interfieren</td><td class="p-1">eLORETA recalcula los pesos para mantener el error nulo en condiciones ideales</td></tr>
+<tr class="border-t border-slate-700 align-top"><td class="p-1 font-semibold" style="color:#34d399">LCMV</td><td class="p-1 whitespace-nowrap">P = 1 / (lⱼᵀ C⁻¹ lⱼ)</td><td class="p-1">Fuentes no correlacionadas y covarianza C bien estimada</td><td class="p-1">Cancela fuentes correlacionadas; sensible al ruido y a errores del modelo de cabeza</td><td class="p-1">Regularizar C (aquí, 5 %). Normalizar por ruido (NAI) evita el sesgo hacia el centro. DICS lo lleva a frecuencia; los beamformers de fuentes múltiples tratan las correlacionadas</td></tr>
+</tbody></table></div>
+<p class="text-xs text-slate-300 mt-2"><b>¿Por qué estos mapas son tan suaves?</b> La mínima norma ya da soluciones muy suaves. LORETA, el método original de la familia, además las impone con un operador laplaciano, partiendo de que las neuronas vecinas tienden a activarse de forma sincronizada. sLORETA no añade ese laplaciano: parte de la mínima norma y la estandariza, así que conserva su suavidad y su baja resolución.</p>
+<p class="text-xs text-slate-400 mt-2"><b class="text-slate-300">Límites de este simulador:</b> la corteza es una capa a profundidad constante con dipolos radiales, por lo que el efecto de W es pequeño; «3 capas» imita el cráneo con un parámetro de emborronado (no resuelve un BEM). Además, el mismo modelo genera e invierte los datos (<i>crimen inverso</i>), así que los errores son optimistas. wMNE y sLORETA usan el instante de 148 ms; LCMV, la potencia de toda la ventana (0–396 ms).</p>
+  <div class="key">💡 <b>Idea clave:</b> ningún método es perfecto. La mínima norma (wMNE, sLORETA) tiende a dar mapas <i>borrosos pero robustos</i>; el beamformer (LCMV), <i>nítidos pero más frágiles</i>.</div>
   <div class="try">🧪 <b>Prueba esto:</b> baja la calidad de la señal (SNR), usa solo 8 electrodos, o activa <b>2 fuentes sincronizadas</b> (misma señal en A y en B) y mira qué método se degrada más (controles en el panel lateral).</div></section>
 
  <section class="card"><div class="hd"><span class="bd bg-violet-400">4</span>Regiones (ROI): de puntos a áreas</div>
-  <p class="text-sm mb-2">En la práctica no se analizan miles de puntos, sino <b>regiones</b> de un atlas. La señal de una región (<i>scout</i>) es el promedio de sus puntos. <b>Toca una región.</b></p>
+  <p class="text-sm mb-2">En la práctica se suele resumir la corteza en <b>regiones</b> de un atlas. La señal de una región (<i>scout</i>) es aquí el promedio de sus puntos; en superficies reales se usa también su primera componente principal (PCA) o se corrige el signo para que no se cancelen dipolos opuestos. Aquí el atlas es esquemático (el de Desikan-Killiany tiene 68 regiones). <b>Haz clic en una región.</b></p>
   <div class="text-xs">Atlas</div><div id="atb"></div>
-  <div class="grid sm:grid-cols-2 gap-3 mt-1"><div><canvas id="c4" class="ia" style="aspect-ratio:1/1" aria-label="Atlas"></canvas><button class="b mt-1" id="rauto">Ir a la región de la fuente</button></div>
-  <div><p class="text-xs text-slate-400">Señal real de la fuente (blanco) y señal estimada de la región (color)</p><canvas id="c5" style="height:220px" aria-label="Series"></canvas><p id="t4" class="text-sm mt-1"></p></div></div>
-  <div class="key">💡 <b>Idea clave:</b> si la región contiene la fuente, su señal recupera la forma de la actividad real. Si no, solo ves ruido o un reflejo de la fuga de señal de las zonas vecinas.</div></section>
+  <div class="grid sm:grid-cols-2 gap-3 mt-1"><div><canvas id="c4" class="ia" style="aspect-ratio:1/1" aria-label="Atlas"></canvas><button class="b mt-1" id="rauto">Ir a la región de la fuente (A)</button></div>
+  <div><p class="text-xs text-slate-400">Señal real de la fuente (blanco) y señal estimada de la región (color)</p><canvas id="c5" style="height:250px" aria-label="Series"></canvas><p id="t4" class="text-sm mt-1"></p></div></div>
+  <div class="key">💡 <b>Idea clave:</b> si la región contiene la fuente, su señal recupera la forma de la actividad real. Si no, solo ves ruido o un reflejo de la fuga de señal de las zonas vecinas.</div>
+  <div class="try">🧪 <b>Prueba esto:</b> con sLORETA, haz clic en una región que no contiene la fuente: r sigue alto por la fuga de señal, así que un r alto no prueba que la fuente esté ahí. Repítelo con LCMV: r cae, aunque con regiones grandes la señal de la región con la fuente también se recupera peor (prueba las 24 regiones).</div></section>
 
  <section class="card"><div class="hd"><span class="bd bg-emerald-400">5</span>🎯 Reto: encuentra la fuente oculta</div>
-  <p class="text-sm mb-2">Hay una fuente oculta. Mira el mapa de voltajes y <b>toca en la vista superior dónde crees que está</b>. Luego compruébalo y compárate con sLORETA.</p>
-  <div class="grid sm:grid-cols-2 gap-3"><div><p class="text-xs text-slate-400">Lo que miden los electrodos</p><canvas id="cq0" style="aspect-ratio:1/1"></canvas></div><div><p class="text-xs text-slate-400">Toca aquí tu respuesta</p><canvas id="cq1" class="ia" style="aspect-ratio:1/1"></canvas></div></div>
-  <div class="mt-2"><button class="b" id="qc">Comprobar</button> <button class="b" id="qn">Otra fuente</button></div><p id="qf" class="text-sm mt-1"></p></section>
+  <p class="text-sm mb-2">Hay una fuente oculta. Mira el mapa de voltajes y <b>haz clic en la vista superior donde crees que está</b>. Luego compruébalo y compárate con sLORETA.</p>
+  <div class="grid sm:grid-cols-2 gap-3"><div><p class="text-xs text-slate-400">Lo que miden los electrodos</p><canvas id="cq0" style="aspect-ratio:1/1"></canvas></div><div><p class="text-xs text-slate-400">Haz clic aquí para responder</p><canvas id="cq1" class="ia" style="aspect-ratio:1/1"></canvas></div></div>
+  <div class="mt-2"><button class="b" id="qc">Comprobar</button> <button class="b" id="qn">Otra fuente</button></div><p id="qf" class="text-sm mt-1"></p>
+  <div class="key">💡 <b>Idea clave:</b> con dipolos radiales, el máximo de voltaje queda casi encima de la fuente, por lo que el ojo acierta bastante. Con dipolos tangenciales, como los de los surcos, esa intuición falla.</div><div class="try">🧪 <b>Prueba esto:</b> haz varios intentos con SNR alta y luego con SNR baja y 8 electrodos: compara tu media con la de sLORETA.</div></section>
 
  <section class="card"><div class="hd"><span class="bd bg-orange-400">6</span>Flujo de trabajo en Brainstorm, paso a paso</div>
   <div id="stb"></div><div id="stp" class="card !border-orange-500/40 mt-2 text-sm space-y-1"></div>
   <div class="grid sm:grid-cols-2 gap-3 mt-3">
-   <div class="card !border-emerald-500/40"><p class="font-semibold text-emerald-300 mb-1">¿Merece la pena localizar fuentes? A favor</p><ul class="text-sm list-disc ml-5 space-y-1"><li>Se eliminan los efectos de la conducción de volumen</li><li>Mejor resolución espacial</li><li>Interpretaciones más sencillas (regiones, no electrodos)</li><li>Espacio de análisis común entre sujetos</li></ul></div>
-   <div class="card !border-rose-500/40"><p class="font-semibold text-rose-300 mb-1">En contra</p><ul class="text-sm list-disc ml-5 space-y-1"><li>Computacionalmente costoso</li><li>Metodológicamente complejo</li><li>Se añaden sesgos a priori (modelo de cabeza, método, regularización)</li></ul><p id="cst" class="text-xs text-slate-400 mt-2"></p></div></div></section>
+   <div class="card !border-emerald-500/40"><p class="font-semibold text-emerald-300 mb-1">¿Merece la pena localizar fuentes? A favor</p><ul class="text-sm list-disc ml-5 space-y-1"><li>Se reducen los efectos de la conducción de volumen (no desaparecen: queda fuga de señal entre regiones)</li><li>Mejor resolución espacial, sobre todo con muchos electrodos</li><li>Interpretaciones más sencillas (regiones, no electrodos)</li><li>Espacio de análisis común entre sujetos</li></ul></div>
+   <div class="card !border-rose-500/40"><p class="font-semibold text-rose-300 mb-1">En contra</p><ul class="text-sm list-disc ml-5 space-y-1"><li>Computacionalmente costoso</li><li>Metodológicamente complejo</li><li>Se añaden sesgos a priori (modelo de cabeza, método, regularización)</li><li>Con pocos electrodos, la localización empeora</li></ul><p id="cst" class="text-xs text-slate-400 mt-2"></p></div></div>
+  <div class="key">💡 <b>Idea clave:</b> cada paso (anatomía, posición de los electrodos, modelo de cabeza, ruido y método) condiciona el resultado. Por eso un mapa de fuentes es una estimación que depende del modelo y hay que documentar estas decisiones.</div></section>
 </div>
 
 <aside class="space-y-2 lg:sticky lg:top-2 self-start lg:max-h-[96vh] lg:overflow-auto">
  <details open class="card"><summary>Datos</summary>
   <label class="text-sm block mt-2">Calidad de la señal (SNR): <b id="snv" class="text-emerald-400"></b> dB<input id="snr" type="range" min="0" max="40" step="1" value="25"></label><button class="b" id="nsb">🎲 Otro ruido</button>
   <div class="text-xs mt-1">Nº de electrodos</div><div id="se"></div>
-  <div class="text-xs">Cabeza real (el cráneo emborrona más o menos)</div><div id="hm"></div>
+  <div class="text-xs">Modelo de cabeza (cuánto emborrona el cráneo)</div><div id="hm"></div>
   <div class="text-xs">Fuentes activas (A = la que arrastras; B = fija)</div><div id="fu"></div>
 </details>
- <details open class="card"><summary>Método de localización</summary><div id="me" class="mt-2"></div><p class="text-[11px] text-slate-400">También puedes elegir el método tocando su mapa en el panel 3.</p></details>
+ <details open class="card"><summary>Método de localización</summary><div id="me" class="mt-2"></div><p class="text-[11px] text-slate-400">También puedes elegir el método haciendo clic en su mapa en el panel 3.</p></details>
 </aside></main>
 <footer id="nl-foot">
 <a class="nl-idx" href="../index.html">← NeuroLab UVa · Índice de simuladores</a>
-<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img data-f="img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img data-f="img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
+<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img src="../../img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img src="../../img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
 <div>© 2026 <a href="https://gib.uva.es/member.php?id=16" target="_blank" rel="noopener">Javier Gómez Pilar</a> · Grupo de Ingeniería Biomédica, Universidad de Valladolid</div>
 </footer>
 <script>
@@ -107,11 +94,11 @@ function inv(A,n){const M=A.map((r,i)=>{const o=new Float64Array(2*n);for(let j=
 for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;[M[c],M[p]]=[M[p],M[c]];const d=M[c][c]||1e-300;for(let j=0;j<2*n;j++)M[c][j]/=d;for(let r=0;r<n;r++)if(r!=c){const f=M[r][c];if(f)for(let j=0;j<2*n;j++)M[r][j]-=f*M[c][j]}}return M.map(r=>r.slice(n))}
 const mv=(M,v)=>Float64Array.from(M,r=>dot(r,v)),col=(Y,t)=>Float64Array.from(Y,r=>r[t]),dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
 function pear(a,b){const n=a.length,ma=mean(a),mb=mean(b);let s=0,x=0,y=0;for(let i=0;i<n;i++){s+=(a[i]-ma)*(b[i]-mb);x+=(a[i]-ma)**2;y+=(b[i]-mb)**2}return x*y>1e-30?s/Math.sqrt(x*y):0}
-// ---- electrodos 10-20 (los mismos que en EEGsim/ERPsim/GraphSim). Cabeza de radio 1 ≈ 9 cm. X derecha, Y anterior, Z arriba
+// ---- electrodos 10-20 (los mismos que en EEGSim/ERPSim/GraphSim). Cabeza de radio 1 ≈ 9 cm. X derecha, Y anterior, Z arriba
 const EL=[['Fp1',-.3,1],['Fpz',0,1],['Fp2',.3,1],['F7',-.85,.6],['F3',-.4,.55],['Fz',0,.5],['F4',.4,.55],['F8',.85,.6],['T3',-1,0],['C3',-.5,0],['Cz',0,0],['C4',.5,0],['T4',1,0],['T5',-.85,-.6],['P3',-.4,-.55],['Pz',0,-.5],['P4',.4,-.55],['T6',.85,-.6],['O1',-.3,-1],['Oz',0,-1],['O2',.3,-1]],NE=21,IX={};EL.forEach((e,i)=>IX[e[0]]=i);
 function disk3(a,b){const r=Math.hypot(a,b),th=r*PI/2*.96,s=r?Math.sin(th)/r:0;return[a*s,b*s,Math.cos(th)]}
 function toDisk(p){const r=Math.hypot(...p)||1,th=Math.acos(clamp(p[2]/r,-1,1)),h=Math.hypot(p[0],p[1]),q=Math.min(1.2,th/(PI/2*.96));return h<1e-9?[0,0]:[p[0]/h*q,p[1]/h*q]}
-const E3=EL.map(([n,a,b])=>disk3(a,b)),CH={'8':['Fp1','Fp2','C3','C4','P3','P4','O1','O2'].map(n=>IX[n]),'21':[...Array(NE).keys()]},NT=100,DT=4,PKI=37,HM={'Esfera simple':.06,'3 capas (BEM)':.55},HMn=Object.keys(HM),CM=9;
+const E3=EL.map(([n,a,b])=>disk3(a,b)),CH={'8':['Fp1','Fp2','C3','C4','P3','P4','O1','O2'].map(n=>IX[n]),'21':[...Array(NE).keys()]},NT=100,DT=4,PKI=37,HM={'Esfera simple':.06,'3 capas (≈ BEM)':.55},HMn=Object.keys(HM),CM=9;
 // ---- problema directo (aproximación didáctica): dipolo radial; el cráneo «emborrona» el campo con un parámetro s
 function fwdR(q,r0,s){const n=r0.map(v=>v/.8),d=[q[0]-r0[0],q[1]-r0[1],q[2]-r0[2]],d2=d[0]*d[0]+d[1]*d[1]+d[2]*d[2];return 2*(n[0]*d[0]+n[1]*d[1]+n[2]*d[2])/(4*PI*Math.pow(d2+s*s,1.5))}
 const onS=(x,y,z)=>{const l=Math.hypot(x,y,z);return[x/l*.8,y/l*.8,z/l*.8]},toCtx=([a,b])=>{const r=Math.hypot(a,b);if(r>.78){a*=.78/r;b*=.78/r}return[a,b,Math.sqrt(Math.max(.64-a*a-b*b,0))]};
@@ -122,9 +109,9 @@ const P=fib(800,.8,.02),NP=P.length,near=p=>{let b=0,bd=1e9;P.forEach((q,j)=>{co
 const LFc={};function getL(sens,s){const k=sens+'|'+s;if(LFc[k])return LFc[k];const ch=CH[sens];return LFc[k]=P.map(p=>{const c=Float64Array.from(ch,i=>fwdR(E3[i],p,s)),m=mean(c);return c.map(v=>v-m)})}
 // ---- estado
 const S={},SRC=[{},{}],Q2={s:1,p:null,guess:null,rev:0,n:0,e1:0,e2:0,DD:null};
-function base(){Object.assign(S,{hm:'3 capas (BEM)',wrong:0,snr:25,seed:1,sens:'21',two:0,cor:0,met:'sLORETA',edit:0,K:8,reg:null,z:1});SRC[0].p=onS(.4,-.5,.8);SRC[1].p=onS(-.5,.25,.8)}base();
+function base(){Object.assign(S,{hm:'3 capas (≈ BEM)',wrong:0,snr:25,seed:1,sens:'21',two:0,cor:0,met:'sLORETA',edit:0,K:8,reg:null,z:1});SRC[0].p=onS(.4,-.5,.8);SRC[1].p=onS(-.5,.25,.8)}base();
 const act=()=>S.two?[SRC[0],SRC[1]]:[SRC[0]],sTrue=()=>HM[S.hm],sInv=()=>HM[S.wrong?HMn.find(h=>h!=S.hm):S.hm];
-const METS=['wMNE','sLORETA','LCMV'],MC={wMNE:'#22d3ee',sLORETA:'#a78bfa',LCMV:'#34d399'},MD={wMNE:'Reparte la actividad por toda la corteza buscando la solución de menor energía: mapa suave y borroso, pero robusto.',sLORETA:'Igual que wMNE pero «estandariza» el mapa: suele centrar mejor el pico sobre la fuente real (sigue siendo borroso).',LCMV:'Beamformer: apunta un «filtro» a cada punto y mide cuánto le llega. Muy nítido con una sola fuente y datos limpios, pero se degrada con ruido y falla bastante si hay varias fuentes sincronizadas.'};
+const METS=['wMNE','sLORETA','LCMV'],MC={wMNE:'#22d3ee',sLORETA:'#a78bfa',LCMV:'#34d399'},MD={wMNE:'Entre todas las soluciones compatibles elige la de menor energía, ponderada para no favorecer las fuentes más cercanas a los electrodos. Mapa suave y robusto.',sLORETA:'Parte de la mínima norma y divide cada punto por su desviación estimada: es un mapa estadístico, no de corriente. Centra mejor el pico, pero hereda la suavidad de la mínima norma.',LCMV:'Beamformer: un filtro para cada punto deja pasar esa posición con ganancia 1 y minimiza todo lo demás. Muy nítido con una fuente y datos limpios, pero cancela las fuentes sincronizadas.'};
 // ---- datos simulados
 const wvA=t=>gs(t,150,35)-.7*gs(t,250,55),wvC=t=>Math.sin(2*PI*12*t/1000)*gs(t,150,80)*1.1;
 function waves(c){const A=[],B=[];for(let i=0;i<NT;i++){const t=i*DT;A.push(wvA(t));B.push(c*wvA(t)+Math.sqrt(1-c*c)*wvC(t))}return[A,B]}
@@ -136,11 +123,14 @@ let en=0;for(const q of Nz)for(const v of q)en+=v*v;const nr=Math.sqrt(en/(m*NT)
 // ---- métodos inversos
 function solve(L,Y,snr,ti){const m=Y.length,N=L.length,G=Array.from({length:m},(_,i)=>Float64Array.from({length:m},(_,k)=>{let s=0;for(let j=0;j<N;j++)s+=L[j][i]*L[j][k];return s})),tr=sum(G.map((r,i)=>r[i]))/m,lam=tr/Math.pow(10,snr/10);
 const Gi=inv(G.map((r,i)=>Float64Array.from(r,(v,k)=>v+(i==k?lam:0))),m),Zs=[];for(let t=0;t<NT;t++)Zs.push(mv(Gi,col(Y,t)));const z=Zs[ti];
-const mne=L.map(l=>Math.abs(dot(l,z))),sl=L.map((l,j)=>mne[j]/Math.sqrt(dot(l,mv(Gi,l))));
+const mne=L.map(l=>Math.abs(dot(l,z))),sd=L.map(l=>Math.sqrt(dot(l,mv(Gi,l)))),sl=mne.map((v,j)=>v/sd[j]);
+// wMNE: varianza a priori w_j = (l_j' l_j)^-0.5 (ponderación de profundidad, exponente 0,5)
+const w0=L.map(l=>Math.pow(dot(l,l),-.5)),wm=mean(w0),wt=w0.map(v=>v/wm),GW=Array.from({length:m},(_,i)=>Float64Array.from({length:m},(_,k)=>{let s=0;for(let j=0;j<N;j++)s+=wt[j]*L[j][i]*L[j][k];return s})),trW=sum(GW.map((r,i)=>r[i]))/m,lamW=trW/Math.pow(10,snr/10),GiW=inv(GW.map((r,i)=>Float64Array.from(r,(v,k)=>v+(i==k?lamW:0))),m),ZsW=[];for(let t=0;t<NT;t++)ZsW.push(mv(GiW,col(Y,t)));
+const wm_=L.map((l,j)=>wt[j]*Math.abs(dot(l,ZsW[ti])));
 const C=Array.from({length:m},(_,i)=>Float64Array.from({length:m},(_,k)=>{let s=0;for(let t=0;t<NT;t++)s+=Y[i][t]*Y[k][t];return s/NT})),tc=sum(C.map((r,i)=>r[i]))/m;C.forEach((r,i)=>r[i]+=.05*tc);
 const Ci=inv(C,m),A=L.map(l=>mv(Ci,l)),lc=L.map((l,j)=>1/dot(l,A[j])),nm=a=>{const M=Math.max(...a)||1;return Float64Array.from(a,v=>v/M)};
-return{maps:{wMNE:nm(mne),sLORETA:nm(sl),LCMV:nm(lc)},ts(met,idx){const out=new Float64Array(NT);if(met=='LCMV'){const w=new Float64Array(m);idx.forEach(j=>{const f=1/dot(L[j],A[j]);for(let i=0;i<m;i++)w[i]+=A[j][i]*f/idx.length});for(let t=0;t<NT;t++)out[t]=dot(w,col(Y,t))}
-else{const r=new Float64Array(m);idx.forEach(j=>{for(let i=0;i<m;i++)r[i]+=L[j][i]/idx.length});for(let t=0;t<NT;t++)out[t]=dot(r,Zs[t])}return out}}}
+return{maps:{wMNE:nm(wm_),sLORETA:nm(sl),LCMV:nm(lc)},ts(met,idx){const out=new Float64Array(NT);if(met=='LCMV'){const w=new Float64Array(m);idx.forEach(j=>{const f=1/dot(L[j],A[j]);for(let i=0;i<m;i++)w[i]+=A[j][i]*f/idx.length});for(let t=0;t<NT;t++)out[t]=dot(w,col(Y,t))}
+else{const r=new Float64Array(m),W=met=='wMNE',q=W?ZsW:Zs;idx.forEach(j=>{const f=W?wt[j]:1/sd[j];for(let i=0;i<m;i++)r[i]+=f*L[j][i]/idx.length});for(let t=0;t<NT;t++)out[t]=dot(r,q[t])}return out}}}
 function peaks(map,k){const o=[];let a=0;map.forEach((v,j)=>{if(v>map[a])a=j});o.push(a);if(k>1){let b=-1;map.forEach((v,j)=>{if(dist(P[j],P[a])>.45&&(b<0||v>map[b]))b=j});if(b>=0)o.push(b)}return o}
 function metr(map,pos){const pk=peaks(map,pos.length),err=mean(pos.map(p=>Math.min(...pk.map(j=>dist(p,P[j])))))*CM,spread=map.filter(v=>v>=.5).length/NP*100;return{pk,err,spread}}
 // ---- cálculo principal (con caché)
@@ -149,90 +139,77 @@ function calc(){const pos=act().map(d=>d.p),k=JSON.stringify([pos,S.cor,S.snr,S.
 const D=gen(pos,S.seed,S.snr,sTrue(),S.sens,S.cor),L=getL(S.sens,sInv()),R=solve(L,D.Y,S.snr,PKI),M={};METS.forEach(m=>M[m]=metr(R.maps[m],pos));return Object.assign(CC,{k,D,L,R,M,pos})}
 // ---- dibujo
 const lerp=(a,b,t)=>a.map((v,i)=>Math.round(v+(b[i]-v)*t)),rgb=c=>`rgb(${c[0]},${c[1]},${c[2]})`,div=v=>{v=clamp(v,-1,1);return rgb(v>=0?lerp([30,41,59],[251,113,133],v):lerp([30,41,59],[56,189,248],-v))},
-heat=v=>{v=clamp(v,0,1);return rgb(v<.5?lerp([20,18,60],[190,40,130],v*2):lerp([190,40,130],[253,224,71],(v-.5)*2))};
+heatv=v=>{v=clamp(v,0,1);return v<.5?lerp([20,18,60],[190,40,130],v*2):lerp([190,40,130],[253,224,71],(v-.5)*2)},heat=v=>rgb(heatv(v));
 function frame(x,cx,cy,R){x.strokeStyle='#475569';x.lineWidth=1.5;x.beginPath();x.arc(cx,cy,R,0,2*PI);x.stroke();x.beginPath();x.moveTo(cx-R*.12,cy-R);x.lineTo(cx,cy-R*1.1);x.lineTo(cx+R*.12,cy-R);x.stroke()}
-const GEO={};
-function topv(id,vals,o={}){const{x,w,h}=cv(id),R=Math.min(w,h)/2-8,cx=w/2,cy=h/2+3;GEO[id]={cx,cy,R};x.clearRect(0,0,w,h);const ds=R*.085;
-P.forEach((p,j)=>{x.fillStyle=o.reg?o.reg(j):heat(vals?vals[j]:0);x.fillRect(cx+p[0]*R-ds/2,cy-p[1]*R-ds/2,ds,ds)});frame(x,cx,cy,R);
+const GEO={},GN=128,GR=(()=>{const c=document.createElement('canvas');c.width=c.height=GN;const o=[];for(let b=0;b<GN;b++)for(let a=0;a<GN;a++){const u=((a+.5)/GN*2-1)*.82,v=-((b+.5)/GN*2-1)*.82;const d=P.map((p,j)=>[(p[0]-u)**2+(p[1]-v)**2,j]).sort((m,n)=>m[0]-n[0]).slice(0,5),ws=d.map(q=>1/(q[0]+1e-4)),t=sum(ws);o.push({i:d.map(q=>q[1]),w:ws.map(q=>q/t),n:d[0][1]})}return{c,x:c.getContext('2d'),o,im:c.getContext('2d').createImageData(GN,GN)}})();
+function topv(id,vals,o={}){const{x,w,h}=cv(id),R=Math.min(w,h)/2-8,cx=w/2,cy=h/2+3;GEO[id]={cx,cy,R};x.clearRect(0,0,w,h);
+if(o.pts){x.fillStyle=o.pts;const ds=Math.max(1.2,R*.016);P.forEach(p=>{x.beginPath();x.arc(cx+p[0]*R,cy-p[1]*R,ds,0,2*PI);x.fill()})}
+else{const d=GR.im.data,memo={};GR.o.forEach((g,k)=>{let c;if(o.reg){const a=o.reg(g.n);c=memo[a]||(memo[a]=(()=>{GR.x.fillStyle=a;GR.x.fillRect(0,0,1,1);return GR.x.getImageData(0,0,1,1).data})())}else{let v=0;for(let q=0;q<5;q++)v+=g.w[q]*(vals?vals[g.i[q]]:0);c=heatv(v)}d[4*k]=c[0];d[4*k+1]=c[1];d[4*k+2]=c[2];d[4*k+3]=255});GR.x.putImageData(GR.im,0,0);const Rc=.8*R,Rg=.82*R;x.save();x.beginPath();x.arc(cx,cy,Rc,0,2*PI);x.clip();x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';x.drawImage(GR.c,cx-Rg,cy-Rg,2*Rg,2*Rg);x.restore()}
+frame(x,cx,cy,R);
 if(o.el)E3.forEach(q=>{const d=toDisk(q);x.fillStyle='#e2e8f0';x.beginPath();x.arc(cx+d[0]*R,cy-d[1]*R,2,0,2*PI);x.fill()});
-(o.tr||[]).forEach(p=>mark(x,cx+p[0]*R,cy-p[1]*R,'x',R));(o.es||[]).forEach(p=>mark(x,cx+p[0]*R,cy-p[1]*R,'+',R));(o.gu||[]).forEach(p=>mark(x,cx+p[0]*R,cy-p[1]*R,'o',R))}
+(o.tr||[]).forEach((p,k,a)=>{mark(x,cx+p[0]*R,cy-p[1]*R,'x',R);if(a.length>1){x.font='bold 12px sans-serif';x.lineWidth=3;x.strokeStyle='#070b14';x.fillStyle='#fff';x.textAlign='left';const l='AB'[k],u=cx+p[0]*R+R*.08,v=cy-p[1]*R-R*.06;x.strokeText(l,u,v);x.fillText(l,u,v)}});(o.es||[]).forEach(p=>mark(x,cx+p[0]*R,cy-p[1]*R,'+',R));(o.gu||[]).forEach(p=>mark(x,cx+p[0]*R,cy-p[1]*R,'o',R))}
 function mark(x,u,v,t,R){const s=R*.06;x.lineWidth=2.5;if(t=='x'){x.strokeStyle='#fff';x.beginPath();x.moveTo(u-s,v-s);x.lineTo(u+s,v+s);x.moveTo(u+s,v-s);x.lineTo(u-s,v+s);x.stroke()}else if(t=='+'){x.strokeStyle='#22d3ee';x.beginPath();x.arc(u,v,s*1.5,0,2*PI);x.moveTo(u-s,v);x.lineTo(u+s,v);x.moveTo(u,v-s);x.lineTo(u,v+s);x.stroke()}else{x.strokeStyle='#fb923c';x.beginPath();x.arc(u,v,s*1.6,0,2*PI);x.stroke()}}
-function scalp(id,v,sens,vm){const{x,w,h}=cv(id),R=Math.min(w,h)/2-10,cx=w/2,cy=h/2+5,ch=CH[sens],pos=ch.map(i=>toDisk(E3[i])),st=3;x.clearRect(0,0,w,h);
-for(let py=-R;py<=R;py+=st)for(let px=-R;px<=R;px+=st){const a=px/R,b=-py/R;if(a*a+b*b>1)continue;let sw=0,sv=0;for(let k=0;k<pos.length;k++){const d=(a-pos[k][0])**2+(b-pos[k][1])**2,wt=1/Math.pow(d+.02,1.5);sw+=wt;sv+=wt*v[k]}x.fillStyle=div(sv/sw/vm);x.fillRect(cx+px,cy+py,st+.6,st+.6)}
-frame(x,cx,cy,R);ch.forEach((i,k)=>{const d=pos[k];x.fillStyle='#e2e8f0';x.beginPath();x.arc(cx+d[0]*R,cy-d[1]*R,2.2,0,2*PI);x.fill();if(w>230){x.fillStyle='#94a3b8';x.font='9px sans-serif';x.fillText(EL[i][0],cx+d[0]*R+3,cy-d[1]*R-3)}})}
+function scalp(id,v,sens,vm){const{x,w,h}=cv(id),R=Math.min(w,h)/2-10,cx=w/2,cy=h/2+5,ch=CH[sens],pos=ch.map(i=>toDisk(E3[i])),st=2;x.clearRect(0,0,w,h);x.save();x.beginPath();x.arc(cx,cy,R,0,2*PI);x.clip();
+for(let py=-R;py<=R;py+=st)for(let px=-R;px<=R;px+=st){const a=px/R,b=-py/R;if(a*a+b*b>1)continue;let sw=0,sv=0;for(let k=0;k<pos.length;k++){const d=(a-pos[k][0])**2+(b-pos[k][1])**2,wt=1/Math.pow(d+.02,1.5);sw+=wt;sv+=wt*v[k]}x.fillStyle=div(sv/sw/vm);x.fillRect(cx+px,cy+py,st+.6,st+.6)}x.restore();
+frame(x,cx,cy,R);ch.forEach((i,k)=>{const d=pos[k];x.fillStyle='#e2e8f0';x.beginPath();x.arc(cx+d[0]*R,cy-d[1]*R,2.2,0,2*PI);x.fill();if(w>230){x.fillStyle='#94a3b8';x.font='9px sans-serif';const rt=d[0]>.6;x.textAlign=rt?'right':'left';x.fillText(EL[i][0],cx+d[0]*R+(rt?-3:3),cy-d[1]*R-3);x.textAlign='left'}})}
 function plot(id,ser,cols,o={}){const{x,w,h}=cv(id),X0=30,W=w-X0-6,Y0=6,H=h-Y0-18;x.clearRect(0,0,w,h);const vm=o.norm?1:Math.max(...ser.flatMap(s=>Array.from(s,Math.abs)))||1;x.strokeStyle='#334155';x.beginPath();x.moveTo(X0,Y0+H/2);x.lineTo(X0+W,Y0+H/2);x.stroke();
-x.fillStyle='#64748b';x.font='10px sans-serif';for(let t=0;t<=400;t+=100)x.fillText(t,X0+W*t/396-8,h-4);x.fillText('ms',w-18,h-4);
+x.fillStyle='#64748b';x.font='10px sans-serif';for(let t=0;t<=300;t+=100){x.textAlign=t?'center':'left';x.fillText(t,X0+W*t/396,h-4)}x.textAlign='right';x.fillText('400 ms',X0+W,h-4);x.textAlign='left';
 ser.forEach((s,k)=>{const m=o.norm?(Math.max(...Array.from(s,Math.abs))||1):vm;x.strokeStyle=cols[k];x.lineWidth=o.lw?o.lw[k]:1;x.beginPath();s.forEach((v,i)=>{const u=X0+W*i/(NT-1),y=Y0+H/2-v/m*H*.46;i?x.lineTo(u,y):x.moveTo(u,y)});x.stroke()});
 if(o.v!=null){x.strokeStyle='#fbbf24';x.setLineDash([4,3]);x.beginPath();x.moveTo(X0+W*o.v/(NT-1),Y0);x.lineTo(X0+W*o.v/(NT-1),Y0+H);x.stroke();x.setLineDash([])}}
 // ---- paneles
-function sec1(){const c=calc(),v=col(c.D.Y,PKI),ch=CH[S.sens],vm=Math.max(...Array.from(v,Math.abs));topv('#c0',null,{el:1,tr:act().map(d=>d.p),reg:()=>'#162036'});
+function sec1(){const c=calc(),v=col(c.D.Y,PKI),ch=CH[S.sens],vm=Math.max(...Array.from(v,Math.abs));topv('#c0',null,{el:1,tr:act().map(d=>d.p),pts:'#26324c'});
 scalp('#c1',v,S.sens,vm);plot('#c2',Array.from(c.D.Y),Array(c.D.Y.length).fill('#67e8f9'),{v:PKI,lw:Array(c.D.Y.length).fill(.8)});
-const hi=ch.filter((_,k)=>Math.abs(v[k])>vm/2).length;$('#t1').innerHTML=`Máximo: <b class="text-emerald-300">${vm.toFixed(1)} µV</b> en <b>${EL[ch[v.reduce((a,_,k)=>Math.abs(v[k])>Math.abs(v[a])?k:a,0)]][0]}</b>. La fuente es un punto, pero <b class="text-amber-300">${hi} de ${ch.length} electrodos</b> reciben más de la mitad del máximo.`}
+const hi=ch.filter((_,k)=>Math.abs(v[k])>vm*.1).length;$('#t1').innerHTML=`Máximo: <b class="text-emerald-300">${vm.toFixed(1)} µV</b> en <b>${EL[ch[v.reduce((a,_,k)=>Math.abs(v[k])>Math.abs(v[a])?k:a,0)]][0]}</b>. La fuente es un punto, pero <b class="text-amber-300">${hi} de ${ch.length} electrodos</b> reciben más del 10 % del máximo.`}
 function sec2(){const L=getL('21',sTrue()),m=21,N=NP,rd=rng(S.z*31+7),jA=near(SRC[0].p),xA=new Float64Array(N);P.forEach((q,j)=>{xA[j]=Math.exp(-(dist(q,P[jA])**2)/(2*.13*.13))});
 const Lx=v=>{const y=new Float64Array(m);for(let j=0;j<N;j++)if(v[j])for(let i=0;i<m;i++)y[i]+=v[j]*L[j][i];return y},G=Array.from({length:m},(_,i)=>Float64Array.from({length:m},(_,k)=>{let s=0;for(let j=0;j<N;j++)s+=L[j][i]*L[j][k];return s})),tr=sum(G.map((r,i)=>r[i]))/m;G.forEach((r,i)=>r[i]+=1e-7*tr);const Gi=inv(G,m),
 back=y=>{const z=mv(Gi,y);return Float64Array.from(L,l=>dot(l,z))},xB=back(Lx(xA)),zr=Float64Array.from({length:N},()=>gn(rd)),nl=Float64Array.from(zr,(v,j)=>v-back(Lx(zr))[j]);
 const n2=Math.hypot(...nl),nB=Math.hypot(...xB),xC=Float64Array.from(xB,(v,j)=>v+nl[j]/n2*nB*3),yA=Lx(xA),df=x=>Math.max(...Array.from(Lx(x),(v,i)=>Math.abs(v-yA[i])))*Kn,nm=x=>{const a=Array.from(x,Math.abs),M=Math.max(...a);return a.map(v=>v/M)};
 topv('#c3a',nm(xA),{tr:[SRC[0].p]});topv('#c3b',nm(xB));topv('#c3c',nm(xC));
-$('#d2').innerHTML=`Diferencia máxima en cualquier electrodo: A↔B <b class="text-emerald-300">${df(xB).toFixed(3)} µV</b> · A↔C <b class="text-emerald-300">${df(xC).toFixed(3)} µV</b>. Los electrodos no pueden distinguirlas.`}
+$('#d2').innerHTML=`Comprobación: calculamos los voltajes que produciría cada mapa y los comparamos electrodo a electrodo. La mayor diferencia entre A y B es de <b class="text-emerald-300">${df(xB).toFixed(3)} µV</b>, y entre A y C, de <b class="text-emerald-300">${df(xC).toFixed(3)} µV</b>. Que salga prácticamente 0 no es un fallo: es la clave, porque los electrodos no pueden distinguir estos mapas.`}
 function sec3(){const c=calc();METS.forEach((m,i)=>{topv('#cm'+i,c.R.maps[m],{tr:c.pos,es:c.M[m].pk.map(j=>P[j])});const q=c.M[m];$('#im'+i).innerHTML=`Error: <b class="${q.err<1.5?'text-emerald-300':q.err<3?'text-amber-300':'text-rose-300'}">${q.err.toFixed(1)} cm</b> · Mancha: <b>${q.spread<1?'&lt;1':q.spread.toFixed(0)}%</b>`;$('#cd'+i).classList.toggle('sel',m==S.met)});
-const best=METS.reduce((a,m)=>c.M[m].err<c.M[a].err?m:a);$('#t3').innerHTML=`<span class="text-slate-400">✕ blanca = fuente real · ◎ azul = lo que estima el método. <b>Error</b> = distancia entre ambas (cabeza ≈ 9 cm de radio). <b>Mancha</b> = % de la corteza con más de la mitad del máximo (más pequeña = más nítido).</span><br>Aquí gana <b style="color:${MC[best]}">${best}</b>. ${MD[S.met]}`;
+const bE=Math.min(...METS.map(m=>c.M[m].err)),best=METS.filter(m=>c.M[m].err-bE<.05);$('#t3').innerHTML=`<span class="text-slate-400">✕ blanca = fuente real · ◎ azul = lo que estima el método. <b>Error</b> = distancia entre ambas (cabeza ≈ 9 cm de radio). <b>Mancha</b> = % de la corteza con más de la mitad del máximo (más pequeña = más nítido).</span><br>Menor error con estos datos: ${best.map(m=>`<b style="color:${MC[m]}">${m}</b>`).join(' y ')}.`;
 $('#cst').textContent=`Aquí: ${CH[S.sens].length} sensores frente a ${NP} posibles fuentes (en la práctica: 20–200 sensores frente a 15 000–300 000 fuentes).`}
 // atlas esquemático
 const ATC={};function parcel(K){if(ATC[K])return ATC[K];const sd=fib(Math.round(K*1.9),.8,.02).slice(0,K),a=P.map(p=>{let b=0,bd=1e9;sd.forEach((s,i)=>{const d=dist(p,s);if(d<bd){bd=d;b=i}});return b});return ATC[K]={a,K:sd.length}}
-function sec4(){const c=calc(),at=parcel(S.K),jA=near(c.pos[0]),rA=at.a[jA];if(S.reg==null||S.reg>=at.K)S.reg=rA;
+function sec4(){const c=calc(),at=parcel(S.K),rs=c.pos.map(p=>at.a[near(p)]),rA=rs[0];if(S.reg==null||S.reg>=at.K)S.reg=rA;
 topv('#c4',null,{reg:j=>{const r=at.a[j],on=r==S.reg;return on?'hsl(45,95%,60%)':`hsl(${r*47%360},${on?90:45}%,${r%2?30:22}%)`},tr:c.pos});
-const idx=[];at.a.forEach((r,j)=>{if(r==S.reg)idx.push(j)});const ts=c.R.ts(S.met,idx),tr=Float64Array.from(c.D.W[0]);let sg=pear(ts,tr);if(sg<0){for(let i=0;i<NT;i++)ts[i]=-ts[i];sg=-sg}
-plot('#c5',[tr,ts],['#ffffff',MC[S.met]],{norm:1,lw:[2,2]});const has=S.reg==rA;
-$('#t4').innerHTML=`Región con ${idx.length} puntos · <b>${has?'contiene la fuente':'no contiene la fuente'}</b> · parecido con la señal real: <b class="${sg>.8?'text-emerald-300':sg>.5?'text-amber-300':'text-rose-300'}">r = ${sg.toFixed(2)}</b>`}
+const idx=[];at.a.forEach((r,j)=>{if(r==S.reg)idx.push(j)});const inR=rs.map((r,k)=>r==S.reg?k:-1).filter(k=>k>=0),k0=inR.length?inR[0]:0,tr=Float64Array.from(c.D.W[k0]),ts=c.R.ts(S.met,idx),two=c.pos.length>1,NM=['A','B'];let sg=pear(ts,tr);if(sg<0){for(let i=0;i<NT;i++)ts[i]=-ts[i];sg=-sg}
+plot('#c5',[tr,ts],['#ffffff',MC[S.met]],{norm:1,lw:[2,2]});const lab=inR.length==2?'contiene las fuentes A y B (se compara con A)':inR.length?'contiene la fuente'+(two?' '+NM[k0]:''):'no contiene '+(two?'ninguna fuente (se compara con A)':'la fuente');
+$('#t4').innerHTML=`Región con ${idx.length} puntos · <b>${lab}</b> · parecido con la señal real: <b class="${sg>.8?'text-emerald-300':sg>.5?'text-amber-300':'text-rose-300'}">r = ${sg.toFixed(2)}</b>`}
 // reto
 function qnew(){Q2.s++;const r=rng(Q2.s*131+5);let a,b;do{a=r()*1.5-.75;b=r()*1.5-.75}while(a*a+b*b>.55);Q2.p=toCtx([a,b]);Q2.guess=null;Q2.rev=0;Q2.DD=gen([Q2.p],Q2.s+99,S.snr,sTrue(),S.sens,0);$('#qf').textContent=''}
-function sec5(){if(!Q2.p)qnew();const v=col(Q2.DD.Y,PKI);scalp('#cq0',v,S.sens,Math.max(...Array.from(v,Math.abs)));topv('#cq1',null,{el:1,reg:()=>'#162036',tr:Q2.rev?[Q2.p]:[],gu:Q2.guess?[Q2.guess]:[]})}
+function sec5(){if(!Q2.p)qnew();const v=col(Q2.DD.Y,PKI);scalp('#cq0',v,S.sens,Math.max(...Array.from(v,Math.abs)));topv('#cq1',null,{el:1,pts:'#26324c',tr:Q2.rev?[Q2.p]:[],gu:Q2.guess?[Q2.guess]:[]})}
 // ---- pasos Brainstorm
-const STEPS=[['Crear el protocolo','Elige anatomía individual o la que viene por defecto. Usa el mismo archivo de canales para todos los sujetos (o incluso para varias adquisiciones del mismo sujeto).','Es la decisión que condiciona todo lo demás. Aquí: «Cabeza real» (panel lateral).'],
+const STEPS=[['Crear el protocolo','Elige anatomía individual o la que viene por defecto. Usa el mismo archivo de canales para todos los sujetos (o incluso para varias adquisiciones del mismo sujeto).','Es la decisión que condiciona todo lo demás. Aquí: «Modelo de cabeza» (panel lateral).'],
 ['Importar los datos','Registros crudos o ya preprocesados (filtrado, ICA, segmentación en trials…).','El registro del panel 1 ya incluye ruido: juega con la calidad de la señal (SNR).'],
 ['Cargar la anatomía','Resonancia T1 (.nii, .img/.hdr) o plantilla. Se normaliza al espacio MNI y se comprueban los fiduciales: nasion, oído izquierdo y derecho, comisura anterior, comisura posterior y un punto interhemisférico.','Con plantilla, la cabeza del modelo no coincide con la del sujeto: es una fuente de error y de sesgo.'],
-['Segmentar la MRI en tejidos','Con CAT12 (≈ 1 h; FreeSurfer tarda ≈ 24 h). Tejidos: sustancia gris, sustancia blanca, LCR, hueso, tejido blando y fondo. Hay que comprobar que la segmentación es correcta.','Cada tejido conduce distinto: el cráneo «emborrona» el potencial (compara esfera simple y 3 capas).'],
+['Segmentar la MRI en tejidos','Con CAT12 (≈ 1 h; FreeSurfer tarda ≈ 24 h). Tejidos: sustancia gris, sustancia blanca, LCR, hueso, tejido blando y fondo. Hay que comprobar que la segmentación es correcta. Este paso solo hace falta con una MRI propia: las plantillas habituales, como ICBM152, ya vienen segmentadas.','Cada tejido conduce distinto: el cráneo «emborrona» el potencial (compara esfera simple y 3 capas).'],
 ['Cargar el archivo de canales EEG','Genera la superficie de la cabeza en espacio MNI, comprueba la posición de los electrodos y ajústala a mano si hace falta (casi siempre). Se pueden ajustar los ejes XYZ y proyectar sobre la superficie.','Aquí, electrodos 10-20 sobre la cabeza: prueba con 8 o 21 electrodos.'],
-['Generar las superficies BEM','Solo para EEG (en MEG valen las «overlapping spheres», más rápidas). Tres capas realistas basadas en la MRI segmentada: cuero cabelludo, cráneo interno y cráneo externo.','«3 capas (BEM)» frente a «Esfera simple».'],
-['Matrices de ruido y covarianza','Para el ruido: matriz identidad, o un registro en reposo si analizas ERPs (sala vacía en MEG). La covarianza de los datos se estima de los propios datos.','El ruido condiciona cuánto «suavizar»; la covarianza de los datos la usa LCMV.'],
-['Calcular las fuentes','Se recomienda mínima norma (MNE) o beamformer LCMV.','Panel 3: compara wMNE, sLORETA y LCMV.'],
+['Generar las superficies BEM','Sobre todo para EEG (en MEG suelen bastar las «overlapping spheres», más rápidas). Tres capas realistas basadas en la MRI segmentada: cuero cabelludo, cráneo externo y cráneo interno. Con ellas se calcula el modelo directo (matriz de ganancias), por ejemplo con OpenMEEG.','«3 capas (≈ BEM)» frente a «Esfera simple».'],
+['Matrices de ruido y covarianza','Para el ruido: la línea base preestímulo si analizas ERPs, o la matriz identidad si no hay un registro de ruido fiable (en MEG, un registro de sala vacía). La covarianza de los datos se estima en la ventana de interés y necesita suficientes muestras.','El ruido condiciona cuánto «suavizar»; la covarianza de los datos la usa LCMV.'],
+['Calcular las fuentes','Se recomienda mínima norma (con sus variantes: corriente, dSPM o sLORETA) o beamformer LCMV. La elección depende de la pregunta: actividad distribuida, o pocas fuentes no correlacionadas.','Panel 3: compara wMNE, sLORETA y LCMV.'],
 ['Cargar el atlas','Si es un atlas volumétrico (estructuras subcorticales, por ejemplo el tálamo) se carga sobre la MRI en 3D.','Panel 4: atlas con pocas o muchas regiones.'],
-['Series temporales de los scouts','Se calcula la serie temporal de cada scout; conviene revisar la serie y su espectro de potencia. La salida se guarda en un archivo .mat.','Panel 4: la serie de la región recupera la forma de onda de la fuente.']];let SI=0;
+['Series temporales de los scouts','Se calcula la serie temporal de cada scout (media, PCA o media con corrección de signo); conviene revisar la serie y su espectro de potencia. La salida se guarda en un archivo .mat.','Panel 4: la serie de la región recupera la forma de onda de la fuente.']];let SI=0;
 function stepUI(){const el=$('#stb');el.innerHTML='';STEPS.forEach((s,i)=>{const b=document.createElement('button');b.className='b mr-1 mb-1'+(i==SI?' on':'');b.textContent=i+1;b.style.minWidth='2.6rem';b.setAttribute('aria-label','Paso '+(i+1)+': '+s[0]);b.onclick=()=>{SI=i;stepUI()};el.appendChild(b)});const s=STEPS[SI];$('#stp').innerHTML=`<p class="text-orange-300 font-semibold">${SI+1}. ${s[0]}</p><p>${s[1]}</p><p class="text-xs text-slate-400"><b class="text-slate-200">En SourceSim:</b> ${s[2]}</p>`}
 // ---- render
 let pend=0;function draw(){if(pend)return;pend=1;requestAnimationFrame(()=>{pend=0;render()})}
 function render(){sec1();sec2();sec3();sec4();sec5()}
 // ---- UI
-function ui(){setOn('#se',S.sens=='8'?'8':'21');setOn('#hm',S.hm);setOn('#fu',S.two?(S.cor>.5?'2 sincronizadas':'2 independientes'):'1 fuente');setOn('#me',S.met);setOn('#atb',S.K==8?'Pocas regiones (≈ Brodmann)':'Muchas regiones (≈ Desikan-Killiany)');$('#snr').value=S.snr;$('#snv').textContent=S.snr;}
+function ui(){setOn('#se',S.sens=='8'?'8':'21');setOn('#hm',S.hm);setOn('#fu',S.two?(S.cor>.5?'2 sincronizadas':'2 independientes'):'1 fuente');setOn('#me',S.met);setOn('#atb',S.K==8?'Pocas regiones (8)':'Muchas regiones (24)');$('#snr').value=S.snr;$('#snv').textContent=S.snr;}
 $('#m3').innerHTML=METS.map((m,i)=>`<div class="mc" id="cd${i}" role="button" tabindex="0" data-m="${m}"><p class="font-semibold text-sm" style="color:${MC[m]}">${m}</p><canvas id="cm${i}" style="aspect-ratio:1/1"></canvas><p id="im${i}" class="text-xs mt-1"></p><p class="text-[11px] text-slate-400">${MD[m]}</p></div>`).join('');
 document.querySelectorAll('.mc').forEach(e=>{const f=()=>{S.met=e.dataset.m;ui();draw()};e.onclick=f;e.onkeydown=ev=>{if(ev.key=='Enter'||ev.key==' '){ev.preventDefault();f()}}});
 mk($('#se'),['8','21'],'21',o=>{S.sens=o;draw()});mk($('#hm'),HMn,S.hm,o=>{S.hm=o;draw()});mk($('#fu'),['1 fuente','2 independientes','2 sincronizadas'],'1 fuente',o=>{S.two=o[0]=='1'?0:1;S.cor=o[2]=='s'?1:0;ui();draw()});
 mk($('#me'),METS,S.met,o=>{S.met=o;ui();draw()});
-mk($('#atb'),['Pocas regiones (≈ Brodmann)','Muchas regiones (≈ Desikan-Killiany)'],'Pocas regiones (≈ Brodmann)',o=>{S.K=o[0]=='P'?8:24;S.reg=null;draw()});
+mk($('#atb'),['Pocas regiones (8)','Muchas regiones (24)'],'Pocas regiones (8)',o=>{S.K=o[0]=='P'?8:24;S.reg=null;draw()});
 $('#snr').oninput=()=>{S.snr=+$('#snr').value;ui();draw()};$('#nsb').onclick=()=>{S.seed++;draw()};$('#nz').onclick=()=>{S.z++;draw()};$('#rauto').onclick=()=>{S.reg=null;draw()};
 const pt=(e,id)=>{const r=$(id).getBoundingClientRect(),g=GEO[id];return[(e.clientX-r.left-g.cx)/g.R,-(e.clientY-r.top-g.cy)/g.R]};
 const dr=e=>{if(!GEO['#c0']||(e.type=='pointermove'&&!e.buttons))return;SRC[S.edit].p=toCtx(pt(e,'#c0'));draw()};['pointerdown','pointermove'].forEach(t=>$('#c0').addEventListener(t,dr));
 const gq=e=>{if(!GEO['#cq1']||Q2.rev||(e.type=='pointermove'&&!e.buttons))return;const[u,v]=pt(e,'#cq1');Q2.guess=[clamp(u,-1,1),clamp(v,-1,1)];draw()};['pointerdown','pointermove'].forEach(t=>$('#cq1').addEventListener(t,gq));
 const rp=e=>{const g=GEO['#c4'];if(!g||(e.type=='pointermove'&&!e.buttons))return;const[u,v]=pt(e,'#c4'),at=parcel(S.K);let b=-1,bd=1e9;P.forEach((p,j)=>{const d=Math.hypot(p[0]-u,p[1]-v);if(d<bd){bd=d;b=j}});if(bd<.2){S.reg=at.a[b];draw()}};['pointerdown','pointermove'].forEach(t=>$('#c4').addEventListener(t,rp));
-$('#qc').onclick=()=>{if(!Q2.guess){$('#qf').textContent='Primero toca la vista superior para dar tu respuesta.';return}if(Q2.rev)return;Q2.rev=1;const R=solve(getL(S.sens,sInv()),Q2.DD.Y,S.snr,PKI),pk=peaks(R.maps.sLORETA,1)[0],e1=Math.hypot(Q2.guess[0]-Q2.p[0],Q2.guess[1]-Q2.p[1])*CM,e2=dist(P[pk],Q2.p)*CM;Q2.n++;Q2.e1+=e1;Q2.e2+=e2;
+$('#qc').onclick=()=>{if(!Q2.guess){$('#qf').textContent='Primero haz clic en la vista superior para dar tu respuesta.';return}if(Q2.rev)return;Q2.rev=1;const R=solve(getL(S.sens,sInv()),Q2.DD.Y,S.snr,PKI),pk=peaks(R.maps.sLORETA,1)[0],e1=Math.hypot(Q2.guess[0]-Q2.p[0],Q2.guess[1]-Q2.p[1])*CM,e2=dist(P[pk],Q2.p)*CM;Q2.n++;Q2.e1+=e1;Q2.e2+=e2;
 $('#qf').innerHTML=`${e1<1.5?'🏆 ¡Excelente!':e1<3?'👍 Bien.':'🙈 Lejos.'} Tu error: <b class="text-orange-300">${e1.toFixed(1)} cm</b> · sLORETA: <b class="text-violet-300">${e2.toFixed(1)} cm</b><br><span class="text-xs text-slate-400">Media tras ${Q2.n} intento${Q2.n>1?'s':''}: tú ${(Q2.e1/Q2.n).toFixed(1)} cm · sLORETA ${(Q2.e2/Q2.n).toFixed(1)} cm. (✕ = fuente real)</span>`;draw()};
 $('#qn').onclick=()=>{qnew();draw()};
 addEventListener('resize',draw);stepUI();ui();render();
-</script><script>
-/* NeuroLab UVa: fondo de nodos, enlaces al índice y logos (independiente del resto de la app) */
-(function(){
-var base=/\/apps\/[^\/]*$/i.test(location.pathname)?'../':'';
-document.querySelectorAll('.nl-idx').forEach(function(a){a.href=base+'index.html'});
-document.querySelectorAll('#nl-foot img').forEach(function(im){var f=im.getAttribute('data-f');im.src=base+f;
- im.onerror=function(){if(!im.dataset.t){im.dataset.t=1;im.src=(base?'':'../')+f}else{im.onerror=null;var sp=document.createElement('span');sp.textContent=im.alt;im.replaceWith(sp)}}});
-var c=document.getElementById('nl-bg');if(!c||!c.getContext)return;var x=c.getContext('2d'),W=0,H=0,P=[],last=0,still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-function build(){W=c.width=innerWidth;H=c.height=innerHeight;var n=Math.min(60,Math.floor(W*H/20000));P=[];for(var i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.4+1})}
-function draw(k){x.clearRect(0,0,W,H);for(var i=0;i<P.length;i++){var p=P[i];p.x+=p.vx*k;p.y+=p.vy*k;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,6.2832);x.fillStyle='rgba(56,189,248,.4)';x.fill();
- for(var j=i+1;j<P.length;j++){var q=P[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.strokeStyle='rgba(99,102,241,'+((1-d/120)*.18)+')';x.lineWidth=.8;x.stroke()}}}}
-function frame(t){requestAnimationFrame(frame);if(document.hidden||t-last<33)return;var k=Math.min(3,(t-last)/16.7);last=t;draw(k)}
-build();draw(0);if(!still)requestAnimationFrame(frame);
-addEventListener('resize',function(){if(Math.abs(innerWidth-W)>2||Math.abs(innerHeight-H)>150){build();draw(0)}else{c.width=W=innerWidth;c.height=H=innerHeight}});
-})();
-</script>
+</script><script src="../../shared/simulab.js"></script>
 <script src="../../shared/aula.js"></script>
 </body></html>

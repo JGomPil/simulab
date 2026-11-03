@@ -1,0 +1,50 @@
+/* Estilos comunes a todos los simuladores de SimuLab UVa.
+   Lo propio de cada app va en un <style> dentro de su HTML. */
+
+/* Base y componentes */
+body{background:#070b14;color:#cbd5e1;font-family:system-ui,sans-serif}
+canvas{width:100%;display:block;background:#0a1020;border-radius:.5rem;border:1px solid #1e293b}
+.ia{touch-action:none;cursor:crosshair}
+.card{background:#0d1424;border:1px solid #1e293b;border-radius:.75rem;padding:.7rem}
+.b{padding:.35rem .7rem;border-radius:.5rem;border:1px solid #334155;background:#111b30;font-size:.82rem;min-height:40px}
+.b.on{border-color:#22d3ee;color:#22d3ee;background:#06323d}
+.b:disabled{opacity:.4}
+input[type=range]{width:100%;accent-color:#34d399}
+input[type=number]{background:#0a1020;border:1px solid #334155;border-radius:.4rem;padding:.3rem .5rem;width:6rem;color:#e2e8f0}
+summary{cursor:pointer;color:#22d3ee;font-weight:600;min-height:32px}
+.bd{display:inline-grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:9999px;color:#000;font-weight:700;margin-right:.4rem}
+.hd{font-weight:600;margin-bottom:.4rem;display:flex;align-items:center;flex-wrap:wrap;gap:.25rem}
+.key{background:#06281f;border:1px solid #047857;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;color:#a7f3d0;margin:.4rem 0}
+.try{background:#2a1a05;border:1px solid #b45309;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;color:#fde68a;margin:.4rem 0}
+.m b{color:#34d399;font-size:1.2rem}
+.m small{display:block;color:#94a3b8;font-size:.68rem;line-height:1.1}
+.led{font-family:ui-monospace,monospace;color:#fb923c;background:#1a0f08;border:2px solid #44403c;border-radius:.4rem;padding:.2rem .5rem;font-size:1.3rem;letter-spacing:.05em}
+.blk{border:1px solid #334155;border-radius:.4rem;padding:.25rem .45rem;background:#0a1020;font-size:.72rem;text-align:center}
+.blk b{color:#34d399}
+.q{display:block;width:100%;text-align:left;margin-bottom:.3rem}
+.q.ok{border-color:#34d399;color:#34d399;background:#064e3b55}
+.q.ko{border-color:#f87171;color:#f87171;background:#7f1d1d55}
+table{width:100%;font-size:.78rem}
+:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
+.sub{font-weight:600;color:#e2e8f0;font-size:.9rem;margin:.9rem 0 .3rem;padding-top:.6rem;border-top:1px dashed #1e293b}
+.res{background:#0a1020;border:1px solid #1e293b;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;margin:.4rem 0}
+table.cmp{width:100%;font-size:.8rem;border-collapse:collapse}
+.cmp th,.cmp td{border:1px solid #1e293b;padding:.35rem .5rem;text-align:left;vertical-align:top}
+.cmp th{background:#111b30;color:#e2e8f0}
+.chip{display:inline-block;border:1px solid #334155;border-radius:9999px;padding:.1rem .6rem;font-size:.75rem;margin:.15rem .15rem .15rem 0;background:#111b30}
+.hidden{display:none!important}
+main>*,.card{min-width:0}
+.hd{min-height:2.5rem}
+
+/* Fondo, cabecera y pie */
+html{background:radial-gradient(circle at 82% 8%,rgba(34,211,238,.10),transparent 45%),radial-gradient(circle at 12% 88%,rgba(167,139,250,.08),transparent 45%),#070b14;background-attachment:fixed}
+body{background:transparent!important}
+#nl-bg{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;display:block;background:transparent!important;border:0!important;border-radius:0!important}
+.nl-hd{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:.5rem}
+.nl-back{font-size:.72rem;color:#7dd3fc;border:1px solid rgba(56,189,248,.35);border-radius:9999px;padding:.25rem .7rem;text-decoration:none;white-space:nowrap;background:rgba(8,16,36,.55)}
+.nl-back:hover{background:rgba(14,116,144,.35);color:#e0f2fe}
+#nl-foot{margin-top:1.25rem;padding:.8rem 0 calc(.8rem + env(safe-area-inset-bottom));border-top:1px solid rgba(51,65,85,.6);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;font-size:.68rem;line-height:1.3;color:#64748b}
+#nl-foot a{color:inherit;text-decoration:none}#nl-foot a:hover{color:#cbd5e1}
+#nl-foot .nl-logos{display:flex;align-items:center;gap:.9rem}
+#nl-foot img{height:26px;width:auto;opacity:.85}#nl-foot img:hover{opacity:1}
+@media print{#nl-bg,#nl-foot,.nl-back{display:none!important}}

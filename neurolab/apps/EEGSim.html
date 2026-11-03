@@ -1,43 +1,20 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EEGsim · Laboratorio de simulación de EEG</title><meta name="theme-color" content="#070b14">
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EEGSim · Laboratorio de simulación de EEG</title><meta name="theme-color" content="#070b14">
 <script src="https://cdn.tailwindcss.com"></script>
-<style>
-body{background:#070b14;color:#cbd5e1;font-family:system-ui,sans-serif}
-canvas{width:100%;display:block;background:#0a1020;border-radius:.5rem;border:1px solid #1e293b}
-.card{background:#0d1424;border:1px solid #1e293b;border-radius:.75rem;padding:.7rem}
-.b{padding:.35rem .7rem;border-radius:.5rem;border:1px solid #334155;background:#111b30;font-size:.82rem;min-height:40px}
-.b.on{border-color:#22d3ee;color:#22d3ee;background:#06323d}
-input[type=range]{width:100%;accent-color:#34d399}
-summary{cursor:pointer;color:#22d3ee;font-weight:600;min-height:32px}
-.bd{display:inline-grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:9999px;color:#000;font-weight:700;margin-right:.4rem}
-.hd{font-weight:600;margin-bottom:.4rem;display:flex;align-items:center;flex-wrap:wrap;gap:.25rem}
-:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
-</style><style id="nl-style">
-/* Elementos comunes NeuroLab UVa: fondo de nodos, enlace al índice y pie */
-html{background:radial-gradient(circle at 82% 8%,rgba(34,211,238,.10),transparent 45%),radial-gradient(circle at 12% 88%,rgba(167,139,250,.08),transparent 45%),#070b14;background-attachment:fixed}
-body{background:transparent!important}
-#nl-bg{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;display:block;background:transparent!important;border:0!important;border-radius:0!important}
-.nl-hd{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:.5rem}
-.nl-back{font-size:.72rem;color:#7dd3fc;border:1px solid rgba(56,189,248,.35);border-radius:9999px;padding:.25rem .7rem;text-decoration:none;white-space:nowrap;background:rgba(8,16,36,.55)}
-.nl-back:hover{background:rgba(14,116,144,.35);color:#e0f2fe}
-#nl-foot{margin-top:1.25rem;padding:.8rem 0 calc(.8rem + env(safe-area-inset-bottom));border-top:1px solid rgba(51,65,85,.6);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;font-size:.68rem;line-height:1.3;color:#64748b}
-#nl-foot a{color:inherit;text-decoration:none}#nl-foot a:hover{color:#cbd5e1}
-#nl-foot .nl-logos{display:flex;align-items:center;gap:.9rem}
-#nl-foot img{height:26px;width:auto;opacity:.85}#nl-foot img:hover{opacity:1}
-@media print{#nl-bg,#nl-foot,.nl-back{display:none!important}}
-</style>
+<link rel="stylesheet" href="../../shared/simulab.css">
 </head><body class="p-2 md:p-4 max-w-7xl mx-auto">
 <canvas id="nl-bg" aria-hidden="true"></canvas>
 
-<header class="mb-3 nl-hd"><h1 class="text-xl md:text-2xl font-bold text-white">EEGsim <span class="text-cyan-400 text-sm md:text-base font-normal">Laboratorio de simulación de EEG</span></h1><a class="nl-back nl-idx" href="../index.html" title="Volver al índice de simuladores">← NeuroLab UVa</a></header>
+<header class="mb-3"><div class="nl-hd"><h1 class="text-xl md:text-2xl font-bold text-white">EEGSim <span class="text-cyan-400 text-sm md:text-base font-normal">Laboratorio de simulación de EEG</span></h1><a class="nl-back nl-idx" href="../index.html" title="Volver al índice de simuladores">← NeuroLab UVa</a></div>
+  <div class="card mt-2 text-sm"><b class="text-white">La idea en 20 segundos.</b> Un electrodo recoge la suma de la actividad de muchas neuronas y también <b class="text-rose-300">artefactos</b> (ojos, músculo, red eléctrica). Cada estado cerebral mezcla de forma distinta sus <b class="text-cyan-300">ritmos</b> (δ, θ, α, β, γ), y el <b class="text-amber-300">espectro</b> permite verlos. Los paneles recorren el análisis: <b>1</b> el registro, <b>Σ</b> su espectro y <b>2-3</b> cómo <b class="text-violet-300">ICA</b> separa las fuentes para limpiar la señal.</div></header>
 <main class="grid lg:grid-cols-3 gap-3">
 <div class="lg:col-span-2 space-y-3">
- <section class="card"><div class="hd"><span class="bd bg-cyan-400">1</span>Registro original<span id="lab" class="text-xs text-slate-400 font-normal ml-1"></span><button class="b ml-auto" id="pau">⏸ Pausar</button></div><canvas id="c0"></canvas><p class="text-xs text-slate-500 mt-1">Ventana de <span id="wsv">6</span> s · ±<span id="scv"></span> µV por canal</p><p id="cur" class="text-xs text-amber-300"></p></section>
- <section class="card"><div class="hd"><span class="bd bg-amber-400">Σ</span>Espectro (PSD)<select id="psc" class="ml-2 bg-slate-800 border border-slate-600 rounded p-1 text-sm" aria-label="Canal del espectro"></select><span class="text-xs text-slate-400 font-normal">cian = original · verde = tras ICA</span></div><div class="text-xs text-slate-400">Suavizado del espectro <span id="sm"></span> · Unidades <span id="un"></span></div><canvas id="c3" style="height:220px"></canvas><p id="bnd" class="text-xs text-slate-400 mt-1"></p></section>
+ <section class="card"><div class="hd"><span class="bd bg-cyan-400">1</span>Registro original<span id="lab" class="text-xs text-slate-400 font-normal ml-1"></span><button class="b ml-auto" id="pau">⏸ Pausar</button></div><canvas id="c0"></canvas><p class="text-xs text-slate-500 mt-1">Ventana de <span id="wsv">6</span> s · ±<span id="scv"></span> µV por canal</p><p id="cur" class="text-xs text-amber-300"></p><div class="key">💡 <b>Idea clave:</b> cada estado cerebral tiene su mezcla de ritmos y su reparto por la cabeza, y el montaje cambia cómo se ve una misma actividad.</div><div class="try">🧪 <b>Prueba esto:</b> alterna «ojos cerrados» y «ojos abiertos» y mira cómo baja α en Pz y Oz. Después pasa de Monopolar a CAR y a Bipolar: lo que es común a dos electrodos vecinos se reduce.</div><div class="try">🧪 <b>Prueba esto:</b> activa «Parpadeo» en el panel lateral y mira Fpz. Ningún filtro lo quita sin dañar el EEG; pulsa «Mostrar ICA» y compara.</div></section>
+ <section class="card"><div class="hd"><span class="bd bg-amber-400">Σ</span>Espectro (PSD)<select id="psc" class="ml-2 bg-slate-800 border border-slate-600 rounded p-1 text-sm" aria-label="Canal del espectro"></select><span class="text-xs text-slate-400 font-normal">cian = original · verde = tras ICA</span></div><div class="text-xs text-slate-400">Suavizado del espectro <span id="sm"></span> · Unidades <span id="un"></span></div><canvas id="c3" style="height:250px"></canvas><p id="bnd" class="text-xs text-slate-400 mt-1"></p><div class="key">💡 <b>Idea clave:</b> el espectro muestra cuánta potencia hay en cada frecuencia y revela lo que en el registro no se distingue a simple vista.</div><div class="try">🧪 <b>Prueba esto:</b> activa «Red 50 Hz»: aparece un pico estrecho en 50 Hz. Activa después el notch y compara.</div></section>
  <div id="icb" class="hidden space-y-3">
   <div class="text-center text-violet-300 text-sm">▼ ICA descompone el registro ▼</div>
-  <section class="card border-violet-500/40"><div class="hd"><span class="bd bg-violet-400">2</span>Componentes ICA<span class="text-xs text-slate-400 font-normal">toca para rechazar/conservar</span></div><div id="ics" class="mb-2"></div><canvas id="c1"></canvas></section>
+  <section class="card border-violet-500/40"><div class="hd"><span class="bd bg-violet-400">2</span>Componentes ICA<span class="text-xs text-slate-400 font-normal">haz clic en una componente para rechazarla o conservarla</span></div><div id="ics" class="mb-2"></div><canvas id="c1"></canvas><p class="text-xs text-slate-500 mt-1">Simplificación docente: estas componentes son las fuentes simuladas, no el resultado de calcular ICA sobre el registro. En datos reales hay que identificarlas y la separación no es perfecta.</p></section>
   <div class="text-center text-emerald-300 text-sm">▼ se restan las componentes rechazadas ▼</div>
-  <section class="card border-emerald-500/40"><div class="hd"><span class="bd bg-emerald-400">3</span>Señal limpia<span class="text-xs text-slate-400 font-normal">gris = registro original</span></div><canvas id="c2"></canvas></section>
+  <section class="card border-emerald-500/40"><div class="hd"><span class="bd bg-emerald-400">3</span>Señal limpia<span class="text-xs text-slate-400 font-normal">gris = registro original</span></div><canvas id="c2"></canvas><div class="key">💡 <b>Idea clave:</b> ICA no elimina una banda de frecuencias, sino fuentes. Por eso puede quitar el parpadeo y conservar el EEG que se solapa con él.</div></section>
  </div></div>
 <aside class="space-y-2 lg:sticky lg:top-2 self-start lg:max-h-[96vh] lg:overflow-auto">
  <details open class="card"><summary>Estado cerebral</summary><div id="norm"><div id="pre" class="mt-2"></div><p id="note" class="text-xs text-slate-400"></p>
@@ -51,7 +28,7 @@ body{background:transparent!important}
 </aside></main>
 <footer id="nl-foot">
 <a class="nl-idx" href="../index.html">← NeuroLab UVa · Índice de simuladores</a>
-<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img data-f="img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img data-f="img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
+<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img src="../../img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img src="../../img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
 <div>© 2026 <a href="https://gib.uva.es/member.php?id=16" target="_blank" rel="noopener">Javier Gómez Pilar</a> · Grupo de Ingeniería Biomédica, Universidad de Valladolid</div>
 </footer>
 <script>
@@ -65,11 +42,13 @@ const TR={Monopolar:EL.map((e,i)=>({n:e[0],a:i,b:-1})),CAR:EL.map((e,i)=>({n:e[0
 'Bipolar longitudinal':'Fp1-F3 F3-C3 C3-P3 P3-O1 Fp2-F4 F4-C4 C4-P4 P4-O2 Fp1-F7 F7-T3 T3-T5 T5-O1 Fp2-F8 F8-T4 T4-T6 T6-O2 Fpz-Fz Fz-Cz Cz-Pz Pz-Oz'.split(' ').map(pr),
 'Bipolar transversal':'F7-F3 F3-Fz Fz-F4 F4-F8 T3-C3 C3-Cz Cz-C4 C4-T4 T5-P3 P3-Pz Pz-P4 P4-T6 Fp1-Fpz Fpz-Fp2 O1-Oz Oz-O2'.split(' ').map(pr)};
 const DF={Monopolar:'Fpz Fz Cz Pz Oz',CAR:'Fpz Fz Cz Pz Oz','Bipolar longitudinal':'Fpz-Fz Fz-Cz Cz-Pz Pz-Oz Fp1-F3','Bipolar transversal':'F3-Fz Fz-F4 C3-Cz Cz-C4 P3-Pz'},SEL={};for(const k in DF)SEL[k]=DF[k].split(' ');
-const F={δ:1.5,θ:6,α:10,β:20,γ:40},BK=Object.keys(F),BE={δ:[.5,4],θ:[4,8],α:[8,13],β:[13,30],γ:[30,45]},NB=['β','γ'],AK=['Parpadeo','EMG','ECG','Red 50 Hz','Respiración'];
-const ST={'Despierto · ojos cerrados':{bd:{δ:[.1],θ:[.15],α:[1,'p'],β:[.2,'a'],γ:[.06]},note:'α (8–12 Hz) dominante en regiones parieto-occipitales; el resto de bandas, residuales.'},
+// Desfase suave según la posición: los ritmos viajan por la cabeza y los electrodos vecinos quedan casi en fase
+const PH=EL.map(e=>.9*e[2]+.25*e[1]);
+const F={δ:1.5,θ:6,α:10,β:20,γ:40},BK=Object.keys(F),BE={δ:[.5,4],θ:[4,8],α:[8,13],β:[13,30],γ:[30,70]},NB=['β','γ'],AK=['Parpadeo','EMG','ECG','Red 50 Hz','Respiración'];
+const ST={'Despierto · ojos cerrados':{bd:{δ:[.1],θ:[.15],α:[1,'p'],β:[.2,'a'],γ:[.06]},note:'α (8–13 Hz) dominante en regiones parieto-occipitales; el resto de bandas, residuales.'},
 'Despierto · ojos abiertos':{bd:{δ:[.1],θ:[.15],α:[.3,'p'],β:[.45],γ:[.15]},note:'α atenuada y más β, repartida por todo el cuero cabelludo.'},
 'N1':{bd:{δ:[.2],θ:[.6],α:[.6,'p'],β:[.1,'a'],γ:[.05]},note:'Somnolencia: se parece a ojos cerrados, con α más débil y fragmentada y θ creciente.'},
-'N2':{bd:{δ:[.5,'a'],θ:[.5],α:[.12,'p'],β:[.12,'a'],γ:[.06]},sp:1,kc:1,note:'Ondas lentas con husos de 12–15 Hz (centro-parietales) y complejos K (frontales/vértex).'},
+'N2':{bd:{δ:[.5,'a'],θ:[.5],α:[.12,'p'],β:[.12,'a'],γ:[.06]},sp:1,kc:1,note:'Ondas lentas con husos de 12–15 Hz (centro-parietales) y complejos K (frontales/vértex). Los husos caen entre α y β: en la potencia relativa se reparten sobre todo en β.'},
 'N3':{bd:{δ:[1.4,'a'],θ:[.12],α:[.1,'p'],β:[.08],γ:[.05]},note:'Sueño profundo: ondas lentas δ de gran amplitud con predominio frontal.'},
 'REM':{bd:{δ:[.1],θ:[.45],α:[.2,'p'],β:[.3],γ:[.1]},note:'Actividad mixta de bajo voltaje (no se simulan los movimientos oculares).'}};
 // ---- bandas como ruido de banda limitada (Butterworth paso-alto + paso-bajo de 2.º orden sobre ruido blanco), no como senoides
@@ -103,11 +82,12 @@ mk($('#ica'),['Mostrar ICA (3 pasos)'],[],(o,on)=>{E.ica=on;$('#icb').classList.
 function setPau(v){E.pau=v;$('#pau').textContent=v?'▶ Reanudar':'⏸ Pausar';if(!v)E.cu=[]}$('#pau').onclick=()=>setPau(!E.pau);
 function verd(){const a=E.art,f=E.fl,L=[],ic=k=>E.ica&&E.rej[k],m=E.mon,bip=m.startsWith('Bip');
 if(a['Red 50 Hz'])L.push(f['Notch 50 Hz']||ic('Red 50 Hz')?'✓ Red 50 Hz eliminada':'✗ Red 50 Hz: usa el notch');
-if(a['Respiración'])L.push(f['Paso-alto']&&E.hc>=.5||ic('Respiración')?'✓ Deriva respiratoria eliminada':f['Paso-alto']?'✗ Corte del paso-alto demasiado bajo para la respiración (0,25 Hz)':'✗ Respiración (0,25 Hz): usa el paso-alto');
+if(a['Respiración'])L.push(ic('Respiración')?'✓ Deriva respiratoria eliminada con ICA':f['Paso-alto']&&E.hc>=1?'✓ Deriva respiratoria atenuada':f['Paso-alto']?'✗ Corte del paso-alto demasiado bajo para la respiración (0,25 Hz)':'✗ Respiración (0,25 Hz): usa el paso-alto');
 if(a.EMG)L.push(f['Paso-bajo']&&E.lc<=40||ic('EMG')?'✓ EMG atenuado':f['Paso-bajo']?'✗ Corte del paso-bajo demasiado alto para el EMG':'✗ EMG (alta frecuencia): usa el paso-bajo');
 if(a.Parpadeo)L.push(ic('Parpadeo')?'✓ Parpadeo eliminado con ICA':'⚠ Parpadeo: solapa con el EEG, requiere ICA/regresión');
 if(a.ECG)L.push(ic('ECG')?'✓ ECG eliminado con ICA':'⚠ ECG: requiere ICA o referencia ECG');
-if(f['Paso-alto']&&E.hc>1.5)L.push('⚠ Paso-alto alto: distorsiona la δ y las ondas lentas');if(f['Paso-bajo']&&E.lc<30)L.push('⚠ Paso-bajo bajo: atenúa la γ'+(E.lc<15?' y la β':''));
+if(f['Paso-alto']&&E.hc>1.5)L.push('⚠ Paso-alto alto: distorsiona la δ y las ondas lentas');if(f['Paso-bajo']&&E.lc<70)L.push('⚠ Paso-bajo por debajo de 70 Hz: atenúa '+(E.lc<30?'la γ':'parte de la γ')+(E.lc<15?' y la β':''));
+if(f['Notch 50 Hz'])L.push('ℹ El notch también quita la parte de la γ que cae en torno a 50 Hz');
 if(m=='CAR'&&a.Parpadeo)L.push('ℹ CAR reparte el parpadeo frontal por todos los canales');
 if(bip&&(a['Red 50 Hz']||a['Respiración']))L.push('ℹ En bipolar, lo común a ambos electrodos se cancela en gran parte');
 if(E.pas)L.push('ℹ Pasivos: más ruido de fondo y deriva lenta por el movimiento del cable; el paso-alto de 1 Hz la reduce');
@@ -125,7 +105,7 @@ if(E.sp&&t>E.nx.sp){E.ev.push({t,k:'sp',f:12+R()*3});E.nx.sp=t+4+R()*4}
 if(E.kc&&t>E.nx.kc){E.ev.push({t,k:'kc'});E.nx.kc=t+6+R()*6}
 E.ev=E.ev.filter(e=>t-e.t<2.5);const sb={};for(const q in E.bd)if(NB.includes(q))sb[q]=bn(E.bs[q]||(E.bs[q]=[]),q);const ph={};for(const q of FMB)if(E.bd[q]){const f=E.fm[q]||(E.fm[q]={x:0,ph:0}),P=FP[q];f.x=f.x*.995+.0999*(R()+R()+R()-1.5)*2;f.ph+=2*PI*(P[0]+P[1]*Math.tanh(.8*f.x))/E.fs;ph[q]=f.ph}
 for(let e=0;e<NE;e++){const x=EL[e][1],y=EL[e][2];E.p[e]=PSC*pink(E.pn[e])*pm;let b=0,i=0;
-for(const q in E.bd){const d=E.bd[q],g=d.g=='p'?.3+.7*(1-y)/2:d.g=='a'?.3+.7*(1+y)/2:1,am=.75+.25*Math.sin(2*PI*(.15+.07*i)*t+i*2);b+=NB.includes(q)?15*d.p*g*am*(.77*sb[q]+.63*bn(E.bl[e+q]||(E.bl[e+q]=[]),q)):30*d.p*g*am*Math.sin(ph[q]+e*1.3+i);i++}
+for(const q in E.bd){const d=E.bd[q],g=d.g=='p'?.3+.7*(1-y)/2:d.g=='a'?.3+.7*(1+y)/2:1,am=.75+.25*Math.sin(2*PI*(.15+.07*i)*t+i*2);b+=NB.includes(q)?15*d.p*g*am*(.77*sb[q]+.63*bn(E.bl[e+q]||(E.bl[e+q]=[]),q)):30*d.p*g*am*Math.sin(ph[q]+PH[e]+i);i++}
 for(const ev of E.ev){const u=t-ev.t;b+=ev.k=='sp'?45*gauss(u,.9,.35)*Math.sin(2*PI*ev.f*u)*(1-.6*Math.abs(x))*(.5+.5*(1-Math.abs(y+.1))):(-110*gauss(u,.3,.09)+60*gauss(u,.75,.2))*(1-.7*Math.abs(x))*(.4+.6*(1-Math.abs(y-.3)/1.3))}
 b*=E.ga;if(e==IX.Cz)cer=b;let base=b+E.p[e];if(E.pas)base+=15*Math.sin(2*PI*.3*t+e*2.1)+6*Math.sin(2*PI*50*t+e);
 let a=base,r=base;const ct={Parpadeo:1.2*Math.pow(Math.max(0,(y+.3)/1.3),2),EMG:(.45+.55*Math.max(Math.abs(x),y>.8?.8:0))*pm,ECG:.5-.4*x-.4*y,'Red 50 Hz':E.pas?pm*(.8+.25*Math.sin(e*1.7)):1,'Respiración':1};
@@ -138,10 +118,13 @@ B.d.copyWithin(0,1);B.d[E.N-1]=proc(f(v,m),S[0]);B.d2.copyWithin(0,1);B.d2[E.N-1
 // ---- dibujo
 const CL=['#22d3ee','#a78bfa','#34d399','#f0abfc','#fbbf24','#fb7185'];let g0,g1,g2,g3,lp=0,last=performance.now();
 function dr(g,arr,lab,sc,gh,col){const{x,w,h}=g,n=arr.length,rh=h/n,st=Math.max(1,Math.floor(E.N/w));x.clearRect(0,0,w,h);x.font='12px sans-serif';
+const secs=E.N/E.fs,stp=secs>12?5:1;x.strokeStyle='rgba(148,163,184,.14)';x.lineWidth=1;x.beginPath();for(let s=stp;s<secs;s+=stp){const X=w-s/secs*w;x.moveTo(X,0);x.lineTo(X,h)}x.stroke();
 const pth=a=>{x.beginPath();if(st<2){for(let i=0;i<E.N;i++){const X=i/E.N*w,Y=y0-a[i]*k;i?x.lineTo(X,Y):x.moveTo(X,Y)}}
 else{const cols=Math.ceil(w);for(let c=0;c<cols;c++){const i0=Math.floor(c*E.N/cols),i1=Math.max(i0+1,Math.floor((c+1)*E.N/cols));let mn=1e9,mx=-1e9;for(let i=i0;i<i1&&i<E.N;i++){const v=a[i];if(v<mn)mn=v;if(v>mx)mx=v}const X=c*w/cols,u=y0-mx*k,d=y0-mn*k;c?x.lineTo(X,u):x.moveTo(X,u);x.lineTo(X,d)}}x.stroke()};let y0,k;
 arr.forEach((a,c)=>{y0=rh*(c+.5);k=rh/2/sc;x.strokeStyle='#1e293b';x.lineWidth=1;x.beginPath();x.moveTo(0,y0);x.lineTo(w,y0);x.moveTo(0,rh*c);x.lineTo(w,rh*c);x.stroke();
-if(gh){x.strokeStyle='rgba(148,163,184,.4)';pth(gh[c])}x.strokeStyle=col||CL[c%6];x.lineWidth=1.3;pth(a);x.fillStyle='#e2e8f0';x.fillText(lab[c],6,rh*c+13)})}
+if(gh){x.strokeStyle='rgba(148,163,184,.4)';pth(gh[c])}x.strokeStyle=col||CL[c%6];x.lineWidth=1.3;pth(a);x.fillStyle='#e2e8f0';x.fillText(lab[c],6,rh*c+13)});
+x.font='11px sans-serif';x.fillStyle='#94a3b8';x.textAlign='center';for(let s=stp;s<secs;s+=stp)x.fillText('−'+s+' s',w-s/secs*w,h-4);
+const uv=sc<=50?25:sc<=150?50:100,bh=uv*rh/2/sc;x.strokeStyle='#e2e8f0';x.lineWidth=2;x.beginPath();x.moveTo(w-8,6);x.lineTo(w-8,6+bh);x.stroke();x.textAlign='right';x.fillStyle='#e2e8f0';x.fillText(uv+' µV',w-13,6+Math.max(10,bh/2+4));x.textAlign='left'}
 function lay(){const n=Math.max(1,selTr().length),hh=Math.max(240,n*62);$('#c0').style.height=$('#c2').style.height=hh+'px';$('#c1').style.height=Math.max(160,ncomp()*54)+'px';g0=cv('#c0');g3=cv('#c3');if(E.ica){g1=cv('#c1');g2=cv('#c2')}}
 function loop(now){if(E.pau)last=now;else{if(now-last>100)last=now-40;const n=Math.min(10,Math.floor((now-last)/1000*E.fs));if(n>0){last+=n/E.fs*1000;for(let i=0;i<n;i++)tick()}}
 const T=selTr(),nm=T.map(t=>t.n);if(g0){dr(g0,T.map(t=>bf(t).d),nm,E.sc);drawCur()}
@@ -155,12 +138,12 @@ E.cu=[];function setWin(n){E.N=n*E.fs;E.buf={};['Cerebral',...AK].forEach(k=>E.i
 mk($('#win'),['3 s','6 s','12 s','30 s'],'6 s',o=>setWin(parseInt(o)));
 $('#hc').oninput=()=>{E.hc=+$('#hc').value;$('#hcv').textContent=E.hc.toFixed(1);verd()};$('#lc').oninput=()=>{E.lc=+$('#lc').value;$('#lcv').textContent=E.lc;verd()};$('#hc').oninput();$('#lc').oninput();
 $('#c0').addEventListener('pointerdown',e=>{const r=e.currentTarget.getBoundingClientRect();if(!E.pau)setPau(true);if(E.cu.length>=2)E.cu=[];E.cu.push({x:e.clientX-r.left,y:e.clientY-r.top})});
-function drawCur(){const{x,w,h}=g0,n=Math.max(1,selTr().length),rh=h/n;if(!E.cu.length){$('#cur').textContent='Toca el registro para colocar dos cursores (se pausa solo). Reanudar los borra.';return}
+function drawCur(){const{x,w,h}=g0,n=Math.max(1,selTr().length),rh=h/n;if(!E.cu.length){$('#cur').textContent='Haz clic en el registro para colocar dos cursores (se pausa solo). Reanudar los borra.';return}
 E.cu.forEach((c,i)=>{x.strokeStyle='#fbbf24';x.lineWidth=1;x.setLineDash([4,3]);x.beginPath();x.moveTo(c.x,0);x.lineTo(c.x,h);x.stroke();x.setLineDash([]);x.fillStyle='#fbbf24';x.beginPath();x.arc(c.x,c.y,4,0,7);x.fill();x.fillText(i?'B':'A',c.x+6,12)});
-if(E.cu.length<2){$('#cur').textContent='Cursor A colocado; toca el segundo punto.';return}
+if(E.cu.length<2){$('#cur').textContent='Cursor A colocado; haz clic en el segundo punto.';return}
 const[a,b]=E.cu,dt=Math.abs(b.x-a.x)/w*E.N/E.fs,uv=y=>{const r=Math.floor(y/rh);return(rh*(r+.5)-y)/(rh/2)*E.sc};
 $('#cur').textContent=`Δt = ${(dt*1000).toFixed(0)} ms (${(1/dt).toFixed(1)} Hz)`+(Math.floor(a.y/rh)==Math.floor(b.y/rh)?` · ΔV = ${Math.abs(uv(a.y)-uv(b.y)).toFixed(0)} µV`:' · ΔV solo si ambos puntos están en el mismo canal')}
-const PF=Array.from({length:120},(_,i)=>(i+1)*.5),BD=[['δ',.5,4,'#60a5fa'],['θ',4,8,'#a78bfa'],['α',8,13,'#34d399'],['β',13,30,'#fbbf24'],['γ',30,60,'#fb7185']];let PT={M:0};
+const PF=Array.from({length:140},(_,i)=>(i+1)*.5),BD=[['δ',.5,4,'#60a5fa'],['θ',4,8,'#a78bfa'],['α',8,13,'#34d399'],['β',13,30,'#fbbf24'],['γ',30,70,'#fb7185']];let PT={M:0};
 function ptab(M){if(PT.M==M)return;const w=new Float32Array(M);let sw=0;for(let n=0;n<M;n++){w[n]=.5-.5*Math.cos(2*PI*n/(M-1));sw+=w[n]*w[n]}
 PT={M,w,sw,c:PF.map(f=>Float32Array.from({length:M},(_,n)=>Math.cos(2*PI*f*n/E.fs))),s:PF.map(f=>Float32Array.from({length:M},(_,n)=>Math.sin(2*PI*f*n/E.fs)))}}
 function psd(a){const M=Math.min(500,E.N),H=M>>2,K=Math.min(21,Math.floor((Math.min(E.N,3000)-M)/H)+1),x=new Float32Array(M),P=new Float32Array(PF.length);ptab(M);
@@ -171,33 +154,18 @@ mk($('#sm'),['Bajo','Medio','Alto'],'Medio',o=>{E.sm={Bajo:[.25,0],Medio:[.1,1],
 mk($('#un'),['dB','µV²/Hz','µV/√Hz'],'dB',o=>{E.un=o});
 function psel(){const T=selTr(),c=$('#psc').value;$('#psc').innerHTML=T.map(t=>`<option>${t.n}</option>`).join('');if(T.some(t=>t.n==c))$('#psc').value=c}
 function dpsd(){const T=selTr(),t=T.find(q=>q.n==$('#psc').value)||T[0];if(!t||!g3)return;const B=bf(t),key=E.mon+'|'+t.n;if(E.pk!=key){E.pk=key;E.p1=E.p2=null}if(!E.ica)E.p2=null;const sm=(o,n)=>o?o.map((v,i)=>(1-E.sm[0])*v+E.sm[0]*n[i]):n,R1=E.p1=sm(E.p1,psd(B.d)),R2=E.ica?(E.p2=sm(E.p2,psd(B.d2))):null,P1=fsm(R1),P2=R2&&fsm(R2),{x,w,h}=g3,db=p=>E.un=='dB'?10*Math.log10(p+1e-3):E.un=='µV²/Hz'?p:Math.sqrt(p);
-const lin=E.un!='dB';let mx=lin?1e-6:40;[P1,P2||[]].forEach(A=>A.forEach(p=>mx=Math.max(mx,lin?db(p)*1.1:db(p)+5)));const lo=lin?0:-20,Y=v=>h-18-(v-lo)/(mx-lo)*(h-30),X=f=>30+f/60*(w-36);x.clearRect(0,0,w,h);x.font='12px sans-serif';x.textAlign='left';
+const lin=E.un!='dB';let mx=lin?1e-6:40;[P1,P2||[]].forEach(A=>A.forEach(p=>mx=Math.max(mx,lin?db(p)*1.1:db(p)+5)));const lo=lin?0:-30,Y=v=>h-18-(v-lo)/(mx-lo)*(h-30),X=f=>30+f/70*(w-36);x.clearRect(0,0,w,h);x.font='12px sans-serif';x.textAlign='left';
 BD.forEach(([l,a,b,c])=>{x.fillStyle=c+'22';x.fillRect(X(a),0,X(b)-X(a),h-18);x.fillStyle=c;x.fillText(l,X((a+b)/2)-4,12)});
-x.fillStyle='#64748b';[10,20,30,40,50,60].forEach(f=>x.fillText(f,X(f)-8,h-4));x.fillText('Hz',w-18,h-4);[0,1,2,3,4].forEach(k=>{const v=lo+(mx-lo)*k/4;x.strokeStyle='#1e293b';x.lineWidth=1;x.beginPath();x.moveTo(30,Y(v));x.lineTo(w-6,Y(v));x.stroke();x.fillStyle='#64748b';x.fillText(lin?(v>=100?v.toFixed(0):v>=10?v.toFixed(1):v.toFixed(2)):v.toFixed(0),2,Y(v)+(k?4:0))});
+x.fillStyle='#64748b';[10,20,30,40,50,60].forEach(f=>x.fillText(f,X(f)-8,h-4));x.textAlign='right';x.fillText('70 Hz',w-4,h-4);x.textAlign='left';(lin?[0,1,2,3,4].map(k=>lo+(mx-lo)*k/4):[-30,-10,10,30,50,70].filter(v=>v<=mx)).forEach((v,k)=>{x.strokeStyle='#1e293b';x.lineWidth=1;x.beginPath();x.moveTo(30,Y(v));x.lineTo(w-6,Y(v));x.stroke();x.fillStyle='#64748b';x.fillText(lin?(v>=100?v.toFixed(0):v>=10?v.toFixed(1):v.toFixed(2)):v.toFixed(0),2,Y(v)+(k?4:0))});
 x.textAlign='right';x.fillText({'dB':'dB re 1 µV²/Hz','µV²/Hz':'µV²/Hz','µV/√Hz':'µV/√Hz'}[E.un],w-6,12);x.textAlign='left';
 const ln=(P,c)=>{x.strokeStyle=c;x.lineWidth=1.6;x.beginPath();P.forEach((p,i)=>{const px=X(PF[i]),py=Y(db(p));i?x.lineTo(px,py):x.moveTo(px,py)});x.stroke()};ln(P1,'#22d3ee');if(P2)ln(P2,'#34d399');
-const tot=P1.reduce((a,b)=>a+b,0)||1;$('#bnd').textContent='Potencia relativa (0,5–60 Hz, original): '+BD.map(([l,a,b])=>l+' '+(PF.reduce((s,f,i)=>s+(f>=a&&f<b?P1[i]:0),0)/tot*100).toFixed(0)+'%').join(' · ')}
+const tot=P1.reduce((a,b)=>a+b,0)||1;$('#bnd').textContent='Potencia relativa (0,5–70 Hz, original): '+BD.map(([l,a,b])=>l+' '+(PF.reduce((s,f,i)=>s+(f>=a&&f<b?P1[i]:0),0)/tot*100).toFixed(0)+'%').join(' · ')}
 const Q={on:0,ok:0,n:0,done:0,ans:''};
 function mkPre(c){mk($('#pre'),Object.keys(ST),c,setP)}
 function qnext(){const ks=Object.keys(ST);Q.ans=ks[R()*ks.length|0];Q.done=0;setP(Q.ans);$('#qf').innerHTML='';mk($('#qa'),ks,[],qans)}
 function qans(o){if(Q.done)return;Q.done=1;Q.n++;const ok=o==Q.ans;Q.ok+=ok;$('#qf').innerHTML=`${ok?'✓ Correcto':'✗ Era «'+Q.ans+'»'} · ${Q.ok}/${Q.n}<br><span class="text-xs text-slate-400">${ST[Q.ans].note}</span><br><button class="b mt-1" id="qn">Siguiente</button>`;$('#qn').onclick=qnext}
 $('#qb').onclick=()=>{Q.on=!Q.on;$('#norm').classList.toggle('hidden',Q.on);$('#qz').classList.toggle('hidden',!Q.on);$('#qb').textContent=Q.on?'Salir del reto':'🎯 Reto: adivina el estado';if(Q.on){Q.ok=Q.n=0;qnext()}else{mkPre(Q.ans);setP(Q.ans)}}
 addEventListener('resize',lay);setP('Despierto · ojos cerrados');chs();ics();lay();requestAnimationFrame(loop);
-</script><script>
-/* NeuroLab UVa: fondo de nodos, enlaces al índice y logos (independiente del resto de la app) */
-(function(){
-var base=/\/apps\/[^\/]*$/i.test(location.pathname)?'../':'';
-document.querySelectorAll('.nl-idx').forEach(function(a){a.href=base+'index.html'});
-document.querySelectorAll('#nl-foot img').forEach(function(im){var f=im.getAttribute('data-f');im.src=base+f;
- im.onerror=function(){if(!im.dataset.t){im.dataset.t=1;im.src=(base?'':'../')+f}else{im.onerror=null;var sp=document.createElement('span');sp.textContent=im.alt;im.replaceWith(sp)}}});
-var c=document.getElementById('nl-bg');if(!c||!c.getContext)return;var x=c.getContext('2d'),W=0,H=0,P=[],last=0,still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-function build(){W=c.width=innerWidth;H=c.height=innerHeight;var n=Math.min(60,Math.floor(W*H/20000));P=[];for(var i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.4+1})}
-function draw(k){x.clearRect(0,0,W,H);for(var i=0;i<P.length;i++){var p=P[i];p.x+=p.vx*k;p.y+=p.vy*k;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,6.2832);x.fillStyle='rgba(56,189,248,.4)';x.fill();
- for(var j=i+1;j<P.length;j++){var q=P[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.strokeStyle='rgba(99,102,241,'+((1-d/120)*.18)+')';x.lineWidth=.8;x.stroke()}}}}
-function frame(t){requestAnimationFrame(frame);if(document.hidden||t-last<33)return;var k=Math.min(3,(t-last)/16.7);last=t;draw(k)}
-build();draw(0);if(!still)requestAnimationFrame(frame);
-addEventListener('resize',function(){if(Math.abs(innerWidth-W)>2||Math.abs(innerHeight-H)>150){build();draw(0)}else{c.width=W=innerWidth;c.height=H=innerHeight}});
-})();
-</script>
+</script><script src="../../shared/simulab.js"></script>
 <script src="../../shared/aula.js"></script>
 </body></html>

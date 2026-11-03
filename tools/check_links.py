@@ -42,7 +42,8 @@ def main():
             if not match:
                 continue
             url = urlsplit(match.group(1))
-            if url.scheme or url.netloc or not url.path or '${' in url.path:
+            # Las rutas absolutas dependen del dominio (solo las usa 404.html): no se pueden comprobar aquí.
+            if url.scheme or url.netloc or not url.path or url.path.startswith('/') or '${' in url.path:
                 continue
             target = page.parent / unquote(url.path)
             if target.is_dir():

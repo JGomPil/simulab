@@ -1,51 +1,29 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ERPsim · Laboratorio de simulación de ERPs</title><meta name="theme-color" content="#070b14">
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ERPSim · Laboratorio de simulación de ERPs</title><meta name="theme-color" content="#070b14">
 <script src="https://cdn.tailwindcss.com"></script>
-<style>
-body{background:#070b14;color:#cbd5e1;font-family:system-ui,sans-serif}
-canvas{width:100%;display:block;background:#0a1020;border-radius:.5rem;border:1px solid #1e293b}
-.card{background:#0d1424;border:1px solid #1e293b;border-radius:.75rem;padding:.7rem}
-.b{padding:.35rem .7rem;border-radius:.5rem;border:1px solid #334155;background:#111b30;font-size:.85rem;min-height:40px}
-.b.on{border-color:#22d3ee;color:#22d3ee;background:#06323d}
-input[type=range]{width:100%;accent-color:#34d399}
-summary{cursor:pointer;color:#22d3ee;font-weight:600;min-height:32px}
-.bd{display:inline-grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:9999px;color:#000;font-weight:700;margin-right:.4rem}
-.hd{font-weight:600;margin-bottom:.4rem;display:flex;align-items:center;flex-wrap:wrap;gap:.25rem}
-:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
-</style><style id="nl-style">
-/* Elementos comunes NeuroLab UVa: fondo de nodos, enlace al índice y pie */
-html{background:radial-gradient(circle at 82% 8%,rgba(34,211,238,.10),transparent 45%),radial-gradient(circle at 12% 88%,rgba(167,139,250,.08),transparent 45%),#070b14;background-attachment:fixed}
-body{background:transparent!important}
-#nl-bg{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;display:block;background:transparent!important;border:0!important;border-radius:0!important}
-.nl-hd{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:.5rem}
-.nl-back{font-size:.72rem;color:#7dd3fc;border:1px solid rgba(56,189,248,.35);border-radius:9999px;padding:.25rem .7rem;text-decoration:none;white-space:nowrap;background:rgba(8,16,36,.55)}
-.nl-back:hover{background:rgba(14,116,144,.35);color:#e0f2fe}
-#nl-foot{margin-top:1.25rem;padding:.8rem 0 calc(.8rem + env(safe-area-inset-bottom));border-top:1px solid rgba(51,65,85,.6);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;font-size:.68rem;line-height:1.3;color:#64748b}
-#nl-foot a{color:inherit;text-decoration:none}#nl-foot a:hover{color:#cbd5e1}
-#nl-foot .nl-logos{display:flex;align-items:center;gap:.9rem}
-#nl-foot img{height:26px;width:auto;opacity:.85}#nl-foot img:hover{opacity:1}
-@media print{#nl-bg,#nl-foot,.nl-back{display:none!important}}
-</style>
+<link rel="stylesheet" href="../../shared/simulab.css">
 </head><body class="p-2 md:p-4 max-w-7xl mx-auto">
 <canvas id="nl-bg" aria-hidden="true"></canvas>
 
-<header class="mb-3 nl-hd"><h1 class="text-xl md:text-2xl font-bold text-white">ERPsim <span class="text-cyan-400 text-sm md:text-base font-normal">Laboratorio de simulación de ERPs</span></h1><a class="nl-back nl-idx" href="../index.html" title="Volver al índice de simuladores">← NeuroLab UVa</a></header>
+<header class="mb-3"><div class="nl-hd"><h1 class="text-xl md:text-2xl font-bold text-white">ERPSim <span class="text-cyan-400 text-sm md:text-base font-normal">Laboratorio de simulación de ERPs</span></h1><a class="nl-back nl-idx" href="../index.html" title="Volver al índice de simuladores">← NeuroLab UVa</a></div>
+  <div class="card mt-2 text-sm"><b class="text-white">La idea en 20 segundos.</b> Un ERP es la respuesta del cerebro a un estímulo, mucho más pequeña que el EEG de fondo. Al <b class="text-cyan-300">promediar N repeticiones</b>, lo que no está sincronizado con el estímulo se cancela: el ruido baja con <b class="text-amber-300">√N</b> y aparecen las <b class="text-rose-300">componentes</b> (P1, N1, P2, N2, P3). Los paneles recorren: <b>1</b> el promedio, <b>2</b> el mapa topográfico, <b>3</b> tiempo-frecuencia, <b>4</b> la relación señal-ruido y <b>5</b> el gran promedio entre sujetos.</div></header>
 <main class="grid lg:grid-cols-3 gap-3">
 <div class="lg:col-span-2 space-y-3">
  <section class="card"><div class="hd"><span class="bd bg-cyan-400">1</span>Potencial evocado (promedio de N trials)<span id="lab" class="text-xs text-slate-400 font-normal ml-1"></span></div>
-  <div id="chip" class="mb-2"></div><canvas id="c0" style="height:300px" aria-label="ERP promedio"></canvas>
-  <p class="text-xs text-slate-500 mt-1">Positivo hacia arriba. Toca el trazo o un botón para elegir la componente.</p>
-  <div class="grid sm:grid-cols-3 gap-3 mt-2"><div class="sm:col-span-2" id="info"></div><div><canvas id="c2" style="height:170px" aria-label="Origen cortical"></canvas><p class="text-[11px] text-slate-500 text-center">Vista superior (arriba = frontal)</p></div></div></section>
- <section class="card"><div class="hd"><span class="bd bg-amber-400">2</span>Mapa topográfico<span id="tml" class="text-xs text-slate-400 font-normal ml-1"></span></div><div class="grid sm:grid-cols-3 gap-3 items-center"><div class="sm:col-span-2"><canvas id="c5" style="height:280px" aria-label="Mapa topográfico"></canvas></div><div><label class="text-sm block">Latencia del mapa: <b id="tmv" class="text-emerald-400"></b> ms<input id="tm" type="range" min="-100" max="600" step="5" value="400"></label><p class="text-xs text-slate-400 mt-2">Rojo = positivo, azul = negativo (escala ±9 µV). Arriba = frontal. Recorre la latencia y observa cómo se desplaza el foco de actividad.</p></div></div></section>
+  <div id="chip" class="mb-1"></div><div id="cmpb" class="mb-2"></div><canvas id="c0" style="height:300px" aria-label="ERP promedio"></canvas>
+  <p class="text-xs text-slate-500 mt-1">Positivo hacia arriba. Haz clic en el trazo o en un botón para elegir la componente.</p>
+  <p id="cmpn" class="text-sm mt-1 hidden"></p>
+  <div class="grid sm:grid-cols-3 gap-3 mt-2"><div class="sm:col-span-2" id="info"></div><div><canvas id="c2" style="height:200px" aria-label="Origen cortical"></canvas><p class="text-[11px] text-slate-500 text-center">Vista superior (arriba = frontal)</p></div></div><div class="key">💡 <b>Idea clave:</b> en un solo trial manda el ruido. Al promediar se conserva lo que está sincronizado con el estímulo y lo demás se cancela.</div><div class="try">🧪 <b>Prueba esto:</b> en Pz, sube N de 1 a 200 y mira cómo el trazo se acerca a la señal real (línea discontinua).</div><div class="try">🧪 <b>Prueba esto:</b> con N=200, pulsa «Comparar Estándar y Diana» en Pz: la P3 crece con la diana y la onda diferencia la aísla.</div><div class="try">🧪 <b>Prueba esto:</b> con N=200, sube el jitter de 0 a 40 ms: en Oz, la P1, estrecha, baja y se ensancha; en Pz, la P3, ancha, apenas cambia.</div></section>
+ <section class="card"><div class="hd"><span class="bd bg-amber-400">2</span>Mapa topográfico<span id="tml" class="text-xs text-slate-400 font-normal ml-1"></span></div><div class="grid sm:grid-cols-3 gap-3 items-center"><div class="sm:col-span-2"><canvas id="c5" style="height:300px" aria-label="Mapa topográfico"></canvas></div><div><label class="text-sm block">Latencia del mapa: <b id="tmv" class="text-emerald-400"></b> ms<input id="tm" type="range" min="-100" max="600" step="5" value="400"></label><p class="text-xs text-slate-400 mt-2">Rojo = positivo, azul = negativo, blanco = 0 (escala ±9 µV). Arriba = frontal. Recorre la latencia y observa cómo se desplaza el foco de actividad.</p></div></div><div class="key">💡 <b>Idea clave:</b> cada componente tiene su propia distribución por la cabeza, y esa distribución depende de la referencia elegida.</div><div class="try">🧪 <b>Prueba esto:</b> con «Diana» y N=200, alterna entre las componentes P1 y P3 y compara dónde está el foco. Después cambia la referencia a «Promedio»: aparecen zonas negativas.</div></section>
  <section class="card"><div class="hd"><span class="bd bg-violet-400">3</span>Tiempo-frecuencia: ¿promediar antes o después?</div>
   <div class="grid sm:grid-cols-2 gap-3">
-   <div><p class="text-sm text-violet-300 font-semibold">A · Promediado sincronizado</p><p class="text-xs text-slate-400 mb-1">Primero el ERP promedio, después el TF</p><canvas id="c3" style="height:210px"></canvas></div>
-   <div><p class="text-sm text-emerald-300 font-semibold">B · Single-trial</p><p class="text-xs text-slate-400 mb-1">TF de cada trial, después el promedio de potencias</p><canvas id="c4" style="height:210px"></canvas></div></div>
-  <p id="tfn" class="text-sm mt-2"></p><p id="tfres" class="text-xs text-slate-400 mt-1"></p></section>
- <section class="card"><div class="hd"><span class="bd bg-sky-400">4</span>Relación señal-ruido frente a N</div><canvas id="c6" style="height:230px" aria-label="SNR frente a N"></canvas><p id="snrn" class="text-sm mt-2"></p><p class="text-xs text-slate-400">SNR (dB) = potencia del ERP promediado / potencia del ruido residual. El ruido se estima con el promedio «±», que alterna el signo de los trials y cancela la señal. Cada vez que se duplica N la SNR sube unos 3 dB (ley √N, línea discontinua). Filtrar también la sube, pero a costa de deformar los picos estrechos.</p></section>
- <section class="card"><div class="hd"><span class="bd bg-rose-400">5</span>Gran promedio entre sujetos</div><canvas id="c7" style="height:260px" aria-label="Gran promedio"></canvas><p id="gtxt" class="text-sm mt-2"></p><p class="text-xs text-slate-400">Cada sujeto aporta su propio promedio de N trials (líneas grises). El gran promedio (línea gruesa) es la media de los promedios individuales. Más trials reducen el ruido de cada sujeto y más sujetos reducen el ruido del grupo, pero la variabilidad entre sujetos (latencia y amplitud) no desaparece: ensancha y aplana los picos, como el jitter entre trials.</p></section>
+   <div><p class="text-sm text-violet-300 font-semibold">A · Promediado sincronizado</p><p class="text-xs text-slate-400 mb-1">Primero el ERP promedio, después el TF</p><canvas id="c3" style="height:250px"></canvas></div>
+   <div><p class="text-sm text-emerald-300 font-semibold">B · Single-trial</p><p class="text-xs text-slate-400 mb-1">TF de cada trial, después el promedio de potencias</p><canvas id="c4" style="height:250px"></canvas></div></div>
+  <p id="tfn" class="text-sm mt-2"></p><p id="tfres" class="text-xs text-slate-400 mt-1"></p><div class="key">💡 <b>Idea clave:</b> promediar antes solo conserva la actividad <b>evocada</b>, ligada en fase al estímulo. Hacer el tiempo-frecuencia de cada trial conserva también la <b>inducida</b>.</div><div class="try">🧪 <b>Prueba esto:</b> con N=200, compara A y B en 8–12 Hz: el alfa, con fase distinta en cada trial, se cancela en A y se mantiene en B.</div><div class="try">🧪 <b>Prueba esto:</b> cambia la ventana STFT o pasa a wavelet: lo que ganas en resolución temporal lo pierdes en frecuencia.</div></section>
+ <section class="card"><div class="hd"><span class="bd bg-sky-400">4</span>Relación señal-ruido frente a N</div><canvas id="c6" style="height:250px" aria-label="SNR frente a N"></canvas><p id="snrn" class="text-sm mt-2"></p><p class="text-xs text-slate-400">SNR (dB) = potencia del ERP promediado / potencia del ruido residual. El ruido se estima con el promedio «±», que alterna el signo de los trials y cancela la señal. Cada vez que se duplica N la SNR sube unos 3 dB (ley √N, línea discontinua). Filtrar también la sube, pero a costa de deformar los picos estrechos.</p><div class="key">💡 <b>Idea clave:</b> la SNR crece despacio: cada duplicación de N solo aporta unos 3 dB, así que ganar 10 dB exige unas 10 veces más trials.</div><div class="try">🧪 <b>Prueba esto:</b> activa el filtro paso-bajo y compara la curva. Después mira en el panel 1 cómo cambian los picos estrechos.</div></section>
+ <section class="card"><div class="hd"><span class="bd bg-rose-400">5</span>Gran promedio entre sujetos</div><canvas id="c7" style="height:300px" aria-label="Gran promedio"></canvas><p id="gtxt" class="text-sm mt-2"></p><p class="text-xs text-slate-400">Cada sujeto aporta su propio promedio de N trials (líneas grises). El gran promedio (línea gruesa) es la media de los promedios individuales. Más trials reducen el ruido de cada sujeto y más sujetos reducen el ruido del grupo, pero la variabilidad entre sujetos (latencia y amplitud) no desaparece: ensancha y aplana los picos, como el jitter entre trials.</p><div class="key">💡 <b>Idea clave:</b> más trials y más sujetos reducen el ruido, pero no recuperan la altura que se pierde porque cada sujeto tiene su propia latencia.</div><div class="try">🧪 <b>Prueba esto:</b> con N=200, pasa la variabilidad entre sujetos de «Baja» a «Alta» y mira cómo el gran promedio se aleja de la amplitud media individual (el porcentaje bajo la gráfica).</div></section>
 </div>
-<aside class="space-y-2 lg:sticky lg:top-2 self-start">
- <details open class="card"><summary>Experimento odd-ball</summary><div class="text-xs mt-2">Condición</div><div id="cd"></div><div class="text-xs">Electrodo</div><div id="st"></div><p class="text-xs text-slate-500">También puedes tocar un electrodo en el mapa.</p>
+<aside class="space-y-2 lg:sticky lg:top-2 self-start lg:max-h-[96vh] lg:overflow-auto">
+ <details open class="card"><summary>Experimento odd-ball</summary><div class="text-xs mt-2">Condición</div><div id="cd"></div><div class="text-xs">Electrodo</div><div id="st"></div><p class="text-xs text-slate-500">También puedes hacer clic en un electrodo en el mapa.</p>
   <label class="text-sm block mt-2">Nº de trials N = <b id="nv" class="text-emerald-400">1</b><input id="n" type="range" min="1" max="200" value="1"></label></details>
  <details open class="card"><summary>Visualización</summary><div class="text-xs mt-2">Tiempo-frecuencia</div><div id="tf"></div><label id="lw" class="text-xs block">Ventana STFT (σ): <b id="lwv" class="text-emerald-400">60</b> ms<input id="swr" type="range" min="20" max="150" step="10" value="60"></label><label id="lcy" class="text-xs block hidden">Ciclos de la wavelet: <b id="cyv" class="text-emerald-400">5</b><input id="cyr" type="range" min="2" max="10" step="1" value="5"></label><div class="text-xs">Capas</div><div id="ly"></div></details>
  <details open class="card"><summary>Referencia</summary><div id="rf" class="mt-2"></div><p id="rfn" class="text-xs text-slate-400"></p></details>
@@ -55,7 +33,7 @@ body{background:transparent!important}
 </aside></main>
 <footer id="nl-foot">
 <a class="nl-idx" href="../index.html">← NeuroLab UVa · Índice de simuladores</a>
-<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img data-f="img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img data-f="img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
+<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img src="../../img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img src="../../img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
 <div>© 2026 <a href="https://gib.uva.es/member.php?id=16" target="_blank" rel="noopener">Javier Gómez Pilar</a> · Grupo de Ingeniería Biomédica, Universidad de Valladolid</div>
 </footer>
 <script>
@@ -90,10 +68,11 @@ for(let n=0;n<TL;n++){const t=ms(n)/1000,w=g[n]/sw,i=(a*NT+b)*TL+n;c[i]=w*Math.c
 function tf1(x,m){const{c,s}=tab(m),o=new Float32Array(NF*NT);for(let q=0;q<NF*NT;q++){let re=0,im=0;const i=q*TL;for(let n=0;n<TL;n++){re+=x[n]*c[i+n];im+=x[n]*s[i+n]}o[q]=re*re+im*im}return o}
 const TC={};function tfs(){const k=S.cond+S.site+S.tf+S.mod+S.jit+(S.lp?S.fc:0)+S.ref+(S.tf=='STFT'?S.sw:S.cy);if(Object.keys(TC).length>30)for(const q in TC)delete TC[q];return TC[k]||(TC[k]=gen(S.cond,S.site).map(x=>tf1(S.lp?lpf(x,S.fc):x,S.tf)))}
 // ---- UI
-mk($('#cd'),Object.keys(CW),S.cond,o=>{S.cond=o;draw()});mk($('#st'),Object.keys(W),S.site,o=>{S.site=o;draw()});
+mk($('#cd'),Object.keys(CW),S.cond,o=>{S.cond=o;if(S.cmp){S.cmp=false;[...$('#cmpb').children].forEach(b=>b.classList.remove('on'))}draw()});mk($('#st'),Object.keys(W),S.site,o=>{S.site=o;draw()});
 mk($('#tf'),['STFT','Wavelet (CWT)'],'STFT',o=>{S.tf=o[0]=='S'?'STFT':'CWT';$('#lw').classList.toggle('hidden',S.tf!='STFT');$('#lcy').classList.toggle('hidden',S.tf=='STFT');draw()});
 mk($('#ly'),['Señal real (discontinua)','Trials individuales'],['Señal real (discontinua)','Trials individuales'],(o,on)=>{o[0]=='S'?S.truth=on:S.trials=on;draw()},1);
 mk($('#chip'),CP.map(p=>p.n),'P3',o=>{S.sel=CP.findIndex(p=>p.n==o);info()});
+mk($('#cmpb'),['Comparar Estándar y Diana'],[],(o,on)=>{S.cmp=on;[...$('#cd').children].forEach(b=>b.classList.toggle('on',!on&&b.textContent==S.cond));draw()},1);
 mk($('#md'),['Visual','Auditiva'],'Visual',o=>{S.mod=o;CP=o=='Visual'?CPV:CPA;bw();info()});
 mk($('#jt'),['0 ms','10 ms','20 ms','40 ms'],'20 ms',o=>{S.jit=parseInt(o);draw()});
 mk($('#fb'),['Filtro paso-bajo'],[],(o,on)=>{S.lp=on;draw()},1);
@@ -115,39 +94,50 @@ x.fillStyle='#e2e8f0';x.font='11px sans-serif';x.textAlign='center';x.fillText(p
 // ---- dibujo
 let g0;const X0=38;
 function draw(){g0=cv('#c0');const{x,w,h}=g0,T=gen(S.cond,S.site),n=S.N,PW=w-X0-8,PH=h-26,X=i=>X0+i/(TL-1)*PW,Y=v=>8+PH/2-v*PH/24;
-$('#lab').textContent=`· ${S.cond} · ${S.site} · N=${n}`;x.clearRect(0,0,w,h);const p=CP[S.sel];
+$('#lab').textContent=`· ${S.cmp?'Estándar y Diana':S.cond} · ${S.site} · N=${n}`;x.clearRect(0,0,w,h);const p=CP[S.sel];
 x.fillStyle=p.c+'22';x.fillRect(X((p.r[0]+100)/4),8,X((p.r[1]+100)/4)-X((p.r[0]+100)/4),PH);
 x.strokeStyle='#334155';x.lineWidth=1;x.beginPath();x.moveTo(X0,Y(0));x.lineTo(w-8,Y(0));x.moveTo(X(25),8);x.lineTo(X(25),8+PH);x.stroke();
-x.fillStyle='#64748b';x.font='11px sans-serif';x.textAlign='right';[-10,-5,0,5,10].forEach(v=>x.fillText((v>0?'+':'')+v,X0-4,Y(v)+4));x.textAlign='center';[0,100,200,300,400,500,600].forEach(t=>x.fillText(t,X((t+100)/4),h-10));x.fillText('ms',w-14,h-10);x.save();x.translate(9,h/2);x.rotate(-PI/2);x.fillText('µV',0,0);x.restore();
+x.fillStyle='#64748b';x.font='11px sans-serif';x.textAlign='right';[-10,-5,0,5,10].forEach(v=>x.fillText((v>0?'+':'')+v,X0-4,Y(v)+4));x.textAlign='center';[0,100,200,300,400,500].forEach(t=>x.fillText(t,X((t+100)/4),h-10));x.textAlign='right';x.fillText('600 ms',w-4,h-10);x.textAlign='center';x.save();x.translate(9,h/2);x.rotate(-PI/2);x.fillText('µV',0,0);x.restore();
 const pth=a=>{x.beginPath();for(let i=0;i<TL;i++)i?x.lineTo(X(i),Y(a[i])):x.moveTo(X(i),Y(a[i]));x.stroke()};
-if(S.trials){x.strokeStyle='rgba(148,163,184,.22)';x.lineWidth=1;for(let k=Math.max(0,n-6);k<n;k++)pth(T[k])}
+if(S.trials&&!S.cmp){x.strokeStyle='rgba(148,163,184,.22)';x.lineWidth=1;for(let k=Math.max(0,n-6);k<n;k++)pth(T[k])}
 const av=avg(T,n),tr=Float32Array.from({length:TL},(_,i)=>erp(ms(i),S.cond,S.site)),avF=S.lp?lpf(av,S.fc):av;
-if(S.truth){x.setLineDash([5,4]);x.strokeStyle='#e2e8f0';x.lineWidth=1.3;pth(tr);x.setLineDash([])}
-if(S.lp){x.strokeStyle='rgba(34,211,238,.4)';x.lineWidth=1.3;pth(av)}x.strokeStyle=S.lp?'#34d399':'#22d3ee';x.lineWidth=2.6;pth(avF);
-CP.forEach((q,i)=>{const px=X((q.m+100)/4),py=Y(erp(q.m,S.cond,S.site));x.fillStyle=q.c;x.beginPath();x.arc(px,py,i==S.sel?6:3.5,0,7);x.fill();x.font=(i==S.sel?'bold 13px':'11px')+' sans-serif';x.textAlign='center';x.fillText(q.n,px,py+(q.a>0?-10:18))});
+if(S.truth&&!S.cmp){x.setLineDash([5,4]);x.strokeStyle='#e2e8f0';x.lineWidth=1.3;pth(tr);x.setLineDash([])}
+if(S.cmp)cmpDraw(x,w,n,p,pth);else{if(S.lp){x.strokeStyle='rgba(34,211,238,.4)';x.lineWidth=1.3;pth(av)}x.strokeStyle=S.lp?'#34d399':'#22d3ee';x.lineWidth=2.6;pth(avF)}
+$('#cmpn').classList.toggle('hidden',!S.cmp);
+if(!S.cmp)CP.forEach((q,i)=>{const px=X((q.m+100)/4),py=Y(erp(q.m,S.cond,S.site));x.fillStyle=q.c;x.beginPath();x.arc(px,py,i==S.sel?6:3.5,0,7);x.fill();x.font=(i==S.sel?'bold 13px':'11px')+' sans-serif';x.textAlign='center';x.fillText(q.n,px,py+(q.a>0?-10:18))});
 const rm=a=>Math.sqrt(a.reduce((q,v,i)=>q+(v-tr[i])**2,0)/TL).toFixed(1),xt=X((S.tm+100)/4);x.strokeStyle='rgba(255,255,255,.55)';x.lineWidth=1;x.setLineDash([2,3]);x.beginPath();x.moveTo(xt,8);x.lineTo(xt,8+PH);x.stroke();x.setLineDash([]);
-x.fillStyle='#34d399';x.textAlign='left';x.font='12px sans-serif';x.fillText(S.lp?`Dif. RMS con la señal real: ${rm(av)} µV sin filtrar → ${rm(avF)} µV filtrado`:`Dif. RMS con la señal real: ${rm(av)} µV`,X0+6,h-26);topo();rnote();snr(T,n);grand();
+x.fillStyle='#34d399';x.textAlign='left';x.font='12px sans-serif';if(!S.cmp){const tx=S.lp?`Dif. RMS con la señal real: ${rm(av)} µV sin filtrar → ${rm(avF)} µV filtrado`:`Dif. RMS con la señal real: ${rm(av)} µV`;x.fillStyle='rgba(10,16,32,.85)';x.fillRect(X0+2,h-40,x.measureText(tx).width+8,18);x.fillStyle='#34d399';x.fillText(tx,X0+6,h-26)}topo();rnote();snr(T,n);grand();
 tfdraw(T,avF,n)}
+// Estándar y Diana superpuestas, con la onda diferencia: la forma clásica de aislar lo que cambia entre condiciones
+function cmpDraw(x,w,n,p,pth){const F=a=>S.lp?lpf(a,S.fc):a,aE=F(avg(gen('Estándar',S.site),n)),aD=F(avg(gen('Diana',S.site),n)),dif=aD.map((v,i)=>v-aE[i]),real=Float32Array.from({length:TL},(_,i)=>erp(ms(i),'Diana',S.site)-erp(ms(i),'Estándar',S.site));
+if(S.truth){x.setLineDash([5,4]);x.strokeStyle='#e2e8f0';x.lineWidth=1.3;pth(real);x.setLineDash([])}
+x.lineWidth=1.8;x.strokeStyle='#94a3b8';pth(aE);x.strokeStyle='#22d3ee';pth(aD);x.lineWidth=2.8;x.strokeStyle='#fb7185';pth(dif);
+const L=[['Estándar','#94a3b8'],['Diana','#22d3ee'],['Diana − Estándar','#fb7185']];x.font='12px sans-serif';x.textAlign='left';let lx=w-300;L.forEach(([t,c])=>{x.fillStyle=c;x.fillRect(lx,8,14,3);x.fillText(t,lx+18,14);lx+=t.length*6.4+34});
+let bi=-1,bv=-Infinity;const sg=Math.sign(p.a),I=m=>Math.round((m+100)/4);for(let i=I(p.r[0]);i<=I(p.r[1]);i++)if(dif[i]*sg>bv){bv=dif[i]*sg;bi=i}
+const rp=real.slice(I(p.r[0]),I(p.r[1])+1).reduce((m,v)=>Math.max(m,v*sg),-Infinity),f1=v=>(v>0?'+':'')+v.toFixed(1).replace('.',',');
+$('#cmpn').innerHTML=`<b class="text-rose-300">Diana − Estándar</b> en ${S.site}, ventana de ${p.n} (${p.r[0]}–${p.r[1]} ms): pico medido de <b>${f1(bv*sg)} µV</b> a ${ms(bi)} ms; el valor simulado real es ${f1(rp*sg)} µV. `+(rp<.3?`<span class="text-amber-300">${p.n} apenas cambia entre condiciones: lo que se ve aquí es sobre todo ruido.</span>`:n<30?`<span class="text-amber-300">Con N=${n} el ruido de ambas condiciones se suma en la diferencia: sube N.</span>`:'')+` <span class="text-slate-400">Los paneles 2 a 5 siguen mostrando «${S.cond}». Elige una condición en el panel lateral para salir de la comparación.</span>`}
 function lpf(a,fc){const K=Math.tan(PI*fc/250),q=Math.SQRT2,nn=1/(1+q*K+K*K),b0=K*K*nn,b1=2*b0,a1=2*(K*K-1)*nn,a2=(1-q*K+K*K)*nn,P=40,L=a.length,e=new Float32Array(L+2*P);
 for(let i=0;i<P;i++){e[i]=2*a[0]-a[P-i];e[L+P+i]=2*a[L-1]-a[L-2-i]}for(let i=0;i<L;i++)e[P+i]=a[i];
 const f=z=>{const o=new Float32Array(z.length);let x1=z[0],x2=z[0],y1=z[0],y2=z[0];for(let i=0;i<z.length;i++){const y=b0*z[i]+b1*x1+b0*x2-a1*y1-a2*y2;x2=x1;x1=z[i];y2=y1;y1=y;o[i]=y}return o};
 return f(f(e).reverse()).reverse().slice(P,P+L)}
+const cmap=u=>{const v=255*(1-Math.abs(u))|0;return u>=0?`rgb(255,${v},${v})`:`rgb(${v},${v},255)`};
 function topo(){const{x,w,h}=cv('#c5'),R=Math.min(w,h)*.42,cx=w/2,cy=h/2+4,t=S.tm,n=S.N;x.clearRect(0,0,w,h);
 const pn=(a,b)=>(15/Math.sqrt(n))*.45*(Math.sin(3.1*a+1.7*b+.5)+Math.sin(-2.3*a+3.9*b+2.1))/2;
-for(let py=-R;py<=R;py+=5)for(let px=-R;px<=R;px+=5){const a=px/R,b=-py/R;if(a*a+b*b>1)continue;let v=pn(a,b);CP.forEach((p,i)=>{v+=p.a*CW[S.cond][i]*gauss(t,p.m,p.s)*(tp(i,a,b)-RF[i])});const u=Math.max(-1,Math.min(1,v/9));x.fillStyle=`rgb(${40+215*Math.max(u,0)|0},${40+50*(1-Math.abs(u))|0},${40+215*Math.max(-u,0)|0})`;x.fillRect(cx+px-2.5,cy+py-2.5,5.5,5.5)}
+x.save();x.beginPath();x.arc(cx,cy,R,0,7);x.clip();for(let py=-R;py<=R;py+=2)for(let px=-R;px<=R;px+=2){const a=px/R,b=-py/R;if(a*a+b*b>1.04)continue;let v=pn(a,b);CP.forEach((p,i)=>{v+=p.a*CW[S.cond][i]*gauss(t,p.m,p.s)*(tp(i,a,b)-RF[i])});const u=Math.max(-1,Math.min(1,v/9));x.fillStyle=cmap(u);x.fillRect(cx+px-1,cy+py-1,2.5,2.5)}x.restore();
 x.strokeStyle='#64748b';x.lineWidth=1.5;x.beginPath();x.arc(cx,cy,R,0,7);x.moveTo(cx-9,cy-R);x.lineTo(cx,cy-R-12);x.lineTo(cx+9,cy-R);x.stroke();
-for(const k in SP){const[a,b]=SP[k];x.fillStyle=k==S.site?'#fff':'#94a3b8';x.beginPath();x.arc(cx+a*R,cy-b*R,k==S.site?5:3,0,7);x.fill();x.font=(k==S.site?'bold 10px':'9px')+' sans-serif';x.textAlign='center';x.fillStyle=k==S.site?'#fff':'#cbd5e1';x.fillText(k,cx+a*R,cy-b*R+14)}
+for(const k in SP){const[a,b]=SP[k];x.fillStyle=k==S.site?'#fbbf24':'#0f172a';x.strokeStyle='#e2e8f0';x.lineWidth=1;x.beginPath();x.arc(cx+a*R,cy-b*R,k==S.site?5:3,0,7);x.fill();x.stroke();x.font=(k==S.site?'bold 11px':'10px')+' sans-serif';x.textAlign='center';x.lineWidth=3;x.strokeStyle='#0a1020';x.strokeText(k,cx+a*R,cy-b*R+15);x.fillStyle=k==S.site?'#fbbf24':'#f1f5f9';x.fillText(k,cx+a*R,cy-b*R+15)}
+const bx=Math.min(w-44,cx+R+36),bt=cy-R,bh=2*R;for(let i=0;i<bh;i++){const u=1-2*i/bh;x.fillStyle=cmap(u);x.fillRect(bx,bt+i,12,1.5)}x.strokeStyle='#64748b';x.lineWidth=1;x.strokeRect(bx,bt,12,bh);x.fillStyle='#cbd5e1';x.font='11px sans-serif';x.textAlign='left';[['+9',bt+9],['0',bt+bh/2+4],['−9',bt+bh-1]].forEach(([l,y])=>x.fillText(l,bx+16,y));x.fillText('µV',bx-1,bt-6);
 $('#tmv').textContent=t;$('#tml').textContent=`· ${t} ms · ${S.cond}`}
 const RN={Mastoides:'Referencia clásica de ERP: las componentes se ven con su polaridad «de libro» en casi todo el cuero cabelludo.',Promedio:'Referencia promedio: el potencial total suma cero, así que donde una componente es positiva, en otras regiones sale negativa.',Nariz:'Referencia frontal: los canales frontales se aplanan y los posteriores quedan amplificados.',Cz:'Cz queda plano porque es la referencia; el resto se ve relativo a él.'};
 function rnote(){const p=CP[S.sel],sg=Math.sign(p.a),inv=Object.keys(W).filter(k=>W[k][S.sel]*sg<-.02);$('#rfn').innerHTML=RN[S.ref]+(inv.length?`<br><span class="text-amber-300">${p.n} con polaridad invertida en: ${inv.join(', ')}.</span>`:`<br>${p.n} conserva su polaridad en todos los canales.`)}
 function snr(T,n){const{x,w,h}=cv('#c6'),NS=[1,2,3,5,8,12,20,30,50,80,120,200],i0=25,i1=150,rm=a=>{let q=0;for(let i=i0;i<=i1;i++)q+=a[i]*a[i];return Math.sqrt(q/(i1-i0+1))},A=new Float32Array(TL),M=new Float32Array(TL),cu=[],cf=[];
 for(let k=0;k<200;k++){const sg=k%2?-1:1;for(let i=0;i<TL;i++){A[i]+=T[k][i];M[i]+=sg*T[k][i]}const N=k+1;if(NS.includes(N)){const a=A.map(v=>v/N),m=M.map(v=>v/N);cu.push([N,20*Math.log10(rm(a)/rm(m))]);if(S.lp)cf.push([N,20*Math.log10(rm(lpf(a,S.fc))/rm(lpf(m,S.fc)))])}}
-const L=36,hi=Math.max(14,Math.ceil(Math.max(...cu.map(c=>c[1]),...cf.map(c=>c[1])))+2),lo=-2,X=N=>L+Math.log10(N)/Math.log10(200)*(w-L-10),Y=v=>h-22-(v-lo)/(hi-lo)*(h-34);x.clearRect(0,0,w,h);x.font='11px sans-serif';
+const L=36,hi=Math.max(14,Math.ceil(Math.max(...cu.map(c=>c[1]),...cf.map(c=>c[1])))+2),lo=-2,X=N=>L+Math.log10(N)/Math.log10(200)*(w-L-10),Y=v=>h-36-(v-lo)/(hi-lo)*(h-48);x.clearRect(0,0,w,h);x.font='11px sans-serif';
 x.fillStyle='#64748b';x.textAlign='right';for(let v=0;v<=hi;v+=5){x.fillText(v,L-4,Y(v)+4);x.strokeStyle='#1e293b';x.beginPath();x.moveTo(L,Y(v));x.lineTo(w-6,Y(v));x.stroke()}
-x.textAlign='center';[1,2,5,10,20,50,100,200].forEach(N=>x.fillText(N,X(N),h-8));x.fillText('N (trials, escala log)',w/2,h-(-2));x.fillText('dB',10,12);
+x.textAlign='center';[1,2,5,10,20,50,100,200].forEach(N=>x.fillText(N,X(N),h-22));x.fillText('N (trials, escala log)',w/2,h-6);x.fillText('dB',10,12);
 const ln=(c,col,d)=>{x.setLineDash(d||[]);x.strokeStyle=col;x.fillStyle=col;x.lineWidth=2;x.beginPath();c.forEach(([N,v],i)=>i?x.lineTo(X(N),Y(v)):x.moveTo(X(N),Y(v)));x.stroke();x.setLineDash([]);if(!d)c.forEach(([N,v])=>{x.beginPath();x.arc(X(N),Y(v),2.5,0,7);x.fill()})};
 ln(cu.map(([N])=>[N,cu[0][1]+10*Math.log10(N)]),'#64748b',[4,4]);ln(cu,'#22d3ee');if(S.lp)ln(cf,'#34d399');
-x.strokeStyle='rgba(255,255,255,.5)';x.lineWidth=1;x.setLineDash([2,3]);x.beginPath();x.moveTo(X(n),8);x.lineTo(X(n),h-22);x.stroke();x.setLineDash([]);
+x.strokeStyle='rgba(255,255,255,.5)';x.lineWidth=1;x.setLineDash([2,3]);x.beginPath();x.moveTo(X(n),8);x.lineTo(X(n),h-36);x.stroke();x.setLineDash([]);
 const it=c=>{for(let j=1;j<c.length;j++)if(n<=c[j][0]){const t=(Math.log(n)-Math.log(c[j-1][0]))/(Math.log(c[j][0])-Math.log(c[j-1][0]));return c[j-1][1]+t*(c[j][1]-c[j-1][1])}return c[c.length-1][1]},v=it(cu);
 $('#snrn').innerHTML=`<span class="text-cyan-300">N=${n}: SNR ≈ ${v.toFixed(1)} dB</span>`+(S.lp?` · <span class="text-emerald-300">filtrado a ${S.fc} Hz: ${it(cf).toFixed(1)} dB</span> (equivale a multiplicar N por ×${Math.pow(10,(it(cf)-v)/10).toFixed(1)}, siempre que el corte no deforme los picos)`:' · activa el filtro para compararlo con promediar más trials')}
 const SJ={},BV={Baja:[8,.1],Media:[20,.25],Alta:[35,.4]};
@@ -159,7 +149,7 @@ function pk(a){const p=CP[S.sel],sg=Math.sign(p.a),i0=Math.round((p.r[0]+100)/4)
 function grand(){const{x,w,h}=cv('#c7'),n=S.N,ns=S.ns,PW=w-X0-8,PH=h-26,X=i=>X0+i/(TL-1)*PW,Y=v=>8+PH/2-v*PH/24,p=CP[S.sel];x.clearRect(0,0,w,h);
 x.fillStyle=p.c+'22';x.fillRect(X((p.r[0]+100)/4),8,X((p.r[1]+100)/4)-X((p.r[0]+100)/4),PH);
 x.strokeStyle='#334155';x.lineWidth=1;x.beginPath();x.moveTo(X0,Y(0));x.lineTo(w-8,Y(0));x.moveTo(X(25),8);x.lineTo(X(25),8+PH);x.stroke();
-x.fillStyle='#64748b';x.font='11px sans-serif';x.textAlign='right';[-10,-5,0,5,10].forEach(v=>x.fillText((v>0?'+':'')+v,X0-4,Y(v)+4));x.textAlign='center';[0,100,200,300,400,500,600].forEach(t=>x.fillText(t,X((t+100)/4),h-10));x.fillText('ms',w-14,h-10);
+x.fillStyle='#64748b';x.font='11px sans-serif';x.textAlign='right';[-10,-5,0,5,10].forEach(v=>x.fillText((v>0?'+':'')+v,X0-4,Y(v)+4));x.textAlign='center';[0,100,200,300,400,500].forEach(t=>x.fillText(t,X((t+100)/4),h-10));x.textAlign='right';x.fillText('600 ms',w-4,h-10);x.textAlign='center';
 const pth=a=>{x.beginPath();for(let i=0;i<TL;i++)i?x.lineTo(X(i),Y(a[i])):x.moveTo(X(i),Y(a[i]));x.stroke()},G=new Float32Array(TL),subs=[];
 for(let q=0;q<ns;q++){let a=avg(gens(q,n),n);if(S.lp)a=lpf(a,S.fc);subs.push(a);for(let i=0;i<TL;i++)G[i]+=a[i]/ns;x.strokeStyle='rgba(148,163,184,.55)';x.lineWidth=1.2;pth(a)}
 x.setLineDash([5,4]);x.strokeStyle='#e2e8f0';x.lineWidth=1.3;pth(Float32Array.from({length:TL},(_,i)=>erp(ms(i),S.cond,S.site)));x.setLineDash([]);
@@ -169,30 +159,16 @@ $('#gtxt').innerHTML=`<b style="color:${p.c}">${p.n}</b> entre sujetos (n=${ns})
 function avg(T,n){const a=new Float32Array(TL);for(let k=0;k<n;k++)for(let i=0;i<TL;i++)a[i]+=T[k][i]/n;return a}
 function tfdraw(T,av,n){const A=tf1(av,S.tf),P=tfs(),B=new Float32Array(NF*NT);for(let k=0;k<n;k++)for(let q=0;q<B.length;q++)B[q]+=P[k][q]/n;
 const db=v=>10*Math.log10(v+1e-4);let mx=-99;[A,B].forEach(m=>m.forEach(v=>mx=Math.max(mx,db(v))));
-[['#c3',A],['#c4',B]].forEach(([id,M])=>{const{x,w,h}=cv(id),L=30,cw=(w-L)/NT,ch=(h-16)/NF;x.clearRect(0,0,w,h);
+[['#c3',A],['#c4',B]].forEach(([id,M])=>{const{x,w:W0,h}=cv(id),CB=40,w=W0-CB,L=30,cw=(w-L)/NT,ch=(h-16)/NF;x.clearRect(0,0,W0,h);
 for(let a=0;a<NF;a++)for(let b=0;b<NT;b++){const u=Math.max(0,Math.min(1,(db(M[a*NT+b])-(mx-32))/32));x.fillStyle=`hsl(${260-u*230},90%,${8+u*55}%)`;x.fillRect(L+b*cw,h-16-(a+1)*ch,cw+1,ch+1)}
 [10,32].forEach(f=>{const sgt=S.tf=='STFT'?S.sw:S.cy/(2*PI*f)*1000,sff=1000/(2*PI*sgt);x.strokeStyle='#fff';x.lineWidth=1.5;x.beginPath();x.ellipse(L+(540+100)/700*(w-L),h-16-((f-4)/2.4+.5)*ch,sgt/700*(w-L),sff/2.4*ch,0,0,7);x.stroke()});
-x.fillStyle='#94a3b8';x.font='10px sans-serif';x.textAlign='right';[10,20,30,40].forEach(f=>x.fillText(f,L-3,h-16-(f-4)/2.4*ch-ch/2+3));x.textAlign='center';[0,200,400,600].forEach(t=>x.fillText(t,L+(t+100)/700*(w-L),h-3));x.fillText('Hz',10,10);
-x.strokeStyle='rgba(255,255,255,.5)';x.beginPath();x.moveTo(L+100/700*(w-L),0);x.lineTo(L+100/700*(w-L),h-16);x.stroke()});
-{const st=f=>S.tf=='STFT'?S.sw:S.cy/(2*PI*f)*1000,sf=f=>1000/(2*PI*st(f));$('#tfres').innerHTML='Las elipses blancas dibujan la celda de resolución (±1σ), en 10 y 32 Hz. '+(S.tf=='STFT'?`STFT, resolución constante: Δt ≈ ${S.sw} ms, Δf ≈ ${sf(10).toFixed(1)} Hz en todas las frecuencias.`:`Wavelet: a 6 Hz Δt ≈ ${st(6).toFixed(0)} ms y Δf ≈ ${sf(6).toFixed(1)} Hz; a 30 Hz Δt ≈ ${st(30).toFixed(0)} ms y Δf ≈ ${sf(30).toFixed(1)} Hz.`)+' Ganar resolución en el tiempo implica perderla en frecuencia (Δt·Δf es fijo).'}
+x.fillStyle='#94a3b8';x.font='10px sans-serif';x.textAlign='right';[10,20,30,40].forEach(f=>x.fillText(f,L-3,h-16-(f-4)/2.4*ch-ch/2+3));x.textAlign='center';[0,200,400].forEach(t=>x.fillText(t,L+(t+100)/700*(w-L),h-3));x.textAlign='right';x.fillText('600 ms',w,h-3);x.save();x.translate(9,(h-16)/2);x.rotate(-PI/2);x.textAlign='center';x.fillText('Hz',0,0);x.restore();
+x.strokeStyle='rgba(255,255,255,.5)';x.beginPath();x.moveTo(L+100/700*(w-L),0);x.lineTo(L+100/700*(w-L),h-16);x.stroke();
+const bx=w+6,bh=h-22;for(let i=0;i<bh;i++){const u=1-i/bh;x.fillStyle=`hsl(${260-u*230},90%,${8+u*55}%)`;x.fillRect(bx,6+i,10,1.5)}x.strokeStyle='#64748b';x.lineWidth=1;x.strokeRect(bx,6,10,bh);x.fillStyle='#cbd5e1';x.font='10px sans-serif';x.textAlign='left';[[mx,14],[mx-16,6+bh/2+3],[mx-32,5+bh]].forEach(([v,y])=>x.fillText(Math.round(v).toString().replace('-','−'),bx+13,y));x.fillText('dB',bx+13,h-3)});
+{const st=f=>S.tf=='STFT'?S.sw:S.cy/(2*PI*f)*1000,sf=f=>1000/(2*PI*st(f));$('#tfres').innerHTML='Color = potencia en dB re 1 µV², con la misma escala en A y B. Las elipses blancas dibujan la celda de resolución (±1σ), en 10 y 32 Hz. '+(S.tf=='STFT'?`STFT, resolución constante: Δt ≈ ${S.sw} ms, Δf ≈ ${sf(10).toFixed(1)} Hz en todas las frecuencias.`:`Wavelet: a 6 Hz Δt ≈ ${st(6).toFixed(0)} ms y Δf ≈ ${sf(6).toFixed(1)} Hz; a 30 Hz Δt ≈ ${st(30).toFixed(0)} ms y Δf ≈ ${sf(30).toFixed(1)} Hz.`)+' Ganar resolución en el tiempo implica perderla en frecuencia (Δt·Δf es fijo).'}
 $('#tfn').innerHTML=n<10?`<span class="text-slate-400">Con N=${n} el ruido domina las dos vías. Sube N para ver qué sobrevive en cada una.</span>`:`<span class="text-slate-300"><b class="text-violet-300">A</b> solo conserva la actividad <b>ligada en fase</b> al estímulo (el propio ERP, a bajas frecuencias). <b class="text-emerald-300">B</b> conserva además la actividad <b>inducida</b>: la ráfaga β (~20 Hz, 250–450 ms) y el α, cuya fase cambia en cada trial y se cancela al promediar antes.</span>`+(S.lp?`<br><span class="text-amber-300">Filtro paso-bajo a ${S.fc} Hz aplicado a ambas vías: se atenúa lo que queda por encima del corte (con cortes bajos la ráfaga β desaparece).</span>`:'')}
 $('#c0').addEventListener('pointerdown',e=>{const r=e.currentTarget.getBoundingClientRect(),m=-100+((e.clientX-r.left-X0)/(r.width-X0-8))*700;let b=0;CP.forEach((p,i)=>{if(Math.abs(p.m-m)<Math.abs(CP[b].m-m))b=i});S.sel=b;info()});
 addEventListener('resize',()=>{brain();draw()});info();
-</script><script>
-/* NeuroLab UVa: fondo de nodos, enlaces al índice y logos (independiente del resto de la app) */
-(function(){
-var base=/\/apps\/[^\/]*$/i.test(location.pathname)?'../':'';
-document.querySelectorAll('.nl-idx').forEach(function(a){a.href=base+'index.html'});
-document.querySelectorAll('#nl-foot img').forEach(function(im){var f=im.getAttribute('data-f');im.src=base+f;
- im.onerror=function(){if(!im.dataset.t){im.dataset.t=1;im.src=(base?'':'../')+f}else{im.onerror=null;var sp=document.createElement('span');sp.textContent=im.alt;im.replaceWith(sp)}}});
-var c=document.getElementById('nl-bg');if(!c||!c.getContext)return;var x=c.getContext('2d'),W=0,H=0,P=[],last=0,still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-function build(){W=c.width=innerWidth;H=c.height=innerHeight;var n=Math.min(60,Math.floor(W*H/20000));P=[];for(var i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.4+1})}
-function draw(k){x.clearRect(0,0,W,H);for(var i=0;i<P.length;i++){var p=P[i];p.x+=p.vx*k;p.y+=p.vy*k;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,6.2832);x.fillStyle='rgba(56,189,248,.4)';x.fill();
- for(var j=i+1;j<P.length;j++){var q=P[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.strokeStyle='rgba(99,102,241,'+((1-d/120)*.18)+')';x.lineWidth=.8;x.stroke()}}}}
-function frame(t){requestAnimationFrame(frame);if(document.hidden||t-last<33)return;var k=Math.min(3,(t-last)/16.7);last=t;draw(k)}
-build();draw(0);if(!still)requestAnimationFrame(frame);
-addEventListener('resize',function(){if(Math.abs(innerWidth-W)>2||Math.abs(innerHeight-H)>150){build();draw(0)}else{c.width=W=innerWidth;c.height=H=innerHeight}});
-})();
-</script>
+</script><script src="../../shared/simulab.js"></script>
 <script src="../../shared/aula.js"></script>
 </body></html>

@@ -1,50 +1,20 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GNSSSim · Navegación por satélite</title><meta name="theme-color" content="#070b14">
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="../../shared/simulab.css">
 <style>
-body{background:#070b14;color:#cbd5e1;font-family:system-ui,sans-serif}
-canvas{width:100%;display:block;background:#0a1020;border-radius:.5rem;border:1px solid #1e293b}
-.ia{touch-action:none;cursor:crosshair}
-.card{background:#0d1424;border:1px solid #1e293b;border-radius:.75rem;padding:.7rem}
-.b{padding:.35rem .7rem;border-radius:.5rem;border:1px solid #334155;background:#111b30;font-size:.82rem;min-height:40px}
-.b.on{border-color:#22d3ee;color:#22d3ee;background:#06323d}
-input[type=range]{width:100%;accent-color:#34d399}
-summary{cursor:pointer;color:#22d3ee;font-weight:600;min-height:32px}
-.bd{display:inline-grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:9999px;color:#000;font-weight:700;margin-right:.4rem}
-.hd{font-weight:600;margin-bottom:.4rem;display:flex;align-items:center;flex-wrap:wrap;gap:.25rem}
-.sub{font-weight:600;color:#e2e8f0;font-size:.9rem;margin:.9rem 0 .3rem;padding-top:.6rem;border-top:1px dashed #1e293b}
-.key{background:#06281f;border:1px solid #047857;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;color:#a7f3d0;margin:.4rem 0}
-.try{background:#2a1a05;border:1px solid #b45309;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;color:#fde68a;margin:.4rem 0}
-.res{background:#0a1020;border:1px solid #1e293b;border-radius:.5rem;padding:.4rem .6rem;font-size:.85rem;margin:.4rem 0}
-table.cmp{width:100%;font-size:.8rem;border-collapse:collapse}.cmp th,.cmp td{border:1px solid #1e293b;padding:.35rem .5rem;text-align:left;vertical-align:top}.cmp th{background:#111b30;color:#e2e8f0}
-.chip{display:inline-block;border:1px solid #334155;border-radius:9999px;padding:.1rem .6rem;font-size:.75rem;margin:.15rem .15rem .15rem 0;background:#111b30}
-.hidden{display:none!important}
-:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
-main>*{min-width:0}.card{min-width:0}
-</style><style id="nl-style">
-/* Elementos comunes NeuroLab UVa: fondo de nodos, enlace al índice y pie */
-html{background:radial-gradient(circle at 82% 8%,rgba(34,211,238,.10),transparent 45%),radial-gradient(circle at 12% 88%,rgba(167,139,250,.08),transparent 45%),#070b14;background-attachment:fixed}
-body{background:transparent!important}
-#nl-bg{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;display:block;background:transparent!important;border:0!important;border-radius:0!important}
-.nl-hd{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:.5rem}
-.nl-back{font-size:.72rem;color:#7dd3fc;border:1px solid rgba(56,189,248,.35);border-radius:9999px;padding:.25rem .7rem;text-decoration:none;white-space:nowrap;background:rgba(8,16,36,.55)}
-.nl-back:hover{background:rgba(14,116,144,.35);color:#e0f2fe}
-#nl-foot{margin-top:1.25rem;padding:.8rem 0 calc(.8rem + env(safe-area-inset-bottom));border-top:1px solid rgba(51,65,85,.6);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;font-size:.68rem;line-height:1.3;color:#64748b}
-#nl-foot a{color:inherit;text-decoration:none}#nl-foot a:hover{color:#cbd5e1}
-#nl-foot .nl-logos{display:flex;align-items:center;gap:.9rem}
-#nl-foot img{height:26px;width:auto;opacity:.85}#nl-foot img:hover{opacity:1}
-@media print{#nl-bg,#nl-foot,.nl-back{display:none!important}}
+main>*{min-width:0}
 </style>
 </head><body class="p-2 md:p-4 max-w-7xl mx-auto">
 <canvas id="nl-bg" aria-hidden="true"></canvas>
 <header class="mb-3"><div class="nl-hd"><h1 class="text-xl md:text-2xl font-bold text-white">GNSSSim <span class="text-cyan-400 text-sm md:text-base font-normal">Navegación por satélite: pseudodistancias, códigos, errores y constelaciones</span></h1><a class="nl-back nl-idx" href="../index.html" title="Volver al índice de simuladores">← RadioNav UVa</a></div>
-<div class="card mt-2 text-sm"><b class="text-white">La idea en 20 segundos.</b> Cada satélite emite un <b class="text-cyan-300">código</b> con su <b class="text-cyan-300">hora de salida</b>. El receptor mide cuánto <b class="text-amber-300">tarda</b> en llegar (y por tanto la <b class="text-amber-300">distancia</b>), pero su reloj no es atómico: todas las distancias salen con el <b class="text-rose-300">mismo error</b>. Por eso hacen falta <b>4 satélites</b>: tres coordenadas y el error de reloj. Los paneles recorren el Tema 1: <b>1</b> cómo se calcula la posición, <b>2</b> cómo se separan los satélites y se mide el retardo, <b>3</b> qué errores hay y cómo la geometría los amplifica (DOP) y <b>4</b> cuántos satélites ve cada constelación.</div></header>
+  <div class="card mt-2 text-sm"><b class="text-white">La idea en 20 segundos.</b> Cada satélite emite un <b class="text-cyan-300">código</b> con su <b class="text-cyan-300">hora de salida</b>. El receptor mide cuánto <b class="text-amber-300">tarda</b> en llegar (y por tanto la <b class="text-amber-300">distancia</b>), pero su reloj no es atómico: todas las distancias salen con el <b class="text-rose-300">mismo error</b>. Por eso hacen falta <b>4 satélites</b>: tres coordenadas y el error de reloj. Los paneles recorren el Tema 1: <b>1</b> cómo se calcula la posición, <b>2</b> cómo se separan los satélites y se mide el retardo, <b>3</b> qué errores hay y cómo la geometría los amplifica (DOP) y <b>4</b> cuántos satélites ve cada constelación.</div></header>
 <main class="grid lg:grid-cols-3 gap-3">
 <div class="lg:col-span-2 space-y-3">
 
  <section class="card"><div class="hd"><span class="bd bg-cyan-400">1</span>Posición a partir de pseudodistancias</div>
   <p class="text-sm mb-2">El receptor mide el <b>retardo</b> de la señal de cada satélite y lo multiplica por <i>c</i>. Como su reloj va desfasado un Δt, todas las medidas salen con el mismo error <b>c·Δt</b>: son <b>pseudodistancias</b> ρ<sub>i</sub> = R<sub>i</sub> + c·Δt. Aquí trabajamos en un <b>plano</b> (en 3D es igual, con una incógnita más). <i>Arrastra el receptor y los satélites.</i></p>
   <p class="text-xs text-slate-400">Vista general (el receptor está en la «superficie»; escala real: los satélites están a unos 20 000 km).</p>
-  <canvas id="g1" class="ia" style="height:290px" aria-label="Satélites y receptor"></canvas>
+  <canvas id="g1" class="ia" style="height:300px" aria-label="Satélites y receptor"></canvas>
   <p class="text-xs text-slate-400 mt-2">Ampliación alrededor del receptor: cada satélite dice «estás en <i>mi</i> circunferencia de radio ρ<sub>i</sub>». Con el reloj mal, las circunferencias <b>no se cortan en un punto</b>.</p>
   <canvas id="g1z" style="height:300px" aria-label="Ampliación de las circunferencias"></canvas>
   <div id="sl-q1" class="grid sm:grid-cols-2 gap-x-4 mt-2"></div>
@@ -57,9 +27,9 @@ body{background:transparent!important}
  <section class="card"><div class="hd"><span class="bd bg-amber-400">2</span>La señal: códigos, espectro ensanchado y correlación</div>
   <p class="text-sm mb-2">Todos los satélites GPS emiten <b>a la misma frecuencia</b> (CDMA). Se distinguen porque cada uno modula (BPSK) su portadora con un <b>código pseudoaleatorio propio</b>. El receptor «correla» la señal con una copia del código del satélite que busca.</p>
   <div class="sub" style="border:0;margin-top:.2rem">a) El código C/A: 1023 chips tipo Gold</div>
-  <p class="text-xs text-slate-400">Primeros 40 chips del código (−1 / +1). Se genera con dos registros de desplazamiento de 10 etapas (G1 y G2) cuyas salidas se combinan con una XOR; la elección de las etapas de G2 da el código de cada satélite (PRN).</p><canvas id="c1a" style="height:70px" aria-label="Chips del código"></canvas>
+  <p class="text-xs text-slate-400">Primeros 40 chips del código (−1 / +1). Se genera con dos registros de desplazamiento de 10 etapas (G1 y G2) cuyas salidas se combinan con una XOR; la elección de las etapas de G2 da el código de cada satélite (PRN).</p><canvas id="c1a" style="height:100px" aria-label="Chips del código"></canvas>
   <div id="sl-c1" class="grid sm:grid-cols-2 gap-x-4 mt-2"></div>
-  <p class="text-xs text-slate-400">Autocorrelación del código A (con él mismo desplazado τ chips): un pico muy marcado en τ = 0.</p><canvas id="c1b" style="height:120px" aria-label="Autocorrelación"></canvas>
+  <p class="text-xs text-slate-400">Autocorrelación del código A (con él mismo desplazado τ chips): un pico muy marcado en τ = 0.</p><canvas id="c1b" style="height:150px" aria-label="Autocorrelación"></canvas>
   <p class="text-xs text-slate-400 mt-1">Correlación cruzada con el código B: siempre valores bajos (±63, −1, −65 sobre 1023).</p><canvas id="c1c" style="height:100px" aria-label="Correlación cruzada"></canvas>
   <div id="t2a" class="res"></div>
   <div class="key">💡 <b>Idea clave:</b> un buen código tiene un <b>pico muy alto en τ = 0</b> (para medir el retardo) y <b>correlación cruzada muy baja</b> con los demás (para separar satélites). Los códigos Gold cumplen ambas cosas. El C/A dura <b>1 ms</b>: un chip dura 1/1,023 MHz = 977,5 ns, que equivale a unos <b>293 m</b>; el código P es 10 veces más rápido (chip de unos 29,3 m), de ahí su mayor precisión.</div>
@@ -67,7 +37,7 @@ body{background:transparent!important}
   <div class="sub">b) Espectro ensanchado: datos × código (el ejemplo de la pizarra)</div>
   <p class="text-sm mb-1">Cada bit de datos de navegación (50 bit/s) se multiplica por el código, que va mucho más rápido. El receptor vuelve a multiplicar por el mismo código y <b>suma (integra) durante un bit</b>. Elige los bits, qué código usa el receptor y cuánto ruido hay.</p>
   <div class="text-xs text-slate-400 mb-1">Bits de datos (pulsa para cambiarlos): <span id="spb"></span></div>
-  <canvas id="sp" style="height:330px" aria-label="Espectro ensanchado"></canvas>
+  <canvas id="sp" style="height:350px" aria-label="Espectro ensanchado"></canvas>
   <div class="mt-1"><span class="text-xs text-slate-400">Código del receptor:</span> <span id="spm"></span></div>
   <div id="sl-sp" class="grid sm:grid-cols-3 gap-x-4 mt-1"></div><div id="spi" class="mb-1"></div>
   <div id="t2b" class="res"></div>
@@ -76,10 +46,10 @@ body{background:transparent!important}
 
   <div class="sub">c) Adquisición: ¿qué satélites oigo y con qué retardo?</div>
   <p class="text-sm mb-1">La antena recibe la <b>suma</b> de varios satélites y ruido. El receptor prueba un PRN y busca con qué desplazamiento τ la correlación supera un umbral. Ese τ, en chips, es el <b>retardo</b>, es decir, la pseudodistancia módulo 300 km.</p>
-  <canvas id="acq" style="height:170px" aria-label="Búsqueda por correlación"></canvas>
+  <canvas id="acq" style="height:200px" aria-label="Búsqueda por correlación"></canvas>
   <div id="sl-ac" class="grid sm:grid-cols-2 gap-x-4 mt-2"></div>
   <div class="flex flex-wrap gap-1"><button class="b" id="acqscan">🔎 Probar los 32 PRN</button></div>
-  <canvas id="acqall" class="mt-2" style="height:130px" aria-label="Pico por PRN"></canvas>
+  <canvas id="acqall" class="mt-2" style="height:150px" aria-label="Pico por PRN"></canvas>
   <div id="t2c" class="res"></div>
   <div class="key">💡 <b>Idea clave:</b> solo aparece un pico cuando el código local es el de un satélite presente, y aparece <b>en el retardo correcto</b>. La medida de tiempo tiene resolución de una fracción de chip, y la distancia no es única: el código se repite cada 1 ms (≈ 300 km), por lo que el mensaje de navegación debe resolver cuál de las repeticiones es.</div>
   <div class="try">🧪 <b>Prueba esto:</b> con ruido 0 busca los PRN 3, 11, 19 y 24 (los que hay). Sube el ruido y añade satélites: ¿hasta cuándo se distinguen bien los picos? Mueve el retardo del PRN 3 y observa cómo se mueve el pico y cambia la distancia.</div></section>
@@ -88,18 +58,18 @@ body{background:transparent!important}
   <p class="text-sm mb-2">El error de posición es el producto de dos cosas: <b>error = UERE × DOP</b>. UERE es lo que se equivoca cada medida de distancia (reloj, órbita, atmósfera, ruido…). DOP es lo que la <b>geometría</b> de los satélites amplifica ese error.</p>
   <div class="sub" style="border:0;margin-top:.2rem">a) Cielo, DOP y nube de posiciones</div>
   <p class="text-xs text-slate-400">Cielo visto desde el receptor (centro = cenit, borde = horizonte). <i>Arrastra los satélites.</i> Los grises quedan tapados por la máscara o por los edificios.</p>
-  <div class="grid sm:grid-cols-2 gap-3"><div><canvas id="sky" class="ia" style="height:290px" aria-label="Cielo"></canvas></div><div><p class="text-xs text-slate-400" id="scl">&nbsp;</p><canvas id="scat" style="height:290px" aria-label="Nube de posiciones"></canvas></div></div>
+  <div class="grid sm:grid-cols-2 gap-3"><div><canvas id="sky" class="ia" style="height:300px" aria-label="Cielo"></canvas></div><div><p class="text-xs text-slate-400" id="scl">&nbsp;</p><canvas id="scat" style="height:300px" aria-label="Nube de posiciones"></canvas></div></div>
   <div class="mt-2"><span class="text-xs text-slate-400">Escenario:</span> <span id="scn"></span></div>
   <div class="mt-1"><span class="text-xs text-slate-400">Opciones:</span> <span id="opt"></span></div>
   <div id="sl-d1" class="grid sm:grid-cols-2 gap-x-4 mt-1"></div>
   <div id="t3a" class="res"></div>
-  <p class="text-xs text-slate-400">Presupuesto de errores de cada medida de distancia (UERE, en metros, con los datos del temario):</p><canvas id="ue" style="height:190px" aria-label="Presupuesto de errores"></canvas>
+  <p class="text-xs text-slate-400">Presupuesto de errores de cada medida de distancia (UERE, en metros, con los datos del temario):</p><canvas id="ue" style="height:200px" aria-label="Presupuesto de errores"></canvas>
   <div class="key">💡 <b>Idea clave:</b> con satélites agrupados el DOP se dispara y la misma UERE da un error enorme; con satélites repartidos por todo el cielo el DOP es de 1–2. El DOP no depende del receptor, sino de <b>dónde están los satélites</b>. Lo que sí se corrige: con la <b>doble frecuencia</b> se quita la ionosfera, con <b>DGPS</b> se eliminan los errores comunes (órbita, reloj, atmósfera) y la <b>disponibilidad selectiva</b> (SA) se apagó en el año 2000.</div>
   <div class="try">🧪 <b>Prueba esto:</b> en «Mala geometría» el HDOP pasa de 3. Arrastra un satélite al lado opuesto del cielo y mira cómo cae el DOP. Activa la SA (C/A): la nube se abre hasta un radio de decenas de metros; luego activa DGPS y observa cómo desaparece. Cambia a código P: el error de ruido baja.</div>
 
   <div class="sub">b) Ionosfera: por qué dos frecuencias la eliminan</div>
   <p class="text-sm mb-1">El retardo ionosférico es proporcional a 1/f². Midiendo la misma distancia en L1 (1575,42 MHz) y L2 (1227,60 MHz) se obtienen dos valores distintos; la recta que pasa por ellos, extrapolada a 1/f² = 0 (frecuencia infinita), da la distancia sin ionosfera.</p>
-  <canvas id="io" style="height:230px" aria-label="Ionosfera"></canvas>
+  <canvas id="io" style="height:250px" aria-label="Ionosfera"></canvas>
   <div id="sl-io" class="grid sm:grid-cols-2 gap-x-4 mt-2"></div><div id="t3b" class="res"></div>
   <div class="key">💡 <b>Idea clave:</b> R = (f₁²·R<sub>1m</sub> − f₂²·R<sub>2m</sub>)/(f₁² − f₂²). Se elimina el error de propagación ionosférico, pero a cambio el <b>ruido de medida se multiplica por unas 3 veces</b>. Los receptores civiles de una frecuencia usan en cambio un <b>modelo</b> cuyos parámetros llegan en el mensaje de navegación.</div>
 
@@ -112,10 +82,10 @@ body{background:transparent!important}
  <section class="card"><div class="hd"><span class="bd bg-violet-400">4</span>Constelaciones GPS, GLONASS y Galileo</div>
   <p class="text-sm mb-2">Cada sistema tiene su propia órbita (altura, inclinación, planos). Con el periodo orbital (3.ª ley de Kepler) y el giro de la Tierra se puede calcular qué satélites ve un receptor en cualquier momento. <b>Combinar constelaciones</b> da más satélites visibles y mejor geometría, sobre todo si el cielo está tapado.</p>
   <div class="mb-1"><span class="text-xs text-slate-400">Constelaciones activas:</span> <span id="cons"></span></div>
-  <div class="grid sm:grid-cols-2 gap-3"><div><p class="text-xs text-slate-400" id="k4a">&nbsp;</p><canvas id="sk4" style="height:290px" aria-label="Cielo con constelaciones"></canvas></div><div><p class="text-xs text-slate-400">Satélites visibles en 24 h (la línea vertical es la hora elegida)</p><canvas id="vis" style="height:290px" aria-label="Satélites visibles en 24 horas"></canvas></div></div>
+  <div class="grid sm:grid-cols-2 gap-3"><div><p class="text-xs text-slate-400" id="k4a">&nbsp;</p><canvas id="sk4" style="height:300px" aria-label="Cielo con constelaciones"></canvas></div><div><p class="text-xs text-slate-400">Satélites visibles en 24 h (la línea vertical es la hora elegida)</p><canvas id="vis" style="height:300px" aria-label="Satélites visibles en 24 horas"></canvas></div></div>
   <div id="sl-k4" class="grid sm:grid-cols-3 gap-x-4 mt-2"></div>
   <div class="flex flex-wrap gap-1"><button class="b" id="k4play">▶ Reproducir el paso del tiempo</button><button class="b" id="k4vll">📍 Valladolid</button><button class="b" id="k4eq">📍 Ecuador</button><button class="b" id="k4pol">📍 Polo (89°)</button></div>
-  <p class="text-xs text-slate-400 mt-2">PDOP durante 24 h con las constelaciones elegidas (tramos rojos: menos de 4 satélites, no hay posición)</p><canvas id="pd" style="height:120px" aria-label="PDOP en 24 horas"></canvas>
+  <p class="text-xs text-slate-400 mt-2">PDOP durante 24 h con las constelaciones elegidas (tramos rojos: menos de 4 satélites, no hay posición)</p><canvas id="pd" style="height:150px" aria-label="PDOP en 24 horas"></canvas>
   <div id="t4" class="res"></div><div class="overflow-x-auto"><table class="cmp" id="orb"></table></div>
   <div class="key">💡 <b>Idea clave:</b> el periodo sale de la altura: T = 2π√(a³/μ), con a = R<sub>Tierra</sub> + altura. GPS da casi exactamente dos vueltas por día sidéreo (≈ 12 h), así que su geometría se repite cada día; GLONASS (≈ 11 h 15 min) no. La mayor inclinación de GLONASS (64,8°) y de Galileo (56°) mejora la cobertura en latitudes altas. Con la máscara alta (ciudad) una sola constelación puede dejarte sin 4 satélites visibles; con tres, casi nunca.</div>
   <div class="try">🧪 <b>Prueba esto:</b> sube la máscara a 40° (calles estrechas) con solo GPS, y observa los tramos sin posición. Activa GLONASS y Galileo. Ahora ve al polo: ¿qué constelación se comporta mejor?</div></section>
@@ -151,7 +121,7 @@ body{background:transparent!important}
 </aside></main>
 <footer id="nl-foot">
 <a class="nl-idx" href="../index.html">← RadioNav UVa · Índice de simuladores</a>
-<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img data-f="img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img data-f="img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
+<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img src="../../img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img src="../../img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
 <div>© 2026 <a href="https://gib.uva.es/member.php?id=16" target="_blank" rel="noopener">Javier Gómez Pilar</a> · Grupo de Ingeniería Biomédica, Universidad de Valladolid</div>
 </footer>
 <script>
@@ -434,21 +404,6 @@ qnew();all();acqScan();
 let lt=0;function loop(now){requestAnimationFrame(loop);if(!k4pl||document.hidden){lt=now;return}const dtt=Math.min(.1,(now-lt)/1000);lt=now;V.hr=(V.hr+dtt*1.2)%24;lab();k4()}
 requestAnimationFrame(loop);addEventListener('resize',all);
 </script>
-<script>
-/* NeuroLab UVa: fondo de nodos, enlaces al índice y logos (independiente del resto de la app) */
-(function(){
-var base=/\/apps\/[^\/]*$/i.test(location.pathname)?'../':'';
-document.querySelectorAll('.nl-idx').forEach(function(a){a.href=base+'index.html'});
-document.querySelectorAll('#nl-foot img').forEach(function(im){var f=im.getAttribute('data-f');im.src=base+f;
- im.onerror=function(){if(!im.dataset.t){im.dataset.t=1;im.src=(base?'':'../')+f}else{im.onerror=null;var sp=document.createElement('span');sp.textContent=im.alt;im.replaceWith(sp)}}});
-var c=document.getElementById('nl-bg');if(!c||!c.getContext)return;var x=c.getContext('2d'),W=0,H=0,P=[],last=0,still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-function build(){W=c.width=innerWidth;H=c.height=innerHeight;var n=Math.min(60,Math.floor(W*H/20000));P=[];for(var i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.4+1})}
-function draw(k){x.clearRect(0,0,W,H);for(var i=0;i<P.length;i++){var p=P[i];p.x+=p.vx*k;p.y+=p.vy*k;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,6.2832);x.fillStyle='rgba(56,189,248,.4)';x.fill();
- for(var j=i+1;j<P.length;j++){var q=P[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.strokeStyle='rgba(99,102,241,'+((1-d/120)*.18)+')';x.lineWidth=.8;x.stroke()}}}}
-function frame(t){requestAnimationFrame(frame);if(document.hidden||t-last<33)return;var k=Math.min(3,(t-last)/16.7);last=t;draw(k)}
-build();draw(0);if(!still)requestAnimationFrame(frame);
-addEventListener('resize',function(){if(Math.abs(innerWidth-W)>2||Math.abs(innerHeight-H)>150){build();draw(0)}else{c.width=W=innerWidth;c.height=H=innerHeight}});
-})();
-</script>
+<script src="../../shared/simulab.js"></script>
 <script src="../../shared/aula.js"></script>
 </body></html>

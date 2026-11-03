@@ -1,40 +1,16 @@
 <!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OptoGenSim · Laboratorio de optogenética</title><meta name="theme-color" content="#070b14">
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="../../shared/simulab.css">
 <style>
-body{background:#070b14;color:#cbd5e1;font-family:system-ui,sans-serif}
-canvas{width:100%;display:block;background:#0a1020;border-radius:.5rem;border:1px solid #1e293b}
-.card{background:#0d1424;border:1px solid #1e293b;border-radius:.75rem;padding:.7rem}
-.b{padding:.35rem .7rem;border-radius:.5rem;border:1px solid #334155;background:#111b30;font-size:.82rem;min-height:40px}
-.b.on{border-color:#22d3ee;color:#22d3ee;background:#06323d}
-.b:disabled{opacity:.4}
-input[type=range]{width:100%;accent-color:#34d399}
-summary{cursor:pointer;color:#22d3ee;font-weight:600;min-height:32px}
-.bd{display:inline-grid;place-items:center;width:1.5rem;height:1.5rem;border-radius:9999px;color:#000;font-weight:700;margin-right:.4rem}
-.hd{font-weight:600;margin-bottom:.4rem;display:flex;align-items:center;flex-wrap:wrap;gap:.25rem}
-.m b{color:#34d399;font-size:1.2rem}.m small{display:block;color:#94a3b8;font-size:.68rem;line-height:1.1}
-table{width:100%;font-size:.78rem}td,th{padding:.15rem .3rem;text-align:right}th:first-child,td:first-child{text-align:left}
-.bar{height:6px;border-radius:3px;background:#1e293b;overflow:hidden;min-width:60px}.bar i{display:block;height:100%}
-.q{display:block;width:100%;text-align:left;margin-bottom:.3rem}
-.q.ok{border-color:#34d399;color:#34d399;background:#064e3b55}.q.ko{border-color:#f87171;color:#f87171;background:#7f1d1d55}
-:focus-visible{outline:2px solid #a78bfa;outline-offset:2px}
-</style><style id="nl-style">
-/* Elementos comunes NeuroLab UVa: fondo de nodos, enlace al índice y pie */
-html{background:radial-gradient(circle at 82% 8%,rgba(34,211,238,.10),transparent 45%),radial-gradient(circle at 12% 88%,rgba(167,139,250,.08),transparent 45%),#070b14;background-attachment:fixed}
-body{background:transparent!important}
-#nl-bg{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:-1;pointer-events:none;display:block;background:transparent!important;border:0!important;border-radius:0!important}
-.nl-hd{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:.5rem}
-.nl-back{font-size:.72rem;color:#7dd3fc;border:1px solid rgba(56,189,248,.35);border-radius:9999px;padding:.25rem .7rem;text-decoration:none;white-space:nowrap;background:rgba(8,16,36,.55)}
-.nl-back:hover{background:rgba(14,116,144,.35);color:#e0f2fe}
-#nl-foot{margin-top:1.25rem;padding:.8rem 0 calc(.8rem + env(safe-area-inset-bottom));border-top:1px solid rgba(51,65,85,.6);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem;font-size:.68rem;line-height:1.3;color:#64748b}
-#nl-foot a{color:inherit;text-decoration:none}#nl-foot a:hover{color:#cbd5e1}
-#nl-foot .nl-logos{display:flex;align-items:center;gap:.9rem}
-#nl-foot img{height:26px;width:auto;opacity:.85}#nl-foot img:hover{opacity:1}
-@media print{#nl-bg,#nl-foot,.nl-back{display:none!important}}
+td,th{padding:.2rem .35rem;text-align:left}
+.bar{height:6px;border-radius:3px;background:#1e293b;overflow:hidden;min-width:60px}
+.bar i{display:block;height:100%}
 </style>
 </head><body class="p-2 md:p-4 max-w-7xl mx-auto">
 <canvas id="nl-bg" aria-hidden="true"></canvas>
 
-<header class="mb-3 flex flex-wrap items-baseline gap-x-3"><h1 class="text-xl md:text-2xl font-bold text-white">OptoGenSim <span class="text-cyan-400 text-sm md:text-base font-normal">Laboratorio de optogenética</span></h1><span class="text-xs text-amber-300">🏅 Nobel de Fisiología o Medicina 2026</span><a style="margin-left:auto" class="nl-back nl-idx" href="../index.html" title="Volver al índice de simuladores">← NeuroLab UVa</a></header>
+<header class="mb-3"><div class="nl-hd"><h1 class="text-xl md:text-2xl font-bold text-white">OptoGenSim <span class="text-cyan-400 text-sm md:text-base font-normal">Laboratorio de optogenética</span> <span class="text-xs text-amber-300 font-normal">🏅 Nobel de Fisiología o Medicina 2026</span></h1><a class="nl-back nl-idx" href="../index.html" title="Volver al índice de simuladores">← NeuroLab UVa</a></div>
+  <div class="card mt-2 text-sm"><b class="text-white">La idea en 20 segundos.</b> Eliges una <b class="text-cyan-300">opsina</b> y una <b class="text-amber-300">luz</b>, y ves qué ocurre en una neurona, en una población y en la conducta. Los paneles recorren: <b>★</b> los ingredientes, <b>1</b> una neurona, <b>2</b> el catálogo de opsinas, <b>3</b> a qué neuronas afecta, <b>4</b> el efecto en la conducta, <b>5</b> la historia y la clínica y <b>6</b> un test final.</div></header>
 <main class="grid lg:grid-cols-3 gap-3">
 <div class="lg:col-span-2 space-y-3">
  <section class="card"><div class="hd"><span class="bd bg-amber-300">★</span>¿Qué es la optogenética?</div>
@@ -43,22 +19,22 @@ body{background:transparent!important}
    <div class="rounded-lg border border-cyan-500/40 p-2"><b class="text-cyan-300">🧬 1 · Una opsina</b><br><span class="text-xs text-slate-400">Proteína de microbios (algas, arqueas) que absorbe luz y, al hacerlo, abre un canal o activa una bomba iónica en la membrana.</span></div>
    <div class="rounded-lg border border-violet-500/40 p-2"><b class="text-violet-300">🎯 2 · Un gen y un vector</b><br><span class="text-xs text-slate-400">Un virus inofensivo lleva el gen de la opsina y un promotor hace que solo cierto tipo de neurona la fabrique.</span></div>
    <div class="rounded-lg border border-amber-500/40 p-2"><b class="text-amber-300">💡 3 · Luz en el sitio justo</b><br><span class="text-xs text-slate-400">Una fibra óptica implantada ilumina la zona. Solo responden las células que tienen la opsina <i>y</i> reciben luz.</span></div></div>
-  <p class="text-xs text-slate-500 mt-2">Recorrido sugerido: empieza en el apartado 1 (enciende la luz azul y mira qué hace la neurona), cambia de opsina, y sigue bajando. Todo es sintético: los modelos son didácticos, no cuantitativamente exactos.</p></section>
+  <p class="text-xs text-slate-500 mt-2">Para empezar, ve al panel 1, enciende la luz azul y mira qué hace la neurona. Todo es sintético: los modelos son didácticos, no cuantitativamente exactos.</p><div class="key">💡 <b>Idea clave:</b> hacen falta los tres ingredientes a la vez. Si falta uno (la opsina, el gen en la célula correcta o la luz), no pasa nada.</div><div class="try">🧪 <b>Prueba esto:</b> antes de seguir, fíjate en el panel lateral: ahí eliges la opsina y la luz, y esa elección afecta a todos los paneles.</div></section>
 
  <section class="card"><div class="hd"><span class="bd bg-cyan-400">1</span>Una neurona, una opsina y luz<span id="lab" class="text-xs text-slate-400 font-normal ml-1"></span><button class="b ml-auto" id="pau">⏸ Pausar</button></div>
-  <div class="grid sm:grid-cols-3 gap-3"><div class="sm:col-span-2"><canvas id="c0" style="height:340px" aria-label="Voltaje de membrana y fotocorriente"></canvas></div><div><canvas id="c1" style="height:340px" aria-label="Membrana con opsinas"></canvas></div></div>
+  <div class="grid sm:grid-cols-3 gap-3"><div class="sm:col-span-2"><canvas id="c0" style="height:350px" aria-label="Voltaje de membrana y fotocorriente"></canvas></div><div><canvas id="c1" style="height:350px" aria-label="Membrana con opsinas"></canvas></div></div>
   <div class="flex flex-wrap gap-1 mt-2 items-center"><button class="b" id="lt">💡 Luz ON/OFF</button><button class="b" id="fl">⚡ Flash</button><span class="text-xs text-slate-400 ml-1">Color:</span><span id="qc"></span></div>
   <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 m mt-2"><div><b id="mr">0</b> Hz<small>Frecuencia de disparo (último s)</small></div><div><b id="mv">-70</b> mV<small>Potencial de membrana medio</small></div><div><b id="mi">0</b> pA<small>Fotocorriente máxima en pantalla</small></div><div><b id="mf">—</b><small>Fidelidad: pulsos que provocan espiga</small></div></div>
   <p id="s1t" class="text-sm mt-2"></p>
-  <p class="text-xs text-slate-400 mt-1">Arriba: barra de luz (su color es la longitud de onda). Centro: voltaje de la neurona; las espigas son potenciales de acción. Abajo: corriente que generan las opsinas (convención electrofisiológica: <i>entrante = negativa</i> = hacia abajo). Línea discontinua = umbral de disparo (−50 mV). A la derecha, la membrana: ves entrar o salir los iones.</p></section>
+  <p class="text-xs text-slate-400 mt-1">Arriba: barra de luz (su color es la longitud de onda). Centro: voltaje de la neurona; las espigas son potenciales de acción. Abajo: corriente que generan las opsinas (convención electrofisiológica: <i>entrante = negativa</i> = hacia abajo). Línea discontinua = umbral de disparo (−50 mV). A la derecha, la membrana: ves entrar o salir los iones.</p><div class="key">💡 <b>Idea clave:</b> la opsina convierte la luz en corriente eléctrica a través de la membrana. Esa corriente acerca o aleja a la neurona de su umbral de disparo.</div><div class="try">🧪 <b>Prueba esto:</b> enciende la luz y mira a la vez las tres cosas: la corriente de abajo, el voltaje del centro y los iones de la membrana. Luego cambia a una opsina inhibidora y compara el signo de la corriente.</div></section>
 
  <section class="card"><div class="hd"><span class="bd bg-amber-400">2</span>Catálogo de opsinas: ¿a qué color responde cada una?</div>
   <canvas id="c2" style="height:250px;touch-action:none" aria-label="Espectros de acción"></canvas>
-  <p class="text-xs text-slate-500 mt-1">Toca o arrastra sobre el gráfico para cambiar el color de la luz. Curva gruesa = opsina elegida.</p>
-  <div class="mt-2 overflow-x-auto" id="s2t"></div><div id="s2i" class="text-sm mt-2"></div></section>
+  <p class="text-xs text-slate-500 mt-1">Haz clic o arrastra sobre el gráfico para cambiar el color de la luz. Curva gruesa = opsina elegida.</p>
+  <div class="mt-2 overflow-x-auto" id="s2t"></div><div id="s2i" class="text-sm mt-2"></div><div class="key">💡 <b>Idea clave:</b> cada opsina responde a un rango de colores, no a uno solo, y esos rangos se solapan. Por eso un mismo color puede activar varias opsinas a la vez.</div><div class="try">🧪 <b>Prueba esto:</b> arrastra sobre el gráfico hasta el rojo y mira la columna de respuesta: comprueba qué opsinas siguen respondiendo y cuáles ya no.</div></section>
 
  <section class="card"><div class="hd"><span class="bd bg-violet-400">3</span>Genética + fibra: ¿a qué neuronas afecta la luz?<span id="s3l" class="text-xs text-slate-400 font-normal ml-1"></span></div>
-  <div class="grid sm:grid-cols-3 gap-3"><div class="sm:col-span-2"><canvas id="c3" style="height:340px;touch-action:none" aria-label="Corte de tejido con neuronas"></canvas><p class="text-xs text-slate-500 mt-1">Arrastra la jeringa 💉 (donde inyectas el virus) y la fibra 🔦 (donde pones la luz). Forma: ▲ excitadora, ● PV, ◆ SST, ✱ astrocito. Halo verde = fluorescencia de la opsina (lleva una proteína fluorescente pegada).</p></div>
+  <div class="grid sm:grid-cols-3 gap-3"><div class="sm:col-span-2"><canvas id="c3" style="height:350px;touch-action:none" aria-label="Corte de tejido con neuronas"></canvas><p class="text-xs text-slate-500 mt-1">Arrastra la jeringa 💉 (donde inyectas el virus) y la fibra 🔦 (donde pones la luz). Forma: ▲ excitadora, ● PV, ◆ SST, ✱ astrocito. Halo verde = fluorescencia de la opsina (lleva una proteína fluorescente pegada).</p></div>
    <div class="text-sm"><div class="text-xs">Promotor (¿quién fabrica la opsina?)</div><div id="s3p"></div>
     <label class="text-xs block mt-1">Semanas tras la inyección: <b id="wkv" class="text-emerald-400">4</b><input id="wk" type="range" min="0" max="6" step=".5" value="4"></label>
     <label class="text-xs block">Volumen de virus (dispersión): <b id="vov" class="text-emerald-400">.5</b><input id="vo" type="range" min=".1" max="1" step=".05" value=".5"></label>
@@ -66,24 +42,24 @@ body{background:transparent!important}
     <div class="text-xs mt-1"><label class="mr-2"><input type="checkbox" id="l3" checked> Luz encendida</label><label class="mr-2"><input type="checkbox" id="lk"> Promotor con fugas</label></div>
     <div class="text-xs mt-1">Capas</div><div id="s3y"></div></div></div>
   <div id="s3m" class="grid grid-cols-2 sm:grid-cols-4 gap-2 m mt-2"></div><p id="s3t" class="text-sm mt-2"></p>
-  <p class="text-xs text-slate-400 mt-1">La luz usa el color y la opsina elegidos en el panel lateral. La luz se atenúa con la profundidad (dispersión y absorción) y la luz azul penetra menos que la roja. Una célula se activa si tiene opsina <i>y</i> recibe intensidad suficiente.</p></section>
+  <p class="text-xs text-slate-400 mt-1">La luz usa el color y la opsina elegidos en el panel lateral. La luz se atenúa con la profundidad (dispersión y absorción) y la luz azul penetra menos que la roja. Una célula se activa si tiene opsina <i>y</i> recibe intensidad suficiente.</p><div class="key">💡 <b>Idea clave:</b> la especificidad nace de dos filtros combinados: el promotor decide qué células fabrican la opsina y la fibra decide cuáles reciben luz. Solo responden las que cumplen ambas condiciones.</div><div class="try">🧪 <b>Prueba esto:</b> cambia el promotor y observa la especificidad. Después activa «Promotor con fugas» y mira cuánto cae.</div></section>
 
  <section class="card"><div class="hd"><span class="bd bg-rose-400">4</span>Del circuito a la conducta: ratones virtuales</div>
   <div class="text-xs">Circuito que vas a manipular</div><div id="s4c"></div>
-  <canvas id="c4" style="height:210px;margin-top:6px" aria-label="Arenas con ratones"></canvas>
+  <canvas id="c4" style="height:250px;margin-top:6px" aria-label="Arenas con ratones"></canvas>
   <div class="flex flex-wrap items-center gap-1 mt-2"><button class="b" id="bgo">▶ Iniciar ensayo</button><button class="b" id="brs">↺ Reiniciar</button><span class="text-xs text-slate-400 ml-1">Velocidad</span><span id="bsp"></span><span id="s4m" class="text-xs ml-auto"></span></div>
-  <canvas id="c5" style="height:190px;margin-top:6px" aria-label="Resultados"></canvas>
+  <canvas id="c5" style="height:200px;margin-top:6px" aria-label="Resultados"></canvas>
   <p id="s4t" class="text-sm mt-2"></p>
   <details class="mt-1"><summary>¿Qué se hizo de verdad?</summary><p id="s4r" class="text-xs text-slate-400 mt-1"></p></details>
-  <p class="text-xs text-slate-400 mt-1">Dos ratones reciben exactamente la misma luz: uno tiene la opsina en el circuito elegido y otro (control) no. Si solo cambia el ratón con opsina, la causa es la manipulación de ese circuito. Usa la opsina, el color y la intensidad del panel lateral. Modelo conductual muy simplificado.</p></section>
+  <p class="text-xs text-slate-400 mt-1">Dos ratones reciben exactamente la misma luz: uno tiene la opsina en el circuito elegido y otro (control) no. Si solo cambia el ratón con opsina, la causa es la manipulación de ese circuito. Usa la opsina, el color y la intensidad del panel lateral. Modelo conductual muy simplificado.</p><div class="key">💡 <b>Idea clave:</b> el ratón control recibe la misma luz pero no tiene la opsina. Sin esa comparación no se puede atribuir el cambio de conducta a la manipulación del circuito.</div><div class="try">🧪 <b>Prueba esto:</b> pon la opsina en «Control» (sin opsina) y repite el ensayo: así ves cuánta diferencia aparece solo por azar.</div></section>
 
  <section class="card"><div class="hd"><span class="bd bg-emerald-400">5</span>De un alga a un Nobel (y a la clínica)</div>
   <div id="tl"></div><div id="tlc" class="rounded-lg border border-slate-700 p-2 mt-1 text-sm"></div>
-  <div class="text-xs mt-3">¿Para qué sirve? Toca una aplicación</div><div id="ap"></div><div id="apc" class="rounded-lg border border-slate-700 p-2 mt-1 text-sm"></div>
-  <p class="text-xs text-slate-500 mt-1">El estado de cada aplicación es orientativo (2026) y puede haber cambiado: comprueba la fuente antes de citarlo.</p></section>
+  <div class="text-xs mt-3">¿Para qué sirve? Haz clic en una aplicación</div><div id="ap"></div><div id="apc" class="rounded-lg border border-slate-700 p-2 mt-1 text-sm"></div>
+  <p class="text-xs text-slate-500 mt-1">El estado de cada aplicación es orientativo (2026) y puede haber cambiado: comprueba la fuente antes de citarlo.</p><div class="key">💡 <b>Idea clave:</b> la optogenética nació de estudiar cómo se mueven unas algas hacia la luz. La investigación básica, sin aplicación aparente, acabó siendo una herramienta central de la neurociencia.</div><div class="try">🧪 <b>Prueba esto:</b> abre una aplicación clínica y fíjate en su estado: la mayoría sigue lejos del uso habitual en personas.</div></section>
 
  <section class="card"><div class="hd"><span class="bd bg-sky-400">6</span>Test final<span id="qs" class="text-xs text-slate-400 font-normal ml-1"></span></div>
-  <div id="qz"></div><button class="b mt-1" id="qn">Siguiente pregunta ▶</button></section>
+  <div id="qz"></div><button class="b mt-1" id="qn">Siguiente pregunta ▶</button><div class="key">💡 <b>Idea clave:</b> si algo no te cuadra en una pregunta, vuelve al panel correspondiente y compruébalo en el simulador.</div></section>
 </div>
 <aside class="space-y-2 lg:sticky lg:top-2 self-start lg:max-h-[96vh] lg:overflow-auto">
  <details open class="card"><summary>Opsina expresada</summary><div id="op" class="mt-2"></div><p id="opd" class="text-xs text-slate-400"></p></details>
@@ -102,7 +78,7 @@ body{background:transparent!important}
 </aside></main>
 <footer id="nl-foot">
 <a class="nl-idx" href="../index.html">← NeuroLab UVa · Índice de simuladores</a>
-<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img data-f="img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img data-f="img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
+<div class="nl-logos"><a href="https://www.uva.es/" target="_blank" rel="noopener"><img src="../../img/UVa.png" alt="Universidad de Valladolid"></a><a href="https://gib.uva.es/" target="_blank" rel="noopener"><img src="../../img/GIB.png" alt="Grupo de Ingeniería Biomédica (GIB)"></a></div>
 <div>© 2026 <a href="https://gib.uva.es/member.php?id=16" target="_blank" rel="noopener">Javier Gómez Pilar</a> · Grupo de Ingeniería Biomédica, Universidad de Valladolid</div>
 </footer>
 <script>
@@ -258,7 +234,7 @@ function draw2(){
 function updS2(){
  let h='<table><tr><th>Opsina</th><th>Efecto</th><th>Tipo</th><th>Pico</th><th>Respuesta a '+S.lam+' nm</th></tr>';
  OK.slice(1).forEach(k=>{const o=OPS[k],r=Math.max(...o.parts.map(p=>sens(p,S.lam)))*100;
-  h+=`<tr style="${k===S.ops&&!S.hid?'background:#06323d55':''}"><td style="color:${o.col}">${OLAB[k]}</td><td>${o.ef.split(' ')[0]}</td><td>${o.mol.split(' (')[0]}</td><td>${o.pico.split(' (')[0]}</td><td><div class="bar"><i style="width:${r}%;background:${o.col}"></i></div></td></tr>`});
+  h+=`<tr style="${k===S.ops&&!S.hid?'background:#06323d55':''}"><td style="color:${o.col}">${OLAB[k]}</td><td>${o.ef.replace(/ [(][^)]*[)]/g,'')}</td><td>${o.mol.split(' (')[0]}</td><td>${o.pico.split(' (')[0]}</td><td><div class="bar"><i style="width:${r}%;background:${o.col}"></i></div></td></tr>`});
  $('#s2t').innerHTML=h+'</table>';
  const o=OPS[S.ops];$('#s2i').innerHTML=S.hid?'<span class="text-slate-400">Opsina oculta: no se muestra su ficha.</span>':`<b style="color:${o.col}">${o.name}</b> — ${o.mol}. Origen: ${o.org}. ${o.nota}`;
  $('#opd').innerHTML=S.hid?'Opsina oculta (reto en curso).':`<b style="color:${o.col}">${o.name}</b><br>${o.ef} · ${o.mol}<br>${o.nota}`;
@@ -432,7 +408,7 @@ const EV=[['1971','Bacteriorrodopsina','Se descubre en la arquea <i>Halobacteriu
 ['2021','Primer paciente','Se documenta recuperación parcial de visión en una persona ciega por retinitis pigmentosa tras terapia optogenética (una opsina roja en células ganglionares de la retina + gafas que proyectan luz). Primer beneficio clínico documentado.'],
 ['2026','El Nobel','El 5 de octubre, el Nobel de Fisiología o Medicina premia a Karl Deisseroth, Peter Hegemann y Georg Nagel «por sus descubrimientos sobre canales iónicos activados por luz y optogenética».']];
 mk($('#tl'),EV.map(e=>e[0]),null,l=>{const e=EV.find(q=>q[0]===l);$('#tlc').innerHTML=`<b class="text-cyan-300">${e[0]} · ${e[1]}</b><br>${e[2]}`});
-$('#tlc').innerHTML='<span class="text-slate-400">Toca una fecha para ver el hito.</span>';
+$('#tlc').innerHTML='<span class="text-slate-400">Haz clic en una fecha para ver el hito.</span>';
 const AP=[['🧠 Mapear circuitos','Investigación básica','Encender o apagar un tipo neuronal y ver qué cambia establece <b>causalidad</b>, no solo correlación. Se ha usado para estudiar recompensa y adicción, hambre, memoria, sueño-vigilia, ansiedad o conducta social (apartado 4).'],
 ['👁 Restaurar visión','Ensayos clínicos tempranos','En la retinitis pigmentosa mueren los fotorreceptores pero las células ganglionares sobreviven. Se les da una opsina por terapia génica y unas gafas convierten la imagen en destellos de la luz adecuada. Primer beneficio parcial documentado en 2021.'],
 ['👂 Implantes auditivos ópticos','Preclínico','La luz se puede enfocar mejor que la corriente eléctrica: podría estimular el nervio auditivo con más canales independientes y dar más resolución en frecuencia que los implantes cocleares actuales.'],
@@ -440,7 +416,7 @@ const AP=[['🧠 Mapear circuitos','Investigación básica','Encender o apagar u
 ['❤️ Corazón','Preclínico','Marcapasos y desfibriladores ópticos en modelos animales: la luz puede sincronizar o reiniciar el tejido cardiaco sin la descarga dolorosa de una desfibrilación eléctrica.'],
 ['⚠ Retos y límites','Para tenerlo en cuenta','Requiere terapia génica (virus) y llevar la luz al tejido (fibras, implantes); las proteínas microbianas pueden provocar respuesta inmune; la luz penetra poco y puede calentar; y los efectos de silenciar o excitar un tipo celular dependen del circuito entero.']];
 mk($('#ap'),AP.map(a=>a[0]),null,l=>{const a=AP.find(q=>q[0]===l);$('#apc').innerHTML=`<b class="text-emerald-300">${a[0]}</b> <span class="text-xs text-amber-300">· ${a[1]}</span><br>${a[2]}`});
-$('#apc').innerHTML='<span class="text-slate-400">Toca una aplicación.</span>';
+$('#apc').innerHTML='<span class="text-slate-400">Haz clic en una aplicación.</span>';
 
 // ====================== sección 6: test ======================
 const QZ=[
@@ -466,21 +442,6 @@ function frame(now){const dtr=Math.min(now-lastT,50);lastT=now;
  draw0();draw1();draw3(now);behFrame(S.paused?0:dtr);drawBeh();if(fc++%6===0)updS1();requestAnimationFrame(frame)}
 let rz;window.addEventListener('resize',()=>{clearTimeout(rz);rz=setTimeout(()=>{CIDS.forEach(setup);draw2();drawBars()},150)});
 CIDS.forEach(setup);setMode('off');lamChanged();intChanged();calc3();resetBeh();showQ();updS2();draw2();requestAnimationFrame(frame);
-</script><script>
-/* NeuroLab UVa: fondo de nodos, enlaces al índice y logos (independiente del resto de la app) */
-(function(){
-var base=/\/apps\/[^\/]*$/i.test(location.pathname)?'../':'';
-document.querySelectorAll('.nl-idx').forEach(function(a){a.href=base+'index.html'});
-document.querySelectorAll('#nl-foot img').forEach(function(im){var f=im.getAttribute('data-f');im.src=base+f;
- im.onerror=function(){if(!im.dataset.t){im.dataset.t=1;im.src=(base?'':'../')+f}else{im.onerror=null;var sp=document.createElement('span');sp.textContent=im.alt;im.replaceWith(sp)}}});
-var c=document.getElementById('nl-bg');if(!c||!c.getContext)return;var x=c.getContext('2d'),W=0,H=0,P=[],last=0,still=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-function build(){W=c.width=innerWidth;H=c.height=innerHeight;var n=Math.min(60,Math.floor(W*H/20000));P=[];for(var i=0;i<n;i++)P.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,r:Math.random()*1.4+1})}
-function draw(k){x.clearRect(0,0,W,H);for(var i=0;i<P.length;i++){var p=P[i];p.x+=p.vx*k;p.y+=p.vy*k;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,6.2832);x.fillStyle='rgba(56,189,248,.4)';x.fill();
- for(var j=i+1;j<P.length;j++){var q=P[j],dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);if(d<120){x.beginPath();x.moveTo(p.x,p.y);x.lineTo(q.x,q.y);x.strokeStyle='rgba(99,102,241,'+((1-d/120)*.18)+')';x.lineWidth=.8;x.stroke()}}}}
-function frame(t){requestAnimationFrame(frame);if(document.hidden||t-last<33)return;var k=Math.min(3,(t-last)/16.7);last=t;draw(k)}
-build();draw(0);if(!still)requestAnimationFrame(frame);
-addEventListener('resize',function(){if(Math.abs(innerWidth-W)>2||Math.abs(innerHeight-H)>150){build();draw(0)}else{c.width=W=innerWidth;c.height=H=innerHeight}});
-})();
-</script>
+</script><script src="../../shared/simulab.js"></script>
 <script src="../../shared/aula.js"></script>
 </body></html>
