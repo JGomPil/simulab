@@ -455,7 +455,7 @@ const clampv=(v,a,b)=>Math.max(a,Math.min(b,v)),lerpv=(a,b,t)=>a+(b-a)*t,mixCol=
   const ctx=canvas.getContext('2d');let W,H,d=1;
   const resize=()=>{const r=canvas.getBoundingClientRect();d=window.devicePixelRatio||1;W=canvas.width=r.width*d;H=canvas.height=r.height*d};
   resize();window.addEventListener('resize',resize);
-  const B=mkBrain(5000);let uy=0,ux=0,drag=false,lx=0,ly=0;
+  const B=mkBrain(15000);let uy=0,ux=0,drag=false,lx=0,ly=0;
   canvas.style.touchAction='pan-y';
   canvas.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;try{canvas.setPointerCapture(e.pointerId)}catch(_){}});
   canvas.addEventListener('pointermove',e=>{if(!drag)return;uy+=(e.clientX-lx)*.008;ux=clampv(ux-(e.clientY-ly)*.008,-1.2,1.2);lx=e.clientX;ly=e.clientY});

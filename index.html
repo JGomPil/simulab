@@ -419,7 +419,7 @@ function drawNet(ctx,Nn,cx0,cy0,sc,yaw,tilt,t,am){const f=Math.max(.45,sc/80),cy
   const resize=()=>{const r=canvas.getBoundingClientRect(),d=window.devicePixelRatio||1;W=canvas.width=r.width*d;H=canvas.height=r.height*d};
   resize();window.addEventListener('resize',resize);
   const CL=[{x:.19,y:.7,col:'34, 211, 238'},{x:.5,y:.3,col:'251, 146, 60'},{x:.81,y:.7,col:'52, 211, 153'}];
-  const BR=mkBrain(2000),GL=mkGlobe(260),NT=mkNet();
+  const BR=mkBrain(5500),GL=mkGlobe(260),NT=mkNet();
   let uy=0,ux=0,drag=false,lx=0,ly=0;
   canvas.style.touchAction='pan-y';
   canvas.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;try{canvas.setPointerCapture(e.pointerId)}catch(_){}});
