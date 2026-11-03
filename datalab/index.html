@@ -160,6 +160,13 @@
 #nl-foot img{height:26px;width:auto;opacity:.85}#nl-foot img:hover{opacity:1}
 @media print{#nl-foot{display:none!important}}
 </style>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b1220'/%3E%3Cpath d='M3 17h6l3-9 5 17 4-12 2 4h6' fill='none' stroke='%2322d3ee' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <style>
+    @media (min-width:1024px) and (max-height:820px){
+      #hero-net-canvas{height:230px!important}
+      main.cards{margin-top:.25rem}
+    }
+  </style>
 </head>
 <body class="relative text-slate-100 min-h-screen">
 
@@ -171,14 +178,14 @@
     <header class="flex flex-wrap items-center justify-between gap-4 py-3 mb-2 border-b border-slate-800/60">
       <!-- Logo UVa (Izquierda) -->
       <a href="https://www.uva.es/" class="flex items-center gap-3">
-          <img src="img/UVa.png" width="200">
+          <img src="img/UVa.png" width="200" alt="Universidad de Valladolid">
       </a>
 
       <!-- Logo GIB (Derecha) -->
       <a href="../index.html" class="nl-back" aria-label="Volver al índice principal SimuLab UVa">← SimuLab UVa</a>
 
       <div class="flex items-center gap-2.5">
-          <a href="https://gib.uva.es/"><img src="img/GIB.png" width="200"></a>
+          <a href="https://gib.uva.es/"><img src="img/GIB.png" width="200" alt="Grupo de Ingeniería Biomédica"></a>
       </div>
     </header>
 
@@ -204,7 +211,7 @@
 
      <main class="cards">
 
-      <a href="apps/BioDataSim.html" class="sim-card p-4 text-left" style="--card-color:#f472b6; --card-glow:rgba(244,114,182,0.35);" aria-disabled="true" tabindex="-1">
+      <a href="apps/biodatasim.html" class="sim-card p-4 text-left" style="--card-color:#f472b6; --card-glow:rgba(244,114,182,0.35);">
         
         <div class="flex items-center justify-between mb-2">
           <span class="badge-tag">IADB</span>
