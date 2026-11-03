@@ -1,5 +1,5 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OptoGenSim · Laboratorio de optogenética</title><meta name="theme-color" content="#070b14">
-<script src="https://cdn.tailwindcss.com"></script>
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OptoGenSim</title><meta name="theme-color" content="#070b14">
+<script src="../../shared/tailwind.js"></script>
 <link rel="stylesheet" href="../../shared/simulab.css">
 <style>
 td,th{padding:.2rem .35rem;text-align:left}
@@ -24,9 +24,9 @@ td,th{padding:.2rem .35rem;text-align:left}
  <section class="card"><div class="hd"><span class="bd bg-cyan-400">1</span>Una neurona, una opsina y luz<span id="lab" class="text-xs text-slate-400 font-normal ml-1"></span><button class="b ml-auto" id="pau">⏸ Pausar</button></div>
   <div class="grid sm:grid-cols-3 gap-3"><div class="sm:col-span-2"><canvas id="c0" style="height:350px" aria-label="Voltaje de membrana y fotocorriente"></canvas></div><div><canvas id="c1" style="height:350px" aria-label="Membrana con opsinas"></canvas></div></div>
   <div class="flex flex-wrap gap-1 mt-2 items-center"><button class="b" id="lt">💡 Luz ON/OFF</button><button class="b" id="fl">⚡ Flash</button><span class="text-xs text-slate-400 ml-1">Color:</span><span id="qc"></span></div>
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 m mt-2"><div><b id="mr">0</b> Hz<small>Frecuencia de disparo (último s)</small></div><div><b id="mv">-70</b> mV<small>Potencial de membrana medio</small></div><div><b id="mi">0</b> pA<small>Fotocorriente máxima en pantalla</small></div><div><b id="mf">—</b><small>Fidelidad: pulsos que provocan espiga</small></div></div>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 m mt-2"><div><b id="mr">0</b> Hz<small>Frecuencia de disparo (último s)</small></div><div><b id="mv">-70</b> mV<small>Potencial de membrana medio</small></div><div><b id="mi">0</b> pA<small>Fotocorriente máxima en pantalla (− entrante, + saliente)</small></div><div><b id="mf">—</b><small>Fidelidad: pulsos que provocan espiga</small></div></div>
   <p id="s1t" class="text-sm mt-2"></p>
-  <p class="text-xs text-slate-400 mt-1">Arriba: barra de luz (su color es la longitud de onda). Centro: voltaje de la neurona; las espigas son potenciales de acción. Abajo: corriente que generan las opsinas (convención electrofisiológica: <i>entrante = negativa</i> = hacia abajo). Línea discontinua = umbral de disparo (−50 mV). A la derecha, la membrana: ves entrar o salir los iones.</p><div class="key">💡 <b>Idea clave:</b> la opsina convierte la luz en corriente eléctrica a través de la membrana. Esa corriente acerca o aleja a la neurona de su umbral de disparo.</div><div class="try">🧪 <b>Prueba esto:</b> enciende la luz y mira a la vez las tres cosas: la corriente de abajo, el voltaje del centro y los iones de la membrana. Luego cambia a una opsina inhibidora y compara el signo de la corriente.</div></section>
+  <p class="text-xs text-slate-400 mt-1">Arriba: barra de luz (su color es la longitud de onda). Centro: voltaje de la neurona; las espigas son potenciales de acción. Abajo: corriente que generan las opsinas (convención electrofisiológica: <i>entrante = negativa</i> = hacia abajo). Línea discontinua = umbral de disparo (−50 mV). A la derecha, la membrana: ves entrar o salir los iones.</p><div class="key">💡 <b>Idea clave:</b> la opsina convierte la luz en corriente eléctrica a través de la membrana. Esa corriente acerca o aleja a la neurona de su umbral de disparo.</div><div class="try">🧪 <b>Prueba esto:</b> con ChR2 y luz azul, enciende la luz y mira la frecuencia de disparo: pasa de unos pocos Hz a decenas. Después elige NpHR con luz amarilla (590 nm): la neurona se hiperpolariza, deja de disparar y la curva de corriente de abajo se va al lado contrario.</div></section>
 
  <section class="card"><div class="hd"><span class="bd bg-amber-400">2</span>Catálogo de opsinas: ¿a qué color responde cada una?</div>
   <canvas id="c2" style="height:250px;touch-action:none" aria-label="Espectros de acción"></canvas>
@@ -42,7 +42,7 @@ td,th{padding:.2rem .35rem;text-align:left}
     <div class="text-xs mt-1"><label class="mr-2"><input type="checkbox" id="l3" checked> Luz encendida</label><label class="mr-2"><input type="checkbox" id="lk"> Promotor con fugas</label></div>
     <div class="text-xs mt-1">Capas</div><div id="s3y"></div></div></div>
   <div id="s3m" class="grid grid-cols-2 sm:grid-cols-4 gap-2 m mt-2"></div><p id="s3t" class="text-sm mt-2"></p>
-  <p class="text-xs text-slate-400 mt-1">La luz usa el color y la opsina elegidos en el panel lateral. La luz se atenúa con la profundidad (dispersión y absorción) y la luz azul penetra menos que la roja. Una célula se activa si tiene opsina <i>y</i> recibe intensidad suficiente.</p><div class="key">💡 <b>Idea clave:</b> la especificidad nace de dos filtros combinados: el promotor decide qué células fabrican la opsina y la fibra decide cuáles reciben luz. Solo responden las que cumplen ambas condiciones.</div><div class="try">🧪 <b>Prueba esto:</b> cambia el promotor y observa la especificidad. Después activa «Promotor con fugas» y mira cuánto cae.</div></section>
+  <p class="text-xs text-slate-400 mt-1">La luz usa el color y la opsina elegidos en el panel lateral. La luz se atenúa con la profundidad (dispersión y absorción) y la luz azul penetra menos que la roja. Una célula se activa si tiene opsina <i>y</i> recibe intensidad suficiente.</p><div class="key">💡 <b>Idea clave:</b> la especificidad nace de dos filtros combinados: el promotor decide qué células fabrican la opsina y la fibra decide cuáles reciben luz. Solo responden las que cumplen ambas condiciones.</div><div class="try">🧪 <b>Prueba esto:</b> pon las semanas a 0: todavía no hay opsina y no se activa ninguna célula. Súbelas y aumenta el volumen de virus para ver cómo crece la población con opsina. Luego elige PV-Cre y activa «Promotor con fugas»: la especificidad baja, y se nota más cuanto más pequeña es la población diana.</div></section>
 
  <section class="card"><div class="hd"><span class="bd bg-rose-400">4</span>Del circuito a la conducta: ratones virtuales</div>
   <div class="text-xs">Circuito que vas a manipular</div><div id="s4c"></div>
@@ -177,7 +177,7 @@ function draw0(){
  for(let c=0;c<pw;c++){if(isNaN(cv[c])){st=false;continue}const y=ymv(cv[c]);if(!st){x.moveTo(L+c,y);st=true}else x.lineTo(L+c,y)}x.stroke();
  // eje de tiempo
  x.fillStyle='#64748b';for(let k=0;k<=4;k++){const px=L+pw*k/4;x.fillText(((t1-W+W*k/4)/1000).toFixed(W<1000?2:1)+' s',px-(k==4?30:k==0?0:12),h-6)}
- sim.mxI=mx;sim.maxI=0;for(let c=0;c<pw;c++)if(Math.abs(ci[c])>sim.maxI)sim.maxI=Math.abs(ci[c]);
+ sim.mxI=mx;let eI=0;for(let c=0;c<pw;c++)if(Math.abs(ci[c])>Math.abs(eI))eI=ci[c];sim.maxI=-eI;
 }
 // membrana con opsinas e iones
 const ions=[],phot=[];
@@ -204,7 +204,7 @@ function draw1(){
  x.fillText(hid?'¿opsina oculta?':S.ops==='Control'?'sin opsina: la luz no hace nada':OLAB[S.ops]+' · '+(kind==='pump'?'bomba':'canal')+(sim.parts.length==1?' · '+eff[sg]:''),6,my+th/2+22);
 }
 function updS1(){
- const rate=sim.spk.length,mv=sim.Vm;$('#mr').textContent=rate;$('#mv').textContent=mv.toFixed(0);$('#mi').textContent=Math.round(sim.maxI||0);
+ const rate=sim.spk.length,mv=sim.Vm;$('#mr').textContent=rate;$('#mv').textContent=mv.toFixed(0);$('#mi').textContent=(v=>v>0?'+'+v:''+v)(Math.round(sim.maxI||0));
  const pl=sim.pulses.filter(q=>q.t<sim.t-30&&q.t>sim.t-3000&&q.w<50);$('#mf').textContent=pl.length>=3?Math.round(100*pl.filter(q=>q.hit).length/pl.length)+' %':'—';
  const hidden=S.hid,op=OPS[S.ops];let t='';
  if(hidden)t='Opsina oculta: investiga con distintos colores e intensidades.';

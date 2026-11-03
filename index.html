@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>SimuLab UVa · Simuladores docentes de neurociencia, radionavegación e inteligencia artificial</title>
+  <title>SimuLab UVa</title>
   <meta name="description" content="Simuladores docentes interactivos de neurociencia, radionavegación e inteligencia artificial y datos. Universidad de Valladolid.">
   <meta name="theme-color" content="#020612">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="shared/tailwind.js"></script>
   <style>
     :root {
       --bg: #020612;
@@ -381,27 +381,29 @@ const clampv=(v,a,b)=>Math.max(a,Math.min(b,v)),lerpv=(a,b,t)=>a+(b-a)*t,mixCol=
 /* ---------- Cerebro: nube de puntos con dos hemisferios, surcos, lóbulos temporales, cerebelo y tronco ---------- */
 function mkBrain(N){
   const rnd=mulberry(11),P=[],CYAN=[34,211,238],VIO=[167,139,250],PINK=[244,114,208];
-  const inCer=(x,y,z,s)=>{const a=(x-s*.40)/.44,b=(y-.05)/.56,c=z/.95;return a*a+b*b+c*c};
+  const inCer=(x,y,z,s)=>{const a=x/.74,b=(y-.05)/.56,c=z/.95;return a*a+b*b+c*c};
   const ant=z=>{let t=(.95-z)/1.9;t=Math.floor(clampv(t,0,.999)*6)/6;return t<.5?mixCol(CYAN,VIO,t*2):mixCol(VIO,PINK,(t-.5)*2)};
-  const M=Math.round(N*.33);
-  for(let h=0;h<2;h++){const s=h?1:-1;
-    for(let i=0;i<M;i++){
-      const uy=1-2*(i+.5)/M,r=Math.sqrt(1-uy*uy),th=i*2.399963+h*.9,ux=r*Math.cos(th),uz=r*Math.sin(th);
-      const g=Math.sin(5.2*ux+2.1*uz+1.3*uy)*Math.sin(4.6*uz-3.1*uy+2*ux)+.6*Math.sin(9*uy+3.7*ux-2.4*uz)*Math.cos(7*uz+1.7*ux),k=1+.05*g;
-      let x=s*.40+ux*.44*k,y=.05+uy*.56*k,z=uz*.95*k;
-      if(y<-.36)y=-.36+(y+.36)*.25;
-      y*=.9+.12*((z+.95)/1.9);
-      if(s*x<.06)continue;
-      P.push({x,y,z,g,col:ant(z),h,part:0});
-    }}
+  const M=Math.round(N*.66);
+  for(let i=0;i<M;i++){
+    const uy=1-2*(i+.5)/M,r=Math.sqrt(1-uy*uy),th=i*2.399963,ux=r*Math.cos(th),uz=r*Math.sin(th);
+    const g=Math.sin(5.2*ux+2.1*uz+1.3*uy)*Math.sin(4.6*uz-3.1*uy+2*ux)+.6*Math.sin(9*uy+3.7*ux-2.4*uz)*Math.cos(7*uz+1.7*ux),k=1+.05*g;
+    let x=ux*.74*k,y=.05+uy*.56*k,z=uz*.95*k;
+    if(y<-.36)y=-.36+(y+.36)*.25;
+    y*=.9+.12*((z+.95)/1.9);
+    x*=1-.34*Math.pow(Math.abs(z)/.95,2.2);
+    const s=x<0?-1:1,fi=Math.max(0,1-Math.abs(x)/.15);
+    if(y>0)y-=.34*fi*fi*y;
+    x+=s*.025*fi;
+    P.push({x,y,z,g,col:ant(z),h:s>0?1:0,part:0});
+  }
   const T=Math.round(N*.07);
-  for(let h=0;h<2;h++){const s=h?1:-1;for(let i=0;i<T;i++){const uy=1-2*(i+.5)/T,r=Math.sqrt(1-uy*uy),th=i*2.399963+h,ux=r*Math.cos(th),uz=r*Math.sin(th),x=s*(.62+ux*.2),y=-.31+uy*.17,z=.2+uz*.44;
+  for(let h=0;h<2;h++){const s=h?1:-1;for(let i=0;i<T;i++){const uy=1-2*(i+.5)/T,r=Math.sqrt(1-uy*uy),th=i*2.399963+h,ux=r*Math.cos(th),uz=r*Math.sin(th),x=s*(.33+ux*.21),y=-.31+uy*.17,z=.2+uz*.44;
     if(inCer(x,y,z,s)<1.03)continue;P.push({x,y,z,g:Math.sin(11*ux+7*uz),col:[251,146,60],h,part:1});}}
   const C=Math.round(N*.1);
   for(let i=0;i<C;i++){const uy=1-2*(i+.5)/C,r=Math.sqrt(1-uy*uy),th=i*2.399963,ux=r*Math.cos(th),uz=r*Math.sin(th),k=1+.05*Math.sin(26*uy),x=ux*.46*k,y=-.42+uy*.2*k,z=-.66+uz*.28*k;
     if(inCer(x,y,z,1)<1.02||inCer(x,y,z,-1)<1.02)continue;P.push({x,y,z,g:Math.sin(26*uy),col:[52,211,153],h:2,part:2});}
   const J=Math.max(6,Math.round(N/90));
-  for(let r=0;r<6;r++){const f=r/5,y=-.26-f*.5,z=-.16-f*.12,rad=.1-.025*f;for(let j=0;j<J;j++){const a=j/J*2*Math.PI+r*.4;P.push({x:Math.cos(a)*rad*1.1,y,z:z+Math.sin(a)*rad,g:0,col:[125,211,252],h:3,part:3});}}
+  for(let r=0;r<6;r++){const f=r/5,y=-.24-f*.32,z=-.08-f*.10,rad=.13-.045*f;for(let j=0;j<J;j++){const a=j/J*2*Math.PI+r*.4;P.push({x:Math.cos(a)*rad*1.1,y,z:z+Math.sin(a)*rad,g:0,col:[125,211,252],h:3,part:3});}}
   const n=P.length,dm=1.9*Math.sqrt(5/n),E=[],seen=new Set(),adj=P.map(()=>[]),cols=[],cmap={};
   P.forEach(p=>{const k=p.col.join(',');if(!(k in cmap)){cmap[k]=cols.length;cols.push(k)}p.cls=cmap[k]});
   for(let i=0;i<n;i++){const d=[];for(let j=0;j<n;j++){if(i==j)continue;const a=P[i],b=P[j];if(a.part==0&&b.part==0&&a.h!=b.h)continue;const dx=a.x-b.x,dy=a.y-b.y,dz=a.z-b.z,q=dx*dx+dy*dy+dz*dz;if(q<dm*dm)d.push([q,j])}
@@ -448,13 +450,13 @@ function drawGlobe(ctx,G,ox,oy,scale,viewYaw,tilt,t,am){
   ctx.restore()}
 /* ---------- Red neuronal en capas (de la web de IA y datos) ---------- */
 function mkNet(){const rnd=mulberry(5),sizes=[5,8,9,8,4],cols=['34, 211, 238','129, 140, 248','167, 139, 250','244, 114, 182','52, 211, 153'],nodes=[],layerIdx=[];
-  sizes.forEach((n,l)=>{layerIdx.push([]);for(let i=0;i<n;i++){const a=i/n*2*Math.PI+l*.4,r=.35+.1*Math.sin(l*1.3+i);nodes.push({x:-1.5+l*.75,y:Math.sin(a)*r*1.5,z:Math.cos(a)*r*1.5,l,col:cols[l]});layerIdx[l].push(nodes.length-1)}});
+  const mx=Math.max(...sizes),sp=1.75/mx;sizes.forEach((n,l)=>{layerIdx.push([]);const nc=n<=5?2:3,nr=Math.ceil(n/nc);for(let i=0;i<n;i++){const r=(i/nc)|0,c=i%nc;nodes.push({x:-1.5+l*.75,y:(r-(nr-1)/2)*sp*mx/nr*1.15,z:(c-(nc-1)/2)*.42,l,col:cols[l]});layerIdx[l].push(nodes.length-1)}});
   const edges=[];for(let l=0;l<sizes.length-1;l++)layerIdx[l].forEach(a=>layerIdx[l+1].forEach(b=>{if(rnd()<.55)edges.push([a,b,rnd()])}));return{nodes,edges}}
 function drawNet(ctx,Nn,cx0,cy0,sc,yaw,tilt,t,am){const f=Math.max(.45,sc/80),cy=Math.cos(yaw),sy=Math.sin(yaw),cx=Math.cos(tilt),sx=Math.sin(tilt);
   const P=n=>{const x1=n.x*cy-n.z*sy,z1=n.x*sy+n.z*cy,y1=n.y*cx-z1*sx,z2=n.y*sx+z1*cx,k=3.2/(3.2+z2);return{x:cx0+x1*sc*k,y:cy0-y1*sc*k,z:z2,k}};
   const pr=Nn.nodes.map(P);ctx.save();ctx.globalAlpha=am;
   Nn.edges.forEach(([a,b,ph])=>{const A=pr[a],B=pr[b],al=.12+.1*(1-(A.z+B.z)/2*.3);ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.strokeStyle=`rgba(${Nn.nodes[a].col},${al})`;ctx.lineWidth=A.k*f;ctx.stroke();const fr=(t*.45+ph*3)%1;if(fr<.9){ctx.beginPath();ctx.arc(A.x+(B.x-A.x)*fr,A.y+(B.y-A.y)*fr,1.8*A.k*f,0,6.2832);ctx.fillStyle=`rgba(${Nn.nodes[a].col},.95)`;ctx.fill()}});
-  pr.forEach((p,i)=>{const n=Nn.nodes[i],act=.5+.5*Math.sin(t*2+n.l*1.2+i);ctx.beginPath();ctx.arc(p.x,p.y,(3+1.5*act)*p.k*f,0,6.2832);ctx.fillStyle=`rgba(${n.col},${.6+.4*act})`;ctx.fill()});ctx.restore()}
+  pr.forEach((p,i)=>{const n=Nn.nodes[i],act=.5+.5*Math.sin(t*2+n.l*1.2+i);ctx.save();ctx.shadowColor=`rgb(${n.col})`;ctx.shadowBlur=(4+5*act)*f;ctx.beginPath();ctx.arc(p.x,p.y,(3+1.5*act)*p.k*f,0,6.2832);ctx.fillStyle=`rgba(${n.col},${.6+.4*act})`;ctx.fill();ctx.restore()});ctx.restore()}
 
 
 (function initHeroClusters(){
@@ -463,7 +465,12 @@ function drawNet(ctx,Nn,cx0,cy0,sc,yaw,tilt,t,am){const f=Math.max(.45,sc/80),cy
   const resize=()=>{const r=canvas.getBoundingClientRect(),d=window.devicePixelRatio||1;W=canvas.width=r.width*d;H=canvas.height=r.height*d};
   resize();window.addEventListener('resize',resize);
   const CL=[{x:.19,y:.7,col:'34, 211, 238'},{x:.5,y:.3,col:'251, 146, 60'},{x:.81,y:.7,col:'52, 211, 153'}];
-  const BR=mkBrain(420),GL=mkGlobe(260),NT=mkNet();
+  const BR=mkBrain(1100),GL=mkGlobe(260),NT=mkNet();
+  let uy=0,ux=0,drag=false,lx=0,ly=0;
+  canvas.style.touchAction='pan-y';
+  canvas.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;ly=e.clientY;try{canvas.setPointerCapture(e.pointerId)}catch(_){}});
+  canvas.addEventListener('pointermove',e=>{if(!drag)return;uy+=(e.clientX-lx)*.008;ux=clampv(ux-(e.clientY-ly)*.008,-1.2,1.2);lx=e.clientX;ly=e.clientY});
+  ['pointerup','pointercancel','pointerleave'].forEach(n=>canvas.addEventListener(n,()=>drag=false));
   let hl=-1;document.querySelectorAll('[data-cluster]').forEach(el=>{el.addEventListener('mouseenter',()=>hl=+el.dataset.cluster);el.addEventListener('mouseleave',()=>hl=-1)});
   const t0=performance.now();
   (function render(now){
@@ -473,9 +480,9 @@ function drawNet(ctx,Nn,cx0,cy0,sc,yaw,tilt,t,am){const f=Math.max(.45,sc/80),cy
       ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.setLineDash([5,6]);ctx.lineDashOffset=-t*14;ctx.strokeStyle=`rgba(148,163,184,${on?.4:.12})`;ctx.lineWidth=1.2;ctx.stroke();ctx.setLineDash([]);
       const f=(t*.25+(a*3+b)*.31)%1;ctx.beginPath();ctx.arc(x1+(x2-x1)*f,y1+(y2-y1)*f,2.6,0,6.2832);ctx.fillStyle='rgba(226,232,240,.9)';ctx.fill()}
     const am=i=>hl<0||hl===i?1:.35;
-    drawBrain(ctx,BR,W*CL[0].x,H*CL[0].y,m*.18,1.2+.5*Math.sin(t*.4),.2,t,am(0));
-    drawGlobe(ctx,GL,W*CL[1].x,H*CL[1].y,m*.105,t*.15,.35,t,am(1));
-    drawNet(ctx,NT,W*CL[2].x,H*CL[2].y,m*.09,t*.3,.4,t,am(2));
+    drawBrain(ctx,BR,W*CL[0].x,H*CL[0].y,m*.18,1.2+t*.15+uy,.2+ux,t,am(0));
+    drawGlobe(ctx,GL,W*CL[1].x,H*CL[1].y,m*.105,t*.15+uy,.35+ux,t,am(1));
+    drawNet(ctx,NT,W*CL[2].x,H*CL[2].y,m*.10,.42+t*.15+uy,.22+ux,t,am(2));
     requestAnimationFrame(render)})(performance.now());
 })();
 
