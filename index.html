@@ -6,6 +6,10 @@
   <title>SimuLab UVa</title>
   <meta name="description" content="Simuladores docentes interactivos de neurociencia, radionavegación e inteligencia artificial y datos. Universidad de Valladolid.">
   <meta name="theme-color" content="#020612">
+  <!-- App instalable (PWA): manifest e icono para iPhone/iPad -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="SimuLab">
   <script src="shared/tailwind.js"></script>
 <script src="shared/brain3d.js"></script>
   <style>
@@ -441,6 +445,12 @@ function drawNet(ctx,Nn,cx0,cy0,sc,yaw,tilt,t,am){const f=Math.max(.45,sc/80),cy
 })();
 
     });
+  </script>
+  <!-- Registro del service worker (necesario para "Instalar aplicación") -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
+    }
   </script>
 </body>
 </html>
